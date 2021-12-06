@@ -1,5 +1,5 @@
 import React, {ReactNode, useState} from 'react';
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
 // interface BackBoardStyleProps = {
 //   state: boolean
@@ -16,7 +16,7 @@ const BackBoardStyle = styled.div<{state: boolean}>`
 `;
 
 interface BackBoardProps {
-  children: ReactNode[];
+  children: ReactNode;
 }
 export default function BackBoard({children}: BackBoardProps) {
   const [state, setState] = useState(false);
@@ -24,12 +24,9 @@ export default function BackBoard({children}: BackBoardProps) {
     setState(!state);
     console.log(`state: ${state}`);
   };
-  return (
-    <BackBoardStyle state={state}>
-      {children.map((child, index) => {
-        return <div key={index}>{child}</div>;
-      })}
-      <button onClick={onclick}>button</button>
-    </BackBoardStyle>
-  );
+
+  if (!children) {
+    return <></>;
+  }
+  return <BackBoardStyle state={state}>{children}</BackBoardStyle>;
 }
