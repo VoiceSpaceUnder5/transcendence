@@ -1,11 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+
+import {ThemeProvider} from 'styled-components';
+import theme from './theme/theme';
+import Home from './Routes/Home';
+import Profile from './Routes/Profile';
+import Friends from './Routes/Friends';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/friends" element={<Friends />}></Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
