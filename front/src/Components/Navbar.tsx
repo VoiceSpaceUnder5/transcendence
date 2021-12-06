@@ -40,7 +40,7 @@ const Nav = styled.div<{align?: string}>`
   }
 `;
 
-const NavMenu = styled.div<{isToggle?: boolean}>`
+const NavCollapse = styled.div<{isToggle?: boolean}>`
   display: flex;
 
   @media screen and (max-width: 768px) {
@@ -52,9 +52,6 @@ const NavMenu = styled.div<{isToggle?: boolean}>`
 `;
 
 const NavToggle = styled.div`
-  // position: absolute;
-  // top: 8px;
-  // right: 16px;
   display: none;
 
   @media screen and (max-width: 768px) {
@@ -75,7 +72,7 @@ function Navbar(): JSX.Element {
           <Button bg="dark" brand icon>
             <HiCube />
           </Button>
-          <NavMenu isToggle={isToggle}>
+          <NavCollapse isToggle={isToggle}>
             <Link to="/">
               <Button bg="dark">Home</Button>
             </Link>
@@ -85,7 +82,7 @@ function Navbar(): JSX.Element {
             <Link to="/friends">
               <Button bg="dark">Friends</Button>
             </Link>
-          </NavMenu>
+          </NavCollapse>
         </Nav>
         <Nav align="end">
           <NavToggle onClick={onToggle}>
@@ -93,16 +90,16 @@ function Navbar(): JSX.Element {
               <HiMenu />
             </Button>
           </NavToggle>
-          <NavMenu isToggle={isToggle}>
+          <NavCollapse isToggle={isToggle}>
             <Button bg="dark" icon>
               <HiUserCircle />
             </Button>
             <Button bg="dark">Login</Button>
-          </NavMenu>
+          </NavCollapse>
         </Nav>
       </NavbarBackground>
     </>
   );
 }
 
-export default Navbar;
+export default React.memo(Navbar);

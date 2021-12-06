@@ -19,7 +19,7 @@ const ChatBoard = styled.div`
   /* Layout */
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 8px;
 
   /* Size */
@@ -75,4 +75,4 @@ function Chat(): JSX.Element {
   );
 }
 
-export default Chat;
+export default React.memo(Chat);

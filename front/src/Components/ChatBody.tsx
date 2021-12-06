@@ -5,14 +5,14 @@ const ChatBodyList = styled.div<{content: number}>`
   /* Layout */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  padding: 0px;
 
   /* Size */
-  width: inherit;
+  width: 304px;
   height: 500px;
-  overflow-y: scroll;
+  overflow-y: auto; // scorll 해놓으면 자리 차지함 ㅡㅡ
+  border-radius: 0px 0px 4px 4px;
 
   /* BackGround */
   ${props => {
@@ -42,7 +42,11 @@ interface ChatBodyProps {
 }
 
 function ChatBody({contentIdx}: ChatBodyProps): JSX.Element {
-  return <ChatBodyList content={contentIdx}></ChatBodyList>;
+  return (
+    <ChatBodyList content={contentIdx}>
+      <button style={{width: '100%'}}>hi</button>
+    </ChatBodyList>
+  );
 }
 
 export default ChatBody;
