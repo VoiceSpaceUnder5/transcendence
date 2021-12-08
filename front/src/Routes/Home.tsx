@@ -1,31 +1,23 @@
 import React from 'react';
-import styled from 'styled-components';
 import Navbar from '../Components/Navbar';
 import Chat from '../Components/Chat';
-import Main from '../Components/Main';
-import MatchRecord from '../Components/MatchRecord';
-import Ladder from '../Components/Ladder';
+import Body, {
+  PageContentStyle,
+  PageContentInnerStyle,
+} from '../Components/Body';
+import MatchRecord from '../Components/MatchRecordBoard';
+import Ladder from '../Components/LadderBoard';
 import AchievementBoard from '../Components/AchievementBoard';
-
-const HomeDivStyle = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: calc(100vh - 47px);
-`;
 
 function Home(): JSX.Element {
   return (
-    <Main>
+    <Body>
       <Navbar />
-      <HomeDivStyle>
-        <MatchRecord />
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+      <PageContentStyle>
+        <PageContentInnerStyle>
+          <MatchRecord />
+        </PageContentInnerStyle>
+        <PageContentInnerStyle>
           <Ladder
             ladderImagePath="path"
             win={15}
@@ -33,10 +25,10 @@ function Home(): JSX.Element {
             point={1000}
           ></Ladder>
           <AchievementBoard />
-        </div>
-      </HomeDivStyle>
+        </PageContentInnerStyle>
+      </PageContentStyle>
       <Chat />
-    </Main>
+    </Body>
   );
 }
 

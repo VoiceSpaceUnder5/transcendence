@@ -2,36 +2,12 @@ import React from 'react';
 import BackBoard from './BackBoard';
 import AchievementList from './AchievementList';
 import Achievement from './Achievement';
-import styled from 'styled-components';
-
-const TitleText = styled.div`
-  position: static;
-  width: 91.53px;
-  height: 24px;
-  left: 207.23px;
-  top: 30px;
-
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 24px;
-  text-align: center;
-
-  color: #ffffff;
-
-  /* Inside Auto Layout */
-
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 8px 0px;
-`;
+import TitleDiv from './TitleDiv';
 
 export default function AchievementBoard(): JSX.Element {
   return (
-    <BackBoard height="210px">
-      <TitleText>업적</TitleText>
+    <BackBoard>
+      <TitleDiv>업적</TitleDiv>
       <AchievementList>
         <Achievement isSuccess Achievement="ohohoh"></Achievement>
         <Achievement isSuccess Achievement="ohohoh"></Achievement>

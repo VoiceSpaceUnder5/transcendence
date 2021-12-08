@@ -1,32 +1,42 @@
 import React, {ReactNode} from 'react';
 import styled from 'styled-components';
 
-const BackBoardStyle = styled.div<{width?: string; height?: string}>`
+const BackBoardStyle = styled.div<{size?: string}>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 12px 0px;
+  align-self: stretch;
+  padding-bottom: 16px;
 
-  width: ${props => (props.width ? props.width : '506px')};
-  height: ${props => (props.height ? props.height : '')};
+  ${props => {
+    if (props.size === 'medium') return `width: 506px;`;
+  }}
 
   /* Color / focus */
 
   background: rgba(196, 196, 196, 0.8);
   border-radius: 50px;
-  margin: 12px; 12px;
+  margin: 0px 12px;
+  margin-bottom: 12px;
+
+  ${props => props.theme.mobileSize} {
+    width: 90vw;
+  }
 `;
 
 interface BackBoardProps {
   children: ReactNode;
-  width?: string;
-  height?: string;
+  size?: string;
 }
-export default function BackBoard(props: BackBoardProps): JSX.Element {
-  return (
-    <BackBoardStyle width={props.width} height={props.height}>
-      {props.children}
-    </BackBoardStyle>
-  );
+
+BackBoard.defaultProps = {
+  size: 'medium',
+};
+
+export default function BackBoard({
+  children,
+  size,
+}: BackBoardProps): JSX.Element {
+  return <BackBoardStyle size={size}>{children}</BackBoardStyle>;
 }

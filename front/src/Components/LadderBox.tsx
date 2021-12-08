@@ -10,9 +10,6 @@ const LadderBoxStyle = styled.div`
 
   position: static;
   width: 242px;
-  height: 236px;
-  left: 132px;
-  top: 64px;
 
   /* Color / Primary */
 
@@ -59,7 +56,6 @@ const LadderMarkBoxStyle = styled.div`
 `;
 
 const ImageStyle = styled.img`
-  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
@@ -78,7 +74,6 @@ const TextStyle = styled.div`
   left: 0px;
   top: 140px;
 
-  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 20px;
