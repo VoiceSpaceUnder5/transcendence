@@ -7,6 +7,9 @@ const AchievementStyle = styled.div<{isSuccess: boolean}>`
   height: 103px;
   left: 34px;
   top: 9.5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   border-radius: 10px;
 
@@ -15,7 +18,7 @@ const AchievementStyle = styled.div<{isSuccess: boolean}>`
   flex: none;
   order: 0;
   flex-grow: 0;
-  margin: 0px 7px;
+  margin: 10px 7px;
   background: ${props => (props.isSuccess ? '#FFEF98' : '#89969F')};
   border-radius: 10px;
 `;

@@ -48,7 +48,7 @@ interface FriendProps {
   children: ReactNode;
 }
 
-export default function Friend(props: FriendProps) {
+export default function Friend(props: FriendProps): JSX.Element {
   return (
     <FriendStyle>
       <ProfileImageStyle src={props.imagePath} />

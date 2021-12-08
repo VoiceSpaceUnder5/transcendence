@@ -6,7 +6,7 @@ const BackBoardStyle = styled.div<{width?: string; height?: string}>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 24px 0px;
+  padding: 12px 0px;
 
   width: ${props => (props.width ? props.width : '506px')};
   height: ${props => (props.height ? props.height : '')};

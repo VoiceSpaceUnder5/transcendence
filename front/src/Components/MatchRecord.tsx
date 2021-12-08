@@ -29,9 +29,9 @@ const TitleText = styled.div`
   margin: 24px 0px;
 `;
 
-function MatchRecord() {
+function MatchRecord(): JSX.Element {
   return (
-    <BackBoard height="558px">
+    <BackBoard>
       <TitleText>대전 기록</TitleText>
       <FriendsList>
         <Friend imagePath="Profile.png">

@@ -24,7 +24,6 @@ const LadderBoxStyle = styled.div`
   flex: none;
   order: 1;
   flex-grow: 0;
-  margin: 16px 0px;
 `;
 
 const LadderInfoStyle = styled.div`
@@ -93,7 +92,7 @@ const TextStyle = styled.div`
   flex: none;
   order: 1;
   flex-grow: 0;
-  margin: 16px 0px;
+  margin: 8px 0px;
 `;
 
 interface LadderBoxProps {
