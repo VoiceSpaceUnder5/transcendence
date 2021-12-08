@@ -27,7 +27,7 @@ const ChatBoard = styled.div`
   height: 560px;
 
   /* Background */
-  background-color: ${props => props.theme.lightButton};
+  background-color: ${props => props.theme.lightButtonBg};
   border-radius: 8px;
 `;
 
@@ -42,7 +42,7 @@ const ChatButton = styled.button`
 
   /* Box */
   padding: 10px 16px;
-  background-color: ${props => props.theme.lightButton};
+  background-color: ${props => props.theme.lightButtonBg};
   border: 0px;
   border-radius: 4px;
 

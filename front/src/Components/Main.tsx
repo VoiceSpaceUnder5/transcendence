@@ -7,7 +7,7 @@ const StyledDiv = styled.div`
 `;
 
 interface MainProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 function Main({children}: MainProps): JSX.Element {
