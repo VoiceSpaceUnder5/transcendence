@@ -25,7 +25,7 @@ const TitleText = styled.div`
   flex: none;
   order: 0;
   flex-grow: 0;
-  margin: 24px 0px;
+  margin: 8px 0px;
 `;
 
 export default function AchievementBoard(): JSX.Element {

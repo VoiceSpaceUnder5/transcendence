@@ -30,6 +30,8 @@ const MatchRecordInfoStyle = styled.div`
 interface MatchRecordInfo {
   recordInfo: string;
 }
-export default function MatchRecordInfo({recordInfo}: MatchRecordInfo) {
+export default function MatchRecordInfo({
+  recordInfo,
+}: MatchRecordInfo): JSX.Element {
   return <MatchRecordInfoStyle>{recordInfo}</MatchRecordInfoStyle>;
 }

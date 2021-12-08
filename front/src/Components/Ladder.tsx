@@ -24,7 +24,7 @@ const TitleText = styled.div`
   flex: none;
   order: 0;
   flex-grow: 0;
-  margin: 24px 0px;
+  margin: 10px 0px;
 `;
 
 interface LadderProps {
@@ -34,7 +34,7 @@ interface LadderProps {
   lose: number;
 }
 
-export default function Ladder(props: LadderProps) {
+export default function Ladder(props: LadderProps): JSX.Element {
   return (
     <BackBoard>
       <TitleText>래더</TitleText>

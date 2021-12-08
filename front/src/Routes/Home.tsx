@@ -24,8 +24,6 @@ function Home(): JSX.Element {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            height: '606px',
-            alignItems: 'center',
           }}
         >
           <Ladder
