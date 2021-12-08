@@ -1,7 +1,7 @@
 import React from 'react';
-import BackBoard from './BackBoard';
+import BackBoard from '../common/BackBoard';
 import LadderBox from './LadderBox';
-import TitleDiv from './TitleDiv';
+import TitleDiv from '../common/TitleDiv';
 
 interface LadderProps {
   ladderImagePath: string;

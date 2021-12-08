@@ -1,8 +1,8 @@
 import React from 'react';
-import BackBoard from './BackBoard';
+import BackBoard from '../common/BackBoard';
 import AchievementList from './AchievementList';
 import Achievement from './Achievement';
-import TitleDiv from './TitleDiv';
+import TitleDiv from '../common/TitleDiv';
 
 export default function AchievementBoard(): JSX.Element {
   return (

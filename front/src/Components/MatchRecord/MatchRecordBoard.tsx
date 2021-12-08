@@ -1,9 +1,9 @@
 import React from 'react';
-import BackBoard from './BackBoard';
-import FriendsList from './FriendList';
-import Friend from './Friend';
-import FrindInfoList from './FriendInfoList';
-import TitleDiv from './TitleDiv';
+import BackBoard from '../common/BackBoard';
+import FriendsList from '../Friend/FriendList';
+import Friend from '../Friend/Friend';
+import FrindInfoList from '../Friend/FriendInfoList';
+import TitleDiv from '../common/TitleDiv';
 
 function MatchRecordBoard(): JSX.Element {
   return (

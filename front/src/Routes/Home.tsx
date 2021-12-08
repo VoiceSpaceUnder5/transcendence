@@ -1,13 +1,13 @@
 import React from 'react';
-import Navbar from '../Components/Navbar';
-import Chat from '../Components/Chat';
+import Navbar from '../Components/common/Navbar';
+import Chat from '../Components/Chat/Chat';
 import Body, {
   PageContentStyle,
   PageContentInnerStyle,
-} from '../Components/Body';
-import MatchRecord from '../Components/MatchRecordBoard';
-import Ladder from '../Components/LadderBoard';
-import AchievementBoard from '../Components/AchievementBoard';
+} from '../Components/common/Body';
+import MatchRecord from '../Components/MatchRecord/MatchRecordBoard';
+import Ladder from '../Components/Ladder/LadderBoard';
+import AchievementBoard from '../Components/Achievement/AchievementBoard';
 
 function Home(): JSX.Element {
   return (
