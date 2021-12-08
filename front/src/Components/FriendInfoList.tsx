@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import FriendInfo from './FriendInfo';
 
 // 수정 예정
 
@@ -8,24 +9,23 @@ const FriendInfoListStyle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  align-self: stretch;
 
   /* fill/gray */
   background: #f0f0f0;
   border-radius: 10px;
 `;
 
-const FriendInfoStyle = styled.div`
-  align-self: stretch;
-`;
-
 interface FriendInfoProps {
-  recordInfo: string;
+  recordInfo: React.ReactNode;
 }
 
-export default function FriendInfo({recordInfo}: FriendInfoProps): JSX.Element {
+export default function FriendInfoList({
+  recordInfo,
+}: FriendInfoProps): JSX.Element {
   return (
     <FriendInfoListStyle>
-      <FriendInfoStyle>{recordInfo}</FriendInfoStyle>
+      <FriendInfo>{recordInfo}</FriendInfo>
     </FriendInfoListStyle>
   );
 }
