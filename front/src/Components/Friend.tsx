@@ -7,23 +7,12 @@ const FriendStyle = styled.div`
   justify-content: center;
   align-items: center;
   padding: 6px 15px;
-
-  position: static;
-  width: 390px;
-  height: 82px;
-  left: 10px;
-  top: 10px;
+  margin-bottom: 8px;
+  width: inherit;
 
   background: #ffffff;
   border: 1px solid #000000;
   border-radius: 12.5px;
-
-  /* Inside Auto Layout */
-
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 5px 0px;
 `;
 
 const ProfileImageStyle = styled.img`

@@ -23,7 +23,7 @@ const NavbarBackground = styled.div`
   /* Color */
   background: #343a40;
 
-  @media screen and (max-width: 768px) {
+  ${props => props.theme.mobileSize} {
     align-items: flex-start;
   }
 `;
@@ -32,7 +32,7 @@ const Nav = styled.div<{align?: string}>`
   /* Layout */
   display: flex;
 
-  @media screen and (max-width: 768px) {
+  ${props => props.theme.mobileSize} {
     flex-direction: column;
     align-items: flex-${props => props.align};
   }
@@ -41,7 +41,7 @@ const Nav = styled.div<{align?: string}>`
 const NavCollapse = styled.div<{isToggle?: boolean}>`
   display: flex;
 
-  @media screen and (max-width: 768px) {
+  ${props => props.theme.mobileSize} {
     flex-direction: column;
     ${props => {
       return props.isToggle ? `display: flex;` : `display: none;`;
@@ -52,7 +52,7 @@ const NavCollapse = styled.div<{isToggle?: boolean}>`
 const NavToggle = styled.div`
   display: none;
 
-  @media screen and (max-width: 768px) {
+  ${props => props.theme.mobileSize} {
     display: block;
   }
 `;
