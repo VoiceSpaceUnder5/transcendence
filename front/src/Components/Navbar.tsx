@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import styled from 'styled-components';
 
-import {Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import {HiCube, HiUserCircle, HiMenu} from 'react-icons/hi';
 import Button from './Button';
-import {useState} from 'react';
+import GameStart from '../Components/GameStart';
 
 const NavbarBackground = styled.div`
   /* Layout */
@@ -15,10 +15,8 @@ const NavbarBackground = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px;
-  align-self
-  
+
   /* Position */
-  position: absolute;
   top: 0px;
   left: 0px;
 
@@ -61,44 +59,44 @@ const NavToggle = styled.div`
 
 function Navbar(): JSX.Element {
   const [isToggle, setIsToggle] = useState<boolean>(false);
+  const navigate = useNavigate();
   const onToggle = () => {
     console.log(isToggle);
     setIsToggle(!isToggle);
   };
   return (
-    <>
-      <NavbarBackground>
-        <Nav align="start">
-          <Button bg="dark" brand icon>
-            <HiCube />
+    <NavbarBackground>
+      <Nav align="start">
+        <Button bg="dark" brand icon>
+          <HiCube />
+        </Button>
+        <NavCollapse isToggle={isToggle}>
+          <Button bg="dark" onClick={() => navigate('/')}>
+            Home
           </Button>
-          <NavCollapse isToggle={isToggle}>
-            <Link to="/">
-              <Button bg="dark">Home</Button>
-            </Link>
-            <Link to="/profile">
-              <Button bg="dark">Profile</Button>
-            </Link>
-            <Link to="/friends">
-              <Button bg="dark">Friends</Button>
-            </Link>
-          </NavCollapse>
-        </Nav>
-        <Nav align="end">
-          <NavToggle onClick={onToggle}>
-            <Button bg="dark" icon>
-              <HiMenu />
-            </Button>
-          </NavToggle>
-          <NavCollapse isToggle={isToggle}>
-            <Button bg="dark" icon>
-              <HiUserCircle />
-            </Button>
-            <Button bg="dark">Login</Button>
-          </NavCollapse>
-        </Nav>
-      </NavbarBackground>
-    </>
+          <Button bg="dark" onClick={() => navigate('/profile')}>
+            Profile
+          </Button>
+          <Button bg="dark" onClick={() => navigate('/friends')}>
+            Friends
+          </Button>
+        </NavCollapse>
+      </Nav>
+      <Nav align="end">
+        <NavToggle onClick={onToggle}>
+          <Button bg="dark" icon>
+            <HiMenu />
+          </Button>
+        </NavToggle>
+        <NavCollapse isToggle={isToggle}>
+          <Button bg="dark" icon>
+            <HiUserCircle />
+          </Button>
+          <Button bg="dark">Login</Button>
+        </NavCollapse>
+      </Nav>
+      <GameStart />
+    </NavbarBackground>
   );
 }
 

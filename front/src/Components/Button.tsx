@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FormEvent} from 'react';
 
 import {ReactNode} from 'react';
 import styled, {css} from 'styled-components';
@@ -7,6 +7,9 @@ const StyledButton = styled.button<{
   bg?: string;
   brand?: boolean;
   icon?: boolean;
+  left?: boolean;
+  right?: boolean;
+  large?: boolean;
 }>`
   /* Text */
 
@@ -40,34 +43,46 @@ const StyledButton = styled.button<{
 
   /* Size */
   height: 31px;
+  ${props => props.large && `width: 170px; padding-left: 36px;`}
 
-  /* Box */
+  /* background-color */
   ${props => {
-    return props.bg === 'dark'
-      ? css`
-          background: #343a40;
-          border: 0px;
-          border-radius: 4px;
-          ${props.brand
-            ? css`
-                color: ${props.theme.brandText};
-              `
-            : css`
-                color: ${props.theme.darkButtonText};
-              `}
-          &: hover {
-            background-color: ${props.theme.darkButtonHover};
-          }
-        `
-      : css`
-          background-color: #ffffff;
-          border: 0px;
-          border-radius: 4px;
-          &: hover {
-            background-color: #fbfbfb;
-          }
-        `;
+    if (props.bg === 'dark') {
+      return css`
+        background: ${props.theme.darkButtonBg};
+        color: ${props.theme.darkButtonText};
+        &: hover {
+          background-color: ${props.theme.darkButtonHover};
+        }
+      `;
+    } else if (props.bg === 'grey') {
+      return css`
+        background: ${props.theme.greyButtonBg};
+        color: ${props.theme.greyButtonText};
+        &: hover {
+          background-color: ${props.theme.greyButtonHover};
+        }
+      `;
+    } else {
+      return css`
+        background-color: ${props.theme.lightButtonBg};
+        color: ${props.theme.lightButtonText};
+        &: hover {
+          background-color: ${props.theme.lightButtonHover};
+        }
+      `;
+    }
   }}
+
+  ${props =>
+    props.brand &&
+    css`
+      color: ${props.theme.brandText};
+    `}
+  border: 0px;
+  border-radius: 4px;
+  ${props => props.left && `border-radius: 4px 0px 0px 4px;`}
+  ${props => props.right && `border-radius: 0px 4px 4px 0px;`}
 `;
 
 interface ButtonProps {
@@ -75,12 +90,32 @@ interface ButtonProps {
   bg?: string;
   brand?: boolean;
   icon?: boolean;
-  onClick?: () => void;
+  left?: boolean;
+  right?: boolean;
+  large?: boolean;
+  onClick?: (e: FormEvent) => void;
 }
 
-function Button({children, bg, brand, icon}: ButtonProps): JSX.Element {
+function Button({
+  children,
+  bg,
+  brand,
+  icon,
+  left,
+  right,
+  large,
+  onClick,
+}: ButtonProps): JSX.Element {
   return (
-    <StyledButton bg={bg} brand={brand} icon={icon}>
+    <StyledButton
+      bg={bg}
+      brand={brand}
+      icon={icon}
+      left={left}
+      right={right}
+      large={large}
+      onClick={onClick}
+    >
       {children}
     </StyledButton>
   );
