@@ -9,7 +9,6 @@ const FriendInfoListStyle = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  align-self: stretch;
 
   /* fill/gray */
   background: #f0f0f0;

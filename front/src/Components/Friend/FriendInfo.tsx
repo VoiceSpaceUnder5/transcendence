@@ -10,7 +10,6 @@ const FriendInfoStyle = styled.div`
   align-self: stretch;
   padding: 2px 44px;
 
-  width: 90%;
   background: rgba(247, 247, 247, 0.8);
   border-radius: 10px;
 `;

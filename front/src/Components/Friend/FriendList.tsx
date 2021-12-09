@@ -7,7 +7,7 @@ const FriendListStyle = styled.div`
   align-items: center;
 
   height: 488px;
-  width: 90%;
+  width: 89%;
 
   /* Inside Auto Layout */
 

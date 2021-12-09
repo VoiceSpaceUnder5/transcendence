@@ -12,9 +12,10 @@ const BodyStyle = styled.div`
 export const PageContentStyle = styled.div`
   display: flex;
   justify-content: center;
-  align-self: stretch;
   align-items: center;
+  align-content: stretch;
   height: calc(100vh - 47px);
+  overflow-y: auto;
 
   ${props => props.theme.padSize} {
     flex-direction: column;

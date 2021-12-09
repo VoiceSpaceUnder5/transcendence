@@ -24,7 +24,7 @@ const ChatBoard = styled.div`
 
   /* Size */
   width: 320px;
-  height: 560px;
+  height: 45vh;
 
   /* Background */
   background-color: ${props => props.theme.lightButtonBg};
