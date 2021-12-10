@@ -12,7 +12,6 @@ const AchievementListStyle = styled.div`
   align-items: center;
 
   width: 90%;
-  // width: 456px;
 
   /* Inside Auto Layout */
 

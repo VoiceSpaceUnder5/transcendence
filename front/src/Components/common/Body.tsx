@@ -2,14 +2,13 @@ import React, {ReactNode} from 'react';
 import styled from 'styled-components';
 
 const BodyStyle = styled.div`
-  background-color: #f0f0f0;
-  height: 100vh;
-
   display: flex;
   flex-direction: column;
 `;
 
 export const PageContentStyle = styled.div`
+  background-color: #f0f0f0;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,7 +17,10 @@ export const PageContentStyle = styled.div`
   overflow-y: auto;
 
   ${props => props.theme.padSize} {
+    padding-top: 8px;
     flex-direction: column;
+    height: 100%;
+    justify-content: start;
   } ;
 `;
 

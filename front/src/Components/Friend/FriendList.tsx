@@ -8,13 +8,6 @@ const FriendListStyle = styled.div`
 
   height: 488px;
   width: 89%;
-
-  /* Inside Auto Layout */
-
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-  overflow-y: auto;
 `;
 
 interface FriendListProps {

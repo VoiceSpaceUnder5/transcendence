@@ -8,9 +8,11 @@ const theme = {
   lightButtonBg: '#ffffff',
   lightButtonHover: '#fbfbfb',
   lightButtonText: '#343a40',
+  greyDivBg: 'rgba(247, 247, 247, 0.8)',
   brandText: '#ffef98',
   mobileSize: '@media screen and (max-width: 768px)',
   padSize: '@media screen and (max-width: 1024px)',
+  test: '#ff0000',
 };
 
 export default theme;

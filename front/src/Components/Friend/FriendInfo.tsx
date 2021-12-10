@@ -4,13 +4,11 @@ import styled from 'styled-components';
 const FriendInfoStyle = styled.div`
   /* layout */
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  align-self: stretch;
+  margin: 2px 8px;
   padding: 2px 44px;
 
-  background: rgba(247, 247, 247, 0.8);
+  background: ${props => props.theme.greyDivBg};
   border-radius: 10px;
 `;
 
