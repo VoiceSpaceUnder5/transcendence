@@ -12,6 +12,8 @@ const theme = {
   lightInputBg: '#ffffff',
   lightInputText: '#343a40',
   brandText: '#ffef98',
+  lightTextBg: '#FFFFFF;',
+  greyTextBg: 'rgba(247, 247, 247, 0.8);',
   mobileSize: '@media screen and (max-width: 768px)',
   padSize: '@media screen and (max-width: 1024px)',
   test: '#ff0000',
