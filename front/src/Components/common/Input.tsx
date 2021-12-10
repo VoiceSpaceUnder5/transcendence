@@ -3,7 +3,7 @@ import React, {FormEvent} from 'react';
 import {ReactNode} from 'react';
 import styled, {css} from 'styled-components';
 
-const StyledButton = styled.button<{
+const InputStyle = styled.input<{
   bg?: string;
   brand?: boolean;
   icon?: boolean;
@@ -43,33 +43,24 @@ const StyledButton = styled.button<{
 
   /* Size */
   height: 31px;
-  ${props => props.large && `width: 170px;`}
+  ${props => props.large && `width: 170px; padding-left: 36px;`}
 
   /* background-color */
   ${props => {
     if (props.bg === 'dark') {
       return css`
-        background: ${props.theme.darkButtonBg};
-        color: ${props.theme.darkButtonText};
-        &: hover {
-          background-color: ${props.theme.darkButtonHover};
-        }
+        background: ${props.theme.darkInputBg};
+        color: ${props.theme.darkInputText};
       `;
     } else if (props.bg === 'grey') {
       return css`
-        background: ${props.theme.greyButtonBg};
-        color: ${props.theme.greyButtonText};
-        &: hover {
-          background-color: ${props.theme.greyButtonHover};
-        }
+        background: ${props.theme.greyInputBg};
+        color: ${props.theme.greyInputText};
       `;
     } else {
       return css`
-        background-color: ${props.theme.lightButtonBg};
-        color: ${props.theme.lightButtonText};
-        &: hover {
-          background-color: ${props.theme.lightButtonHover};
-        }
+        background-color: ${props.theme.lightInputBg};
+        color: ${props.theme.lightInputText};
       `;
     }
   }}
@@ -85,7 +76,7 @@ const StyledButton = styled.button<{
   ${props => props.right && `border-radius: 0px 4px 4px 0px;`}
 `;
 
-interface ButtonProps {
+interface InputProps {
   children?: ReactNode;
   bg?: string;
   brand?: boolean;
@@ -93,10 +84,10 @@ interface ButtonProps {
   left?: boolean;
   right?: boolean;
   large?: boolean;
-  onClick?: (e: FormEvent) => void;
+  onChange?: (e: FormEvent) => void;
 }
 
-function Button({
+function Input({
   children,
   bg,
   brand,
@@ -104,21 +95,21 @@ function Button({
   left,
   right,
   large,
-  onClick,
-}: ButtonProps): JSX.Element {
+  onChange,
+}: InputProps): JSX.Element {
   return (
-    <StyledButton
+    <InputStyle
       bg={bg}
       brand={brand}
       icon={icon}
       left={left}
       right={right}
       large={large}
-      onClick={onClick}
+      onChange={onChange}
     >
       {children}
-    </StyledButton>
+    </InputStyle>
   );
 }
 
-export default Button;
+export default Input;

@@ -25,8 +25,7 @@ export const PageContentStyle = styled.div`
 `;
 
 export const PageContentInnerStyle = styled.div`
-  display: 'flex',
-  flex-direction: 'column';
+  display: 'flex';
 `;
 
 interface BodyProps {
