@@ -4,11 +4,12 @@ import styled from 'styled-components';
 const BodyStyle = styled.div`
   display: flex;
   flex-direction: column;
+
+  height: 100vh;
+  background-color: #f0f0f0;
 `;
 
-export const PageContentStyle = styled.div`
-  background-color: #f0f0f0;
-
+export const BackboardBoxLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,7 +25,7 @@ export const PageContentStyle = styled.div`
   } ;
 `;
 
-export const PageContentInnerStyle = styled.div`
+export const BackboardBoxInnerLayout = styled.div`
   display: 'flex';
 `;
 

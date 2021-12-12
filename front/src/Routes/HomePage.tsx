@@ -2,22 +2,22 @@ import React from 'react';
 import Navbar from '../Components/common/Navbar';
 import Chat from '../Components/Chat/Chat';
 import Body, {
-  PageContentStyle,
-  PageContentInnerStyle,
+  BackboardBoxLayout,
+  BackboardBoxInnerLayout,
 } from '../Components/common/Body';
 import MatchRecord from '../Components/MatchRecord/MatchRecordBoard';
 import Ladder from '../Components/Ladder/LadderBoard';
 import AchievementBoard from '../Components/Achievement/AchievementBoard';
 
-function Home(): JSX.Element {
+function HomePage(): JSX.Element {
   return (
     <Body>
       <Navbar />
-      <PageContentStyle>
-        <PageContentInnerStyle>
+      <BackboardBoxLayout>
+        <BackboardBoxInnerLayout>
           <MatchRecord />
-        </PageContentInnerStyle>
-        <PageContentInnerStyle>
+        </BackboardBoxInnerLayout>
+        <BackboardBoxInnerLayout>
           <Ladder
             ladderImagePath="path"
             win={15}
@@ -25,11 +25,11 @@ function Home(): JSX.Element {
             point={1000}
           ></Ladder>
           <AchievementBoard />
-        </PageContentInnerStyle>
-      </PageContentStyle>
+        </BackboardBoxInnerLayout>
+      </BackboardBoxLayout>
       <Chat />
     </Body>
   );
 }
 
-export default Home;
+export default HomePage;
