@@ -1,7 +1,5 @@
 import React from 'react';
-import Navbar from '../Components/common/Navbar';
-import Chat from '../Components/Chat/Chat';
-import Body, {
+import {
   BackboardBoxLayout,
   BackboardBoxInnerLayout,
 } from '../Components/common/Body';
@@ -11,8 +9,7 @@ import AchievementBoard from '../Components/Achievement/AchievementBoard';
 
 function HomePage(): JSX.Element {
   return (
-    <Body>
-      <Navbar />
+    <>
       <BackboardBoxLayout>
         <BackboardBoxInnerLayout>
           <MatchRecord />
@@ -27,8 +24,7 @@ function HomePage(): JSX.Element {
           <AchievementBoard />
         </BackboardBoxInnerLayout>
       </BackboardBoxLayout>
-      <Chat />
-    </Body>
+    </>
   );
 }
 

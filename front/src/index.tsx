@@ -1,25 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-
-import {ThemeProvider} from 'styled-components';
-import theme from './theme/theme';
-import HomePage from './Routes/HomePage';
-import ProfilePage from './Routes/ProfilePage';
-import EditProfilePage from './Routes/EditProfilePage';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />}></Route>
-          <Route path="/profile" element={<ProfilePage />}></Route>
-          <Route path="/profile/edit" element={<EditProfilePage />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+    <App />
   </React.StrictMode>,
   document.getElementById('root'),
 );
