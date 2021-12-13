@@ -4,9 +4,9 @@ import './index.css';
 
 import {ThemeProvider} from 'styled-components';
 import theme from './theme/theme';
-import Home from './Routes/Home';
-import Profile from './Routes/Profile';
-import Friends from './Routes/Friends';
+import HomePage from './Routes/HomePage';
+import ProfilePage from './Routes/ProfilePage';
+import EditProfilePage from './Routes/EditProfilePage';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 ReactDOM.render(
@@ -14,9 +14,9 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/friends" element={<Friends />}></Route>
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/profile" element={<ProfilePage />}></Route>
+          <Route path="/profile/edit" element={<EditProfilePage />}></Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

@@ -57,7 +57,7 @@ function GameStart(): JSX.Element {
       </Button>
       <form>
         <Button left large onClick={onSubmit}>
-          게임 시작
+          <span style={{paddingLeft: '24px'}}>게임 시작</span>
         </Button>
         {toggle && (
           <GameOptions>

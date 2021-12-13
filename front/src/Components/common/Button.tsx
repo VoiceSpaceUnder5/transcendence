@@ -3,7 +3,7 @@ import React, {FormEvent} from 'react';
 import {ReactNode} from 'react';
 import styled, {css} from 'styled-components';
 
-const StyledButton = styled.button<{
+const ButtonStyle = styled.button<{
   bg?: string;
   brand?: boolean;
   icon?: boolean;
@@ -11,8 +11,7 @@ const StyledButton = styled.button<{
   right?: boolean;
   large?: boolean;
 }>`
-  /* Text */
-
+  /* font */
   font-style: normal;
   font-weight: 600;
   ${props =>
@@ -43,7 +42,7 @@ const StyledButton = styled.button<{
 
   /* Size */
   height: 31px;
-  ${props => props.large && `width: 170px; padding-left: 36px;`}
+  ${props => props.large && `width: 170px;`}
 
   /* background-color */
   ${props => {
@@ -93,6 +92,7 @@ interface ButtonProps {
   left?: boolean;
   right?: boolean;
   large?: boolean;
+  type?: string;
   onClick?: (e: FormEvent) => void;
 }
 
@@ -107,7 +107,7 @@ function Button({
   onClick,
 }: ButtonProps): JSX.Element {
   return (
-    <StyledButton
+    <ButtonStyle
       bg={bg}
       brand={brand}
       icon={icon}
@@ -117,7 +117,7 @@ function Button({
       onClick={onClick}
     >
       {children}
-    </StyledButton>
+    </ButtonStyle>
   );
 }
 

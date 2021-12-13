@@ -77,9 +77,6 @@ function Navbar(): JSX.Element {
           <Button bg="dark" onClick={() => navigate('/profile')}>
             Profile
           </Button>
-          <Button bg="dark" onClick={() => navigate('/friends')}>
-            Friends
-          </Button>
         </NavCollapse>
       </Nav>
       <Nav align="end">

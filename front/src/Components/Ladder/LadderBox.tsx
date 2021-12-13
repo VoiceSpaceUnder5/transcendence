@@ -13,14 +13,8 @@ const LadderBoxStyle = styled.div`
 
   /* Color / Primary */
 
-  background: #343a40;
+  background: ${props => props.theme.darkBg};
   border-radius: 25px;
-
-  /* Inside Auto Layout */
-
-  flex: none;
-  order: 1;
-  flex-grow: 0;
 `;
 
 const LadderInfoStyle = styled.div`
