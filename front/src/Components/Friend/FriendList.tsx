@@ -6,7 +6,7 @@ const FriendListStyle = styled.div`
   flex-direction: column;
   align-items: center;
 
-  height: 488px;
+  height: 440px;
   width: 89%;
 `;
 

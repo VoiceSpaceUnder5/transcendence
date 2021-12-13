@@ -80,7 +80,9 @@ export default function EditProfile(): JSX.Element {
       <div
         style={{display: 'flex', width: '20%', justifyContent: 'space-evenly'}}
       >
-        <Button onClick={() => navigate('/profile')}>확인</Button>
+        <Button onClick={() => navigate('/profile', {state: inputs})}>
+          확인
+        </Button>
         <Button onClick={() => navigate('/profile')}>취소</Button>
       </div>
     </BackBoard>

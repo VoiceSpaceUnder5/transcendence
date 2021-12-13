@@ -13,11 +13,15 @@ const FriendStyle = styled.div`
 
   background-color: ${props => props.theme.lightButtonBg};
   border-radius: 12.5px;
+
+  ${props => props.theme.padSize} {
+    width: 70%;
+  }
 `;
 
 const ProfileImageStyle = styled.img`
-  width: 47px;
-  height: 47px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 `;
 

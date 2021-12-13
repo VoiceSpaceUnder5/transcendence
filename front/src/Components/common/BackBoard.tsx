@@ -10,7 +10,7 @@ const BackBoardStyle = styled.div<{size?: string}>`
   padding-bottom: 16px;
 
   ${props => {
-    if (props.size === 'medium') return `width: 506px;`;
+    if (props.size === 'medium') return `width: 360px;`;
   }}
 
   /* Color / focus */
@@ -19,10 +19,6 @@ const BackBoardStyle = styled.div<{size?: string}>`
   border-radius: 50px;
   margin: 0px 12px;
   margin-bottom: 12px;
-
-  ${props => props.theme.mobileSize} {
-    width: 90vw;
-  }
 `;
 
 interface BackBoardProps {

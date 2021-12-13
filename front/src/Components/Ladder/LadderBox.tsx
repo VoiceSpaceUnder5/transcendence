@@ -9,7 +9,7 @@ const LadderBoxStyle = styled.div`
   padding: 16px 32px;
 
   position: static;
-  width: 242px;
+  width: 200px;
 
   /* Color / Primary */
 
@@ -24,18 +24,8 @@ const LadderInfoStyle = styled.div`
   align-items: center;
   padding: 0px;
 
-  position: static;
-  width: 178px;
-  height: 204px;
-  left: 32px;
-  top: 16px;
-
-  /* Inside Auto Layout */
-
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 16px 0px;
+  width: 120px;
+  height: 200px;
 `;
 
 const LadderMarkBoxStyle = styled.div`
