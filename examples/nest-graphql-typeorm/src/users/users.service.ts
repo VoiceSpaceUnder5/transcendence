@@ -29,7 +29,4 @@ export class UsersService {
   async getRecords(id: number): Promise<Record[]> {
     return await this.recordRepository.find({ where: { user: id } });
   }
-  // findAll(id: number): Promise<[Record]> {
-  //   return this.
-  // }
 }
