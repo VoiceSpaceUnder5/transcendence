@@ -24,14 +24,13 @@ const AchievementStyle = styled.div<{isSuccess: boolean}>`
 `;
 
 interface AchievementProps {
+  children: React.ReactNode;
   isSuccess: boolean;
-  Achievement: string;
 }
 
-export default function Achievement(props: AchievementProps): JSX.Element {
-  return (
-    <AchievementStyle isSuccess={props.isSuccess}>
-      {props.Achievement}
-    </AchievementStyle>
-  );
+export default function Achievement({
+  children,
+  isSuccess,
+}: AchievementProps): JSX.Element {
+  return <AchievementStyle isSuccess={isSuccess}>{children}</AchievementStyle>;
 }

@@ -3,22 +3,26 @@ import BackBoard from '../common/BackBoard';
 import LadderBox from './LadderBox';
 import TitleDiv from '../common/TitleDiv';
 
-interface LadderProps {
-  ladderImagePath: string;
-  point: number;
-  win: number;
-  lose: number;
+interface LadderBoardProps {
+  ladderData: {
+    imagePath: string;
+    point: number;
+    win: number;
+    lose: number;
+  };
 }
 
-export default function LadderBoard(props: LadderProps): JSX.Element {
+export default function LadderBoard({
+  ladderData,
+}: LadderBoardProps): JSX.Element {
   return (
     <BackBoard>
       <TitleDiv>래더</TitleDiv>
       <LadderBox
-        ladderImagePath={props.ladderImagePath}
-        point={props.point}
-        win={props.win}
-        lose={props.lose}
+        ladderImagePath={ladderData.imagePath}
+        point={ladderData.point}
+        win={ladderData.win}
+        lose={ladderData.lose}
       ></LadderBox>
     </BackBoard>
   );
