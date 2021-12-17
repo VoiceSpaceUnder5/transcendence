@@ -39,7 +39,7 @@ function ChatBody({contentIdx}: ChatBodyProps): JSX.Element {
       element = <CreateChannel />;
       break;
   }
-  return <ChatBodyList content={contentIdx}>{element};</ChatBodyList>;
+  return <ChatBodyList content={contentIdx}>{element}</ChatBodyList>;
 }
 
 export default ChatBody;

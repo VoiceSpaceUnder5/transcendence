@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import TitleDiv from '../common/TitleDiv';
 import Input from '../common/Input';
@@ -6,7 +6,7 @@ import Div from '../common/Div';
 import BackBoard from '../common/BackBoard';
 import Textarea from '../common/Textarea';
 import Button from '../common/Button';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 const ProfileImgStyle = styled.div`
   width: 288px;
@@ -40,12 +40,12 @@ const InnerLayout = styled.div`
 
 export default function EditProfile(): JSX.Element {
   const navigate = useNavigate();
+  const location = useLocation();
   const [inputs, setInputs] = useState({
-    name: '익명의 토끼',
-    email: 'test@test.com',
-    description: '자기 소개',
+    userId: '',
+    email: '',
+    description: '',
   });
-  const {name, email, description} = inputs;
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -56,6 +56,10 @@ export default function EditProfile(): JSX.Element {
       [name]: value,
     });
   };
+  useEffect(() => {
+    const {userId, email, description} = location.state;
+    setInputs({userId, email, description});
+  }, []);
   return (
     <BackBoard size="hug">
       <TitleDiv>프로필 편집</TitleDiv>
@@ -66,13 +70,13 @@ export default function EditProfile(): JSX.Element {
         </InnerLayout>
         <InnerLayout>
           <Div>이름</Div>
-          <Input name="name" onChange={onChange} value={name} />
+          <Input name="name" onChange={onChange} value={inputs.userId} />
           <Div>email</Div>
-          <Input name="email" onChange={onChange} value={email} />
+          <Input name="email" onChange={onChange} value={inputs.email} />
           <Div>자기소개</Div>
           <Textarea
             name="description"
-            value={description}
+            value={inputs.description}
             onChange={onChange}
           ></Textarea>
         </InnerLayout>
