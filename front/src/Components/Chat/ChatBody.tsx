@@ -1,5 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import ChatFriendList from './ChatFriendList';
+import ParticipatingChannel from './ParticipatingChannel';
+import SearchChannel from './SearchChannel';
+import CreateChannel from './CreateChannel';
 
 const ChatBodyList = styled.div<{content: number}>`
   /* Layout */
@@ -13,28 +17,6 @@ const ChatBodyList = styled.div<{content: number}>`
   height: 500px;
   overflow-y: auto; // scorll 해놓으면 자리 차지함 ㅡㅡ
   border-radius: 0px 0px 4px 4px;
-
-  /* BackGround */
-  ${props => {
-    console.log(props.content);
-    if (props.content === 0) {
-      return `
-      background-color: rgba(200, 0, 0, 0.2);
-      `;
-    } else if (props.content === 1) {
-      return `
-      background-color: rgba(0, 255, 0, 0.2);
-      `;
-    } else if (props.content === 2) {
-      return `
-        background-color: rgba(255, 200, 0, 0.2);
-      `;
-    } else {
-      return `
-        background-color: rgba(0, 0, 255, 0.2);
-      `;
-    }
-  }}
 `;
 
 interface ChatBodyProps {
@@ -42,11 +24,22 @@ interface ChatBodyProps {
 }
 
 function ChatBody({contentIdx}: ChatBodyProps): JSX.Element {
-  return (
-    <ChatBodyList content={contentIdx}>
-      <button style={{width: '100%'}}>hi</button>
-    </ChatBodyList>
-  );
+  let element;
+  switch (contentIdx) {
+    case 0:
+      element = <ChatFriendList />;
+      break;
+    case 1:
+      element = <ParticipatingChannel />;
+      break;
+    case 2:
+      element = <SearchChannel />;
+      break;
+    case 3:
+      element = <CreateChannel />;
+      break;
+  }
+  return <ChatBodyList content={contentIdx}>{element};</ChatBodyList>;
 }
 
 export default ChatBody;
