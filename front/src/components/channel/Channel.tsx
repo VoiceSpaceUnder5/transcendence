@@ -64,7 +64,10 @@ export default function Channel({
         {isPrivate && isClick && !isJoin ? (
           <>
             <ChannelInfo>비밀번호를 입력하세요.</ChannelInfo>
-            <form style={{display: 'flex'}} onSubmit={onSubmit}>
+            <form
+              style={{display: 'flex', margin: '2px 0px', padding: '2px 8px'}}
+              onSubmit={onSubmit}
+            >
               <input
                 type="password"
                 style={{width: '50%'}}
@@ -80,7 +83,7 @@ export default function Channel({
           <>
             <ChannelInfo>
               {name}
-              {isPrivate && ' 🔑'}
+              {isPrivate && ' (비)'}
             </ChannelInfo>
             <ChannelInfo>{number}명</ChannelInfo>
           </>

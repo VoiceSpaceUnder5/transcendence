@@ -3,40 +3,42 @@ import styled from 'styled-components';
 import Input from '../common/Input';
 import {useDispatch} from 'react-redux';
 import {selectChatMenu} from '../../modules/chatting';
-
-const ChattingStyles = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-self: stretch;
-`;
+import Div from '../common/Div';
+import Button from '../common/Button';
 
 const ChattingHead = styled.div`
   /* Layout */
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 4px 16px;
   align-items: center;
   align-self: stretch;
+
+  background-color: white;
+  border-radius: 4px;
 `;
 
 const MessageBoxStyles = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
 
-  background-color: red;
+  width: 96%;
+  height: 100%;
+
+  overflow-y: auto;
+  background-color: ${props => props.theme.greyDivBg};
+  border: 5px solid white;
+  border-top: 0px;
+  border-bottom: 0px;
 `;
 
-const ChattingFooter = styled.form`
-  position: absolute;
+const MessageForm = styled.form`
   display: flex;
-  justify-content: center;
-  bottom: 56px;
+  width: 96%;
+  padding: 4px;
+  background-color: white;
 `;
-
-// interface ChattingProps {
-//   onBackButtonClick?: (idx: number) => void;
-// }
 
 export default function Chatting(): JSX.Element {
   const [input, setInput] = useState('');
@@ -54,20 +56,27 @@ export default function Chatting(): JSX.Element {
   const dispatch = useDispatch();
   const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
   return (
-    <ChattingStyles>
+    <>
       <ChattingHead>
-        <div>채널 이름</div>
-        <button onClick={() => onChatMenuClick(1)}>뒤로</button>
+        <Div>채널 이름</Div>
       </ChattingHead>
       <MessageBoxStyles>
         {messages.map((message, idx) => (
           <div key={idx}>{message}</div>
         ))}
       </MessageBoxStyles>
-      <ChattingFooter onSubmit={onSubmit}>
-        <Input value={input} onChange={onChange}></Input>
-        <button>입력</button>
-      </ChattingFooter>
-    </ChattingStyles>
+      <MessageForm onSubmit={onSubmit}>
+        <input
+          style={{width: '66%'}}
+          value={input}
+          onChange={onChange}
+          required
+        />
+        <Button bg="dark">입력</Button>
+        <Button bg="dark" type="button" onClick={() => onChatMenuClick(1)}>
+          뒤로
+        </Button>
+      </MessageForm>
+    </>
   );
 }
