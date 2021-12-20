@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import ChannelInfoList from './ChannelInfoList';
 import ChannelInfo from './ChannelInfo';
+import {useDispatch} from 'react-redux';
+import {selectChatMenu} from '../../modules/chatting';
 
 const ChannelStyles = styled.div`
   display: flex;
@@ -42,16 +44,20 @@ export default function Channel({
   const [isClick, setIsClick] = useState(false);
   const [input, setInput] = useState('');
   const onDivClick = () => {
-    if (isJoin || !isPrivate) console.log('방으로');
+    if (isJoin || !isPrivate) onChatMenuClick(4);
     if (!isClick) setIsClick(true);
   };
   const onCancelButtonClick = () => setIsClick(false);
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(`${id}랑 ${input} 보내고, 유효성 검사가 되면 채팅방으로 이동`);
+    onChatMenuClick(4);
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setInput(e.target.value);
+
+  const dispatch = useDispatch();
+  const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
   return (
     <ChannelStyles onClick={onDivClick}>
       <ChannelInfoList>

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const ChannelInfoStyle = styled.div`
   text-align: center;
+  vertical-align: middle;
   margin: 2px 0px;
   padding: 2px 8px;
   height: 22px;

@@ -35,7 +35,6 @@ const ChatButton = styled.button`
 `;
 
 export default function Chat(): JSX.Element {
-  // 리팩토링 필요
   const [visible, setVisible] = useState(false);
   const onClick = () => {
     setVisible(!visible);

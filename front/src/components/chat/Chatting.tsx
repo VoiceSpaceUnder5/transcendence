@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import Input from '../common/Input';
+import {useDispatch} from 'react-redux';
+import {selectChatMenu} from '../../modules/chatting';
 
 const ChattingStyles = styled.div`
   display: flex;
@@ -48,11 +50,14 @@ export default function Chatting(): JSX.Element {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
+
+  const dispatch = useDispatch();
+  const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
   return (
     <ChattingStyles>
       <ChattingHead>
         <div>채널 이름</div>
-        <button>뒤로</button>
+        <button onClick={() => onChatMenuClick(1)}>뒤로</button>
       </ChattingHead>
       <MessageBoxStyles>
         {messages.map((message, idx) => (
