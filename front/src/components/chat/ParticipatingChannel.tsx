@@ -2,27 +2,40 @@ import React from 'react';
 import ChannelList from '../channel/ChannelList';
 import Channel from '../channel/Channel';
 
+import {useDispatch} from 'react-redux';
+import {joinChannel} from '../../modules/chatting';
+
 export default function ParticipatingChannel(): JSX.Element {
   const channelList = [
     {
-      channelId: '같이 코딩하실 분',
-      channelPeople: 3,
+      id: 0,
+      name: '노실 분?',
+      number: 3,
       isPrivate: true,
     },
     {
-      channelId: '게임',
-      channelPeople: 50,
+      id: 1,
+      name: '윗방처럼 놀면 망함',
+      number: 50,
       isPrivate: false,
     },
   ];
+  const dispatch = useDispatch();
+  const onClickChannel = (id: number) => {
+    dispatch(joinChannel(id));
+    console.log(`참여 중인 방(room ID: ${id})에 참여 시도`);
+  };
   return (
     <ChannelList>
-      {channelList.map((channel, idx) => (
+      {channelList.map(channel => (
         <Channel
-          key={idx}
-          channelId={channel.channelId}
-          channelPeople={channel.channelPeople}
+          key={channel.id}
+          id={channel.id}
+          name={channel.name}
+          number={channel.number}
+          isJoin={true}
           isPrivate={channel.isPrivate}
+          onClick={onClickChannel}
         ></Channel>
       ))}
     </ChannelList>

@@ -15,7 +15,7 @@ const ChannelInfoStyle = styled.div`
 `;
 
 interface ChannelInfoProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export default function ChannelInfo({children}: ChannelInfoProps): JSX.Element {

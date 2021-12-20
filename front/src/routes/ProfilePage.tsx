@@ -5,7 +5,7 @@ import {BackboardBoxLayout} from '../components/common/Body';
 
 function ProfilePage(): JSX.Element {
   const profileData = {
-    imagePath: '',
+    imagePath: './testImage.png',
     userId: 'hyeonkim',
     email: 'test@test.com',
     description: '빙빙 돌아가는 회전 목마처럼',

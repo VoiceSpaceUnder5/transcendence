@@ -58,12 +58,12 @@ const ChatHeadItem = styled.button<{index: number; clickedIdx: number}>`
 `;
 
 interface ChatHeadProps {
-  items: string[];
   onClick: (idx: number) => void;
   clickedIdx: number;
 }
 
-function ChatHead({items, onClick, clickedIdx}: ChatHeadProps): JSX.Element {
+function ChatHead({onClick, clickedIdx}: ChatHeadProps): JSX.Element {
+  const items = ['친구 목록', '참여 중', '채널 탐색', '채널 생성'];
   return (
     <ChatHeadList>
       {items.map((item, idx) => {

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import ChatHead from './ChatHead';
-import ChatBody from './ChatBody';
+import ChatBoard from './ChatBoard';
 
 const ChatBackground = styled.div`
   /* Position */
@@ -13,22 +12,6 @@ const ChatBackground = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-`;
-
-const ChatBoard = styled.div`
-  /* Layout */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 8px;
-
-  /* Size */
-  width: 320px;
-  height: 45vh;
-
-  /* Background */
-  background-color: ${props => props.theme.greyButtonBg};
-  border-radius: 8px;
 `;
 
 const ChatButton = styled.button`
@@ -51,28 +34,17 @@ const ChatButton = styled.button`
   }
 `;
 
-function Chat(): JSX.Element {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [clickedIdx, setClickedIdx] = useState<number>(0);
-  const onChatButtonClick = () => setIsOpen(!isOpen);
-  const onChatHeadClick = (idx: number) => setClickedIdx(idx);
+export default function Chat(): JSX.Element {
+  // 리팩토링 필요
+  const [visible, setVisible] = useState(false);
+  const onClick = () => {
+    setVisible(!visible);
+  };
+
   return (
     <ChatBackground>
-      {isOpen && (
-        <ChatBoard>
-          <ChatHead
-            items={['친구 목록', '참여 중', '채널 탐색', '채널 생성']}
-            onClick={onChatHeadClick}
-            clickedIdx={clickedIdx}
-          />
-          <ChatBody contentIdx={clickedIdx}></ChatBody>
-        </ChatBoard>
-      )}
-      <ChatButton onClick={onChatButtonClick}>
-        {!isOpen ? '채팅' : '닫기'}
-      </ChatButton>
+      <ChatBoard visible={visible} />
+      <ChatButton onClick={onClick}>{!visible ? '채팅' : '닫기'}</ChatButton>
     </ChatBackground>
   );
 }
-
-export default React.memo(Chat);

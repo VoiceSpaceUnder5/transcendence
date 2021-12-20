@@ -4,6 +4,7 @@ import ChatFriendList from './ChatFriendList';
 import ParticipatingChannel from './ParticipatingChannel';
 import SearchChannel from './SearchChannel';
 import CreateChannel from './CreateChannel';
+import Chatting from './Chatting';
 
 const ChatBodyStyle = styled.div<{content: number}>`
   /* Layout */
@@ -39,6 +40,9 @@ function ChatBody({contentIdx}: ChatBodyProps): JSX.Element {
       break;
     case 3:
       element = <CreateChannel />;
+      break;
+    case 4:
+      element = <Chatting />;
       break;
   }
   return <ChatBodyStyle content={contentIdx}>{element}</ChatBodyStyle>;
