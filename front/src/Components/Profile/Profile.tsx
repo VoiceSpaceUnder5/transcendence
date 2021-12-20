@@ -6,7 +6,7 @@ import TitleDiv from '../common/TitleDiv';
 import Div from '../common/Div';
 import BackBoard from '../common/BackBoard';
 
-const ProfileImgStyle = styled.div`
+const ProfileImgStyle = styled.img`
   width: 288px;
   height: 288px;
   border-radius: 25px;
@@ -36,7 +36,16 @@ const InnerLayout = styled.div`
   margin: 0px 24px;
 `;
 
-export default function Profile(): JSX.Element {
+interface ProfileProps {
+  profileData: {
+    imagePath: string;
+    userId: string;
+    email: string;
+    description: string;
+  };
+}
+
+export default function Profile({profileData}: ProfileProps): JSX.Element {
   const navigate = useNavigate();
   return (
     <BackBoard size="hug">
@@ -44,34 +53,27 @@ export default function Profile(): JSX.Element {
       <WholeLayout>
         <InnerLayout>
           <Div>프로필 사진</Div>
-          <ProfileImgStyle></ProfileImgStyle>
+          <ProfileImgStyle src={profileData.imagePath}></ProfileImgStyle>
         </InnerLayout>
         <InnerLayout>
           <Div>이름</Div>
           <Div bg="light" width="large" align="center">
-            익명의 토끼
+            {profileData.userId}
           </Div>
           <Div>email</Div>
           <Div bg="light" width="large" align="center">
-            test@test.com
+            {profileData.email}
           </Div>
           <Div>자기소개</Div>
           <Div bg="light" width="large" align="center" height="full">
-            자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기
-            소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개
-            자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기
-            소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개
-            자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기
-            소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개
-            자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기
-            소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개
-            자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기
-            소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개
-            자기 소개 자기 소개 자기 소개 자기 소개 자기 소개 자기 소개
+            {profileData.description}
           </Div>
         </InnerLayout>
       </WholeLayout>
-      <Button large onClick={() => navigate('/profile/edit')}>
+      <Button
+        large
+        onClick={() => navigate('/profile/edit', {state: profileData})}
+      >
         프로필 수정
       </Button>
     </BackBoard>

@@ -3,12 +3,12 @@ import React from 'react';
 import {ThemeProvider} from 'styled-components';
 import theme from './theme/theme';
 
-import Navbar from './Components/common/Navbar';
-import Chat from './Components/Chat/Chat';
-import Body from './Components/common/Body';
-import HomePage from './Routes/HomePage';
-import ProfilePage from './Routes/ProfilePage';
-import EditProfilePage from './Routes/EditProfilePage';
+import Navbar from './components/common/Navbar';
+import Chat from './components/Chat/Chat';
+import Body from './components/common/Body';
+import HomePage from './routes/HomePage';
+import ProfilePage from './routes/ProfilePage';
+import EditProfilePage from './routes/EditProfilePage';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 function App(): JSX.Element {

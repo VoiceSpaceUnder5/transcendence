@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import FriendInfo from './FriendInfo';
 import FriendInfoList from './FriendInfoList';
@@ -27,17 +27,18 @@ const ProfileImageStyle = styled.img`
 
 interface FriendProps {
   imagePath: string;
-  children?: ReactNode;
+  // eslint-disable-next-line
+  infos: any[];
 }
 
-export default function Friend(props: FriendProps): JSX.Element {
+export default function Friend({imagePath, infos}: FriendProps): JSX.Element {
   return (
     <FriendStyle>
-      <ProfileImageStyle src={props.imagePath} />
+      <ProfileImageStyle src={imagePath} />
       <FriendInfoList>
-        <FriendInfo>hi</FriendInfo>
-        <FriendInfo>hi</FriendInfo>
-        <FriendInfo>hi</FriendInfo>
+        {infos.map(info => (
+          <FriendInfo key={info.userId}>{info}</FriendInfo>
+        ))}
       </FriendInfoList>
     </FriendStyle>
   );

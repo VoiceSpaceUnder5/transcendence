@@ -4,16 +4,25 @@ import AchievementList from './AchievementList';
 import Achievement from './Achievement';
 import TitleDiv from '../common/TitleDiv';
 
-export default function AchievementBoard(): JSX.Element {
+interface AchievementBoardProps {
+  achievementData: {achievement: string; isSuccess: boolean}[];
+}
+
+export default function AchievementBoard({
+  achievementData,
+}: AchievementBoardProps): JSX.Element {
   return (
     <BackBoard>
       <TitleDiv>업적</TitleDiv>
       <AchievementList>
-        <Achievement isSuccess Achievement="ohohoh"></Achievement>
-        <Achievement isSuccess Achievement="ohohoh"></Achievement>
-        <Achievement isSuccess={false} Achievement="asdf"></Achievement>
-        <Achievement isSuccess={false} Achievement="ohfdsohoh"></Achievement>
-        <Achievement isSuccess={false} Achievement="ohoasdhoh"></Achievement>
+        {achievementData.map(achievementDatum => (
+          <Achievement
+            key={achievementDatum.achievement}
+            isSuccess={achievementDatum.isSuccess}
+          >
+            {achievementDatum.achievement}
+          </Achievement>
+        ))}
       </AchievementList>
     </BackBoard>
   );

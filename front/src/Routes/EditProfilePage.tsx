@@ -1,7 +1,7 @@
 import React from 'react';
-import {BackboardBoxInnerLayout} from '../Components/common/Body';
-import EditProfile from '../Components/EditProfile/EditProfile';
-import {BackboardBoxLayout} from '../Components/common/Body';
+import {BackboardBoxInnerLayout} from '../components/common/Body';
+import EditProfile from '../components/EditProfile/EditProfile';
+import {BackboardBoxLayout} from '../components/common/Body';
 
 function EditProfilePage(): JSX.Element {
   return (
