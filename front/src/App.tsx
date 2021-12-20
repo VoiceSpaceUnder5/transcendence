@@ -4,7 +4,7 @@ import {ThemeProvider} from 'styled-components';
 import theme from './theme/theme';
 
 import Navbar from './components/common/Navbar';
-import Chat from './components/Chat/Chat';
+import Chat from './components/chat/Chat';
 import Body from './components/common/Body';
 import HomePage from './routes/HomePage';
 import ProfilePage from './routes/ProfilePage';

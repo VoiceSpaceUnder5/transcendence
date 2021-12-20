@@ -6,7 +6,7 @@ import {useNavigate} from 'react-router-dom';
 
 import {HiCube, HiUserCircle, HiMenu} from 'react-icons/hi';
 import Button from './Button';
-import GameStart from '../Chat/GameStart';
+import GameStart from './GameStart';
 
 const NavbarBackground = styled.div`
   /* Layout */

@@ -18,6 +18,7 @@ const theme = {
   mobileSize: '@media screen and (max-width: 768px)',
   padSize: '@media screen and (max-width: 1024px)',
   test: '#ff0000',
+  online: '#75b798',
 };
 
 export default theme;

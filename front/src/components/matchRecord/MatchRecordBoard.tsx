@@ -1,11 +1,16 @@
 import React from 'react';
 import BackBoard from '../common/BackBoard';
-import FriendsList from '../Friend/FriendList';
-import Friend from '../Friend/Friend';
+import FriendsList from '../friend/FriendList';
+import Friend from '../friend/Friend';
 import TitleDiv from '../common/TitleDiv';
 
 interface MatchRecordBoardProps {
-  matchRecordData: {userId: string; imagePath: string; record: string}[];
+  matchRecordData: {
+    userId: string;
+    imagePath: string;
+    record: string;
+    isOnline: boolean;
+  }[];
 }
 
 function MatchRecordBoard({
@@ -19,7 +24,9 @@ function MatchRecordBoard({
           <Friend
             key={matchRecord.userId}
             imagePath={matchRecord.imagePath}
-            infos={[matchRecord.userId, matchRecord.record]}
+            userId={matchRecord.userId}
+            isOnline={matchRecord.isOnline}
+            matchRecord={matchRecord.record}
           ></Friend>
         ))}
       </FriendsList>

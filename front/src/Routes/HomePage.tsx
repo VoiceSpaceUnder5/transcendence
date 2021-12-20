@@ -3,13 +3,13 @@ import {
   BackboardBoxLayout,
   BackboardBoxInnerLayout,
 } from '../components/common/Body';
-import MatchRecord from '../components/MatchRecord/MatchRecordBoard';
-import Ladder from '../components/Ladder/LadderBoard';
-import AchievementBoard from '../components/Achievement/AchievementBoard';
+import MatchRecord from '../components/matchRecord/MatchRecordBoard';
+import Ladder from '../components/ladder/LadderBoard';
+import AchievementBoard from '../components/achievement/AchievementBoard';
 
 function HomePage(): JSX.Element {
   const ladderData = {
-    imagePath: '',
+    imagePath: `${process.env.PUBLIC_URL}/testImage.png`,
     point: 1000,
     win: 10,
     lose: 5,
@@ -19,16 +19,19 @@ function HomePage(): JSX.Element {
       userId: 'kilee',
       imagePath: '',
       record: '승',
+      isOnline: true,
     },
     {
       userId: 'mijeong',
       imagePath: '',
       record: '패',
+      isOnline: true,
     },
     {
       userId: 'hyeonkim',
       imagePath: '',
       record: '승',
+      isOnline: false,
     },
   ];
   const achievementData = [

@@ -1,6 +1,6 @@
 import React, {FormEvent, useState} from 'react';
 import styled from 'styled-components';
-import Button from '../common/Button';
+import Button from './Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
 
 const GameStartStyles = styled.div`

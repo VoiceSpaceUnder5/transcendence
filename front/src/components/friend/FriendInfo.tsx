@@ -2,13 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 
 const FriendInfoStyle = styled.div`
-  /* layout */
-  display: flex;
-  justify-content: center;
-  margin: 2px 8px;
-  padding: 2px 44px;
+  text-align: center;
+  margin: 2px 0px;
+  padding: 2px 8px;
+  height: 22px;
+  white-space: nowrap;
 
   background: ${props => props.theme.greyDivBg};
+  overflow: hidden;
+  text-overflow: ellipsis;
   border-radius: 10px;
 `;
 

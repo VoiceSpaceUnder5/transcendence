@@ -5,12 +5,13 @@ import ParticipatingChannel from './ParticipatingChannel';
 import SearchChannel from './SearchChannel';
 import CreateChannel from './CreateChannel';
 
-const ChatBodyList = styled.div<{content: number}>`
+const ChatBodyStyle = styled.div<{content: number}>`
   /* Layout */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  padding-top: 8px;
 
   /* Size */
   width: 304px;
@@ -24,6 +25,7 @@ interface ChatBodyProps {
 }
 
 function ChatBody({contentIdx}: ChatBodyProps): JSX.Element {
+  // 어떤 컴포넌트 렌더링할지
   let element;
   switch (contentIdx) {
     case 0:
@@ -39,7 +41,7 @@ function ChatBody({contentIdx}: ChatBodyProps): JSX.Element {
       element = <CreateChannel />;
       break;
   }
-  return <ChatBodyList content={contentIdx}>{element}</ChatBodyList>;
+  return <ChatBodyStyle content={contentIdx}>{element}</ChatBodyStyle>;
 }
 
 export default ChatBody;

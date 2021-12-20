@@ -27,7 +27,7 @@ const ChatBoard = styled.div`
   height: 45vh;
 
   /* Background */
-  background-color: ${props => props.theme.lightButtonBg};
+  background-color: ${props => props.theme.greyButtonBg};
   border-radius: 8px;
 `;
 
@@ -53,7 +53,7 @@ const ChatButton = styled.button`
 
 function Chat(): JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [clickedIdx, setClickedIdx] = useState<number>(1);
+  const [clickedIdx, setClickedIdx] = useState<number>(0);
   const onChatButtonClick = () => setIsOpen(!isOpen);
   const onChatHeadClick = (idx: number) => setClickedIdx(idx);
   return (
