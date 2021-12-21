@@ -5,6 +5,20 @@ import ChannelInfo from './ChannelInfo';
 import {useDispatch} from 'react-redux';
 import {selectChatMenu} from '../../modules/chatting';
 
+const FormStyles = styled.form`
+  display: flex;
+  margin: 2px 0px;
+  padding: 2px 8px;
+`;
+
+const FormInputStyles = styled.input`
+  width: 52%;
+`;
+
+const FormButtonStyles = styled.button`
+  padding: 0px 4px;
+`;
+
 const ChannelStyles = styled.div`
   display: flex;
   justify-content: space-around;
@@ -21,7 +35,7 @@ const ChannelStyles = styled.div`
   }
 
   &: hover {
-    background-color: red;
+    background-color: ${props => props.theme.greyButtonBg};
   }
 `;
 
@@ -34,6 +48,15 @@ interface ChannelProps {
   onClick?: (id: number, isPrivate: boolean) => void;
 }
 
+function useInput(initialValue: string) {
+  const [input, setInput] = useState(initialValue);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+  return {input, onChange};
+}
+
 export default function Channel({
   id,
   name,
@@ -42,7 +65,6 @@ export default function Channel({
   isJoin,
 }: ChannelProps): JSX.Element {
   const [isClick, setIsClick] = useState(false);
-  const [input, setInput] = useState('');
   const onDivClick = () => {
     if (isJoin || !isPrivate) onChatMenuClick(4);
     if (!isClick) setIsClick(true);
@@ -50,12 +72,13 @@ export default function Channel({
   const onCancelButtonClick = () => setIsClick(false);
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(`${id}랑 ${input} 보내고, 유효성 검사가 되면 채팅방으로 이동`);
+    console.log(
+      `${id}랑 ${password.input} 보내고, 유효성 검사가 되면 채팅방으로 이동`,
+    );
     onChatMenuClick(4);
   };
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setInput(e.target.value);
 
+  const password = useInput('');
   const dispatch = useDispatch();
   const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
   return (
@@ -64,20 +87,17 @@ export default function Channel({
         {isPrivate && isClick && !isJoin ? (
           <>
             <ChannelInfo>비밀번호를 입력하세요.</ChannelInfo>
-            <form
-              style={{display: 'flex', margin: '2px 0px', padding: '2px 8px'}}
-              onSubmit={onSubmit}
-            >
-              <input
+            <FormStyles onSubmit={onSubmit}>
+              <FormInputStyles
                 type="password"
-                style={{width: '50%'}}
-                onChange={onChange}
+                value={password.input}
+                onChange={password.onChange}
               />
-              <button>입력</button>
-              <button type="button" onClick={onCancelButtonClick}>
+              <FormButtonStyles type="submit">입력</FormButtonStyles>
+              <FormButtonStyles type="button" onClick={onCancelButtonClick}>
                 취소
-              </button>
-            </form>
+              </FormButtonStyles>
+            </FormStyles>
           </>
         ) : (
           <>

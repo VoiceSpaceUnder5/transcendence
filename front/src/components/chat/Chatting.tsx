@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import Input from '../common/Input';
 import {useDispatch} from 'react-redux';
 import {selectChatMenu} from '../../modules/chatting';
 import Div from '../common/Div';

@@ -20,7 +20,7 @@ const ChatBoardStyles = styled.div<{visible: boolean}>`
   height: 45vh;
 
   /* Background */
-  background-color: ${props => props.theme.greyButtonBg};
+  background-color: ${props => props.theme.lightButtonBg};
   border-radius: 8px;
 `;
 

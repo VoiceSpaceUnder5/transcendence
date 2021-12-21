@@ -86,7 +86,7 @@ function Navbar(): JSX.Element {
           </Button>
         </NavToggle>
         <NavCollapse isToggle={isToggle}>
-          <Button bg="dark" icon>
+          <Button bg="dark" icon onClick={() => navigate('/profile')}>
             <HiUserCircle />
           </Button>
           <Button bg="dark">Login</Button>
