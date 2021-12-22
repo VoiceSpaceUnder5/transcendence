@@ -40,6 +40,7 @@ export default function JoinChatting({
     e.preventDefault();
     // 유효성 검사
     // 성공하면 방으로 이동
+    dispatch(afterJoin(channelId));
     reset();
   };
   const onClick = () => dispatch(selectMenu(2));
@@ -59,7 +60,9 @@ export default function JoinChatting({
         value={password}
       />
       <Buttons>
-        <Button bg="grey">입장</Button>
+        <Button bg="grey" type="submit">
+          입장
+        </Button>
         <Button bg="grey" type="button" onClick={onClick}>
           뒤로
         </Button>

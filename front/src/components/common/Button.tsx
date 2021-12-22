@@ -3,7 +3,9 @@ import React, {FormEvent} from 'react';
 import {ReactNode} from 'react';
 import styled, {css} from 'styled-components';
 
-const ButtonStyle = styled.button<{
+const ButtonStyle = styled.button.attrs(props => ({
+  type: props.type === 'submit' ? ('submit' as string) : ('button' as string),
+}))<{
   bg?: string;
   brand?: boolean;
   icon?: boolean;
@@ -104,6 +106,7 @@ function Button({
   left,
   right,
   large,
+  type,
   onClick,
 }: ButtonProps): JSX.Element {
   return (
@@ -115,6 +118,7 @@ function Button({
       right={right}
       large={large}
       onClick={onClick}
+      type={type}
     >
       {children}
     </ButtonStyle>

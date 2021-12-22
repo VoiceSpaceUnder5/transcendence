@@ -47,6 +47,7 @@ const initialState: StateTypes = {
   menuIdx: 1,
 };
 
+// 리듀서
 export default function chatting(
   state = initialState,
   action: ActionReturnType,
