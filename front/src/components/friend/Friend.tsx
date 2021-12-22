@@ -52,3 +52,46 @@ export default function Friend({
     </FriendStyle>
   );
 }
+
+// 클릭 시 게임, 채팅, 친구신청하는 데에 아마도 쓸듯
+// const FormStyles = styled.form`
+//   display: flex;
+//   margin: 2px 0px;
+//   padding: 2px 8px;
+// `;
+
+// const FormInputStyles = styled.input`
+//   width: 52%;
+// `;
+
+// const FormButtonStyles = styled.button`
+//   padding: 0px 4px;
+// `;
+
+// const [isClick, setIsClick] = useState(false);
+// const onCancelButtonClick = () => setIsClick(false);
+
+// const onSubmit = (e: React.FormEvent) => {
+//   e.preventDefault();
+//   console.log('비공개방');
+//   onJoinChannel(id);
+// };
+
+// const [{password}, onChange] = useInput({password: ''});
+//  {isPrivate && isClick && !isJoin ? (
+// <>
+//   <MenuInfo>비밀번호를 입력하세요.</MenuInfo>
+//   <FormStyles onSubmit={onSubmit}>
+//     <FormInputStyles
+//       type="password"
+//       name="password"
+//       value={password}
+//       onChange={onChange}
+//     />
+//     <FormButtonStyles type="submit">입력</FormButtonStyles>
+//     <FormButtonStyles type="button" onClick={onCancelButtonClick}>
+//       취소
+//     </FormButtonStyles>
+//   </FormStyles>
+// </>
+// ) : (

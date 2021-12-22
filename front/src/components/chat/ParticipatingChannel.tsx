@@ -25,7 +25,6 @@ export default function ParticipatingChannel(): JSX.Element {
           id={channel.id}
           name={channel.name}
           number={channel.number}
-          isJoin={true}
           isPrivate={channel.isPrivate}
         ></Channel>
       ))}

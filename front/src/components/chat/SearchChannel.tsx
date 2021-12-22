@@ -60,7 +60,6 @@ export default function SearchChannel(): JSX.Element {
           key={channel.id}
           id={channel.id}
           name={channel.name}
-          isJoin={false}
           number={channel.number}
           isPrivate={channel.isPrivate}
         ></Channel>

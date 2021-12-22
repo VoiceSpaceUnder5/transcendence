@@ -42,12 +42,16 @@ const MessageForm = styled.form`
 `;
 
 interface ChattingProps {
-  id: number;
+  channelId: number;
 }
 
 // 해당하는 채팅방의 고유한 id를 통해 채팅방 데이터를 fetching 해야 함.
-export default function Chatting({id}: ChattingProps): JSX.Element {
+export default function Chatting({channelId}: ChattingProps): JSX.Element {
+  console.log(`현재 켜져있는 채팅 ID: ${channelId}`);
   const [{message}, onChange, reset] = useInput({message: ''});
+  const dispatch = useDispatch();
+  const onBackClick = (idx: number) => dispatch(selectChatMenu(idx));
+
   // 이것도 서버에서 뿌려줄 것
   const [messages, setMessages] = useState<string[]>([]);
   const onSubmit = (e: React.FormEvent) => {
@@ -56,12 +60,10 @@ export default function Chatting({id}: ChattingProps): JSX.Element {
     setMessages(messages.concat(message as string));
   };
 
-  const dispatch = useDispatch();
-  const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
   return (
     <>
       <ChattingHead>
-        <Div>채널 ID: {id}</Div>
+        <Div>채널 ID: {channelId}</Div>
       </ChattingHead>
       <MessageBoxStyles>
         {messages.map((message, idx) => (
@@ -77,7 +79,7 @@ export default function Chatting({id}: ChattingProps): JSX.Element {
           required
         />
         <Button bg="dark">입력</Button>
-        <Button bg="dark" type="button" onClick={() => onChatMenuClick(1)}>
+        <Button bg="dark" type="button" onClick={() => onBackClick(1)}>
           뒤로
         </Button>
       </MessageForm>

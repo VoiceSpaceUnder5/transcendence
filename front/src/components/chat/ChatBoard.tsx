@@ -56,7 +56,7 @@ export default function ChatBoard({visible}: ChatBoardProps): JSX.Element {
         setElement(<CreateChannel />);
         break;
       case 4:
-        setElement(<Chatting id={channelId as number} />);
+        setElement(<Chatting channelId={channelId as number} />);
         break;
     }
   }, [menuIdx]);
