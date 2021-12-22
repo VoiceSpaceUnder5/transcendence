@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import {MenuInfoList, MenuInfo} from '../common/MenuList';
-import {useDispatch} from 'react-redux';
-import {joinChannel} from '../../modules/chatting';
 
 const ChannelStyles = styled.div`
   display: flex;
@@ -29,22 +27,17 @@ interface ChannelProps {
   name: string;
   number: number;
   isPrivate: boolean;
-  onClick?: (id: number, isPrivate: boolean) => void;
+  onClick: () => void;
 }
 
 export default function Channel({
-  id,
   name,
   number,
   isPrivate,
+  onClick,
 }: ChannelProps): JSX.Element {
-  const dispatch = useDispatch();
-  const onJoinChannel = (id: number) => dispatch(joinChannel(id));
-  const onDivClick = () => {
-    onJoinChannel(id);
-  };
   return (
-    <ChannelStyles onClick={onDivClick}>
+    <ChannelStyles onClick={onClick}>
       <MenuInfoList>
         <MenuInfo>
           {name}

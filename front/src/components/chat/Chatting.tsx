@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
 import {useDispatch} from 'react-redux';
-import {selectChatMenu} from '../../modules/chatting';
+import {selectMenu} from '../../modules/chatting';
 import Div from '../common/Div';
 import Button from '../common/Button';
 
@@ -12,7 +12,6 @@ const ChattingHead = styled.div`
   flex-direction: row;
   justify-content: space-between;
   padding: 4px 16px;
-  margin-top: 2px;
   align-items: center;
   align-self: stretch;
 
@@ -50,9 +49,9 @@ export default function Chatting({channelId}: ChattingProps): JSX.Element {
   console.log(`현재 켜져있는 채팅 ID: ${channelId}`);
   const [{message}, onChange, reset] = useInput({message: ''});
   const dispatch = useDispatch();
-  const onBackClick = (idx: number) => dispatch(selectChatMenu(idx));
+  const onBackClick = (idx: number) => dispatch(selectMenu(idx));
 
-  // 이것도 서버에서 뿌려줄 것
+  // 이것도 서버에서 받아와야 함
   const [messages, setMessages] = useState<string[]>([]);
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +71,7 @@ export default function Chatting({channelId}: ChattingProps): JSX.Element {
       </MessageBoxStyles>
       <MessageForm onSubmit={onSubmit}>
         <input
-          style={{width: '66%'}}
+          style={{width: '64%'}}
           name="message"
           value={message}
           onChange={onChange}

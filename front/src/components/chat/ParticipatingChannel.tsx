@@ -1,6 +1,8 @@
 import React from 'react';
 import {MenuList} from '../common/MenuList';
 import Channel from '../channel/Channel';
+import {useDispatch} from 'react-redux';
+import {afterJoin} from '../../modules/chatting';
 
 export default function ParticipatingChannel(): JSX.Element {
   const channelList = [
@@ -17,6 +19,8 @@ export default function ParticipatingChannel(): JSX.Element {
       isPrivate: false,
     },
   ];
+  const dispatch = useDispatch();
+  const afterJoinChannel = (id: number) => dispatch(afterJoin(id));
   return (
     <MenuList>
       {channelList.map(channel => (
@@ -26,6 +30,7 @@ export default function ParticipatingChannel(): JSX.Element {
           name={channel.name}
           number={channel.number}
           isPrivate={channel.isPrivate}
+          onClick={() => afterJoinChannel(channel.id)}
         ></Channel>
       ))}
     </MenuList>

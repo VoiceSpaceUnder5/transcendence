@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import {useDispatch, useSelector} from 'react-redux';
 import ChatMenu from './ChatMenu';
 import ChatContent from './ChatContent';
-import {selectChatMenu} from '../../modules/chatting';
+import {selectMenu} from '../../modules/chatting';
 import {RootState} from '../../modules';
 import FriendList from './FriendList';
 import ParticipatingChannel from './ParticipatingChannel';
 import SearchChannel from './SearchChannel';
 import CreateChannel from './CreateChannel';
+import JoinChatting from './JoinChatting';
 import Chatting from './Chatting';
 
 const ChatBoardStyles = styled.div<{visible: boolean}>`
@@ -34,12 +35,13 @@ interface ChatBoardProps {
 }
 
 export default function ChatBoard({visible}: ChatBoardProps): JSX.Element {
-  const {menuIdx, channelId} = useSelector((state: RootState) => ({
+  const {menuIdx, channelId, isPrivate} = useSelector((state: RootState) => ({
     menuIdx: state.chatting.menuIdx,
     channelId: state.chatting.channelId,
+    isPrivate: state.chatting.isPrivate,
   }));
   const dispatch = useDispatch();
-  const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
+  const onChatMenuClick = (idx: number) => dispatch(selectMenu(idx));
   const [element, setElement] = useState<JSX.Element | undefined>(undefined);
   useEffect(() => {
     switch (menuIdx) {
@@ -56,6 +58,14 @@ export default function ChatBoard({visible}: ChatBoardProps): JSX.Element {
         setElement(<CreateChannel />);
         break;
       case 4:
+        setElement(
+          <JoinChatting
+            channelId={channelId as number}
+            isPrivate={isPrivate as boolean}
+          />,
+        );
+        break;
+      case 5:
         setElement(<Chatting channelId={channelId as number} />);
         break;
     }

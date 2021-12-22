@@ -1,6 +1,8 @@
 import React from 'react';
 import Channel from '../channel/Channel';
 import {MenuList} from '../common/MenuList';
+import {useDispatch} from 'react-redux';
+import {join} from '../../modules/chatting';
 
 export default function SearchChannel(): JSX.Element {
   const channelList = [
@@ -53,6 +55,9 @@ export default function SearchChannel(): JSX.Element {
       isPrivate: false,
     },
   ];
+  const dispatch = useDispatch();
+  const joinChannel = (id: number, isPrivate: boolean) =>
+    dispatch(join(id, isPrivate));
   return (
     <MenuList>
       {channelList.map(channel => (
@@ -62,6 +67,7 @@ export default function SearchChannel(): JSX.Element {
           name={channel.name}
           number={channel.number}
           isPrivate={channel.isPrivate}
+          onClick={() => joinChannel(channel.id, channel.isPrivate)}
         ></Channel>
       ))}
     </MenuList>
