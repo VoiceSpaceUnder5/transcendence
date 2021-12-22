@@ -1,10 +1,15 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from 'react-redux';
 import ChatMenu from './ChatMenu';
-import ChatBody from './ChatBody';
+import ChatContent from './ChatContent';
 import {selectChatMenu} from '../../modules/chatting';
 import {RootState} from '../../modules';
+import FriendList from './FriendList';
+import ParticipatingChannel from './ParticipatingChannel';
+import SearchChannel from './SearchChannel';
+import CreateChannel from './CreateChannel';
+import Chatting from './Chatting';
 
 const ChatBoardStyles = styled.div<{visible: boolean}>`
   /* Layout */
@@ -34,10 +39,30 @@ export default function ChatBoard({visible}: ChatBoardProps): JSX.Element {
   }));
   const dispatch = useDispatch();
   const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
+  const [element, setElement] = useState<undefined | JSX.Element>(undefined);
+  useEffect(() => {
+    switch (menuIdx) {
+      case 0:
+        setElement(<FriendList />);
+        break;
+      case 1:
+        setElement(<ParticipatingChannel />);
+        break;
+      case 2:
+        setElement(<SearchChannel />);
+        break;
+      case 3:
+        setElement(<CreateChannel />);
+        break;
+      case 4:
+        setElement(<Chatting />);
+        break;
+    }
+  }, [menuIdx]);
   return (
     <ChatBoardStyles visible={visible}>
       <ChatMenu onClick={onChatMenuClick} clickedIdx={menuIdx} />
-      <ChatBody contentIdx={menuIdx} />
+      <ChatContent idx={menuIdx}>{element}</ChatContent>
     </ChatBoardStyles>
   );
 }

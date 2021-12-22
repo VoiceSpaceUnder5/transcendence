@@ -1,41 +1,27 @@
-import React, {FormEvent, useState} from 'react';
-// import styled from 'styled-components';
-
-// const CreateChannelStyles = styled.form`
-//   display: flex;
-//   flex-direction: column;
-// `;
+import React from 'react';
+import useInput from '../../hooks/useInput';
 
 export default function CreateChannel(): JSX.Element {
-  const [inputs, setInputs] = useState({
+  const [{id, password}, onChange, reset] = useInput({
     id: '',
     password: '',
   });
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setInputs({
-      ...inputs,
-      [name]: value,
-    });
-  };
-
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 제출
+    reset();
   };
 
   return (
-    <form>
-      <input name="id" value={inputs.id} onChange={onChange} />
+    <form onSubmit={onSubmit}>
+      <input name="id" value={id} onChange={onChange} />
       <input
         name="password"
-        value={inputs.password}
+        value={password}
         onChange={onChange}
         type="password"
       />
-      <button onSubmit={onSubmit}>만들기</button>
-      <button type="button">취소</button>
+      <button>만들기</button>
     </form>
   );
 }
