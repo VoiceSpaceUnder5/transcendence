@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
 import {useDispatch} from 'react-redux';
 import {selectChatMenu} from '../../modules/chatting';
@@ -40,16 +41,13 @@ const MessageForm = styled.form`
 `;
 
 export default function Chatting(): JSX.Element {
-  const [input, setInput] = useState('');
+  const [{message}, onChange, reset] = useInput({message: ''});
   const [messages, setMessages] = useState<string[]>([]);
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('메시지 제출됨');
-    setInput('');
-    setMessages(messages.concat(input));
-  };
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
+    reset();
+    setMessages(messages.concat(message as string));
   };
 
   const dispatch = useDispatch();
@@ -67,7 +65,8 @@ export default function Chatting(): JSX.Element {
       <MessageForm onSubmit={onSubmit}>
         <input
           style={{width: '66%'}}
-          value={input}
+          name="message"
+          value={message}
           onChange={onChange}
           required
         />

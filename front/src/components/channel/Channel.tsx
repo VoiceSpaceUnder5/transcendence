@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
 import ChannelInfoList from './ChannelInfoList';
 import ChannelInfo from './ChannelInfo';
@@ -48,15 +49,6 @@ interface ChannelProps {
   onClick?: (id: number, isPrivate: boolean) => void;
 }
 
-function useInput(initialValue: string) {
-  const [input, setInput] = useState(initialValue);
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
-  return {input, onChange};
-}
-
 export default function Channel({
   id,
   name,
@@ -73,12 +65,12 @@ export default function Channel({
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(
-      `${id}랑 ${password.input} 보내고, 유효성 검사가 되면 채팅방으로 이동`,
+      `${id}랑 ${password} 보내고, 유효성 검사가 되면 채팅방으로 이동`,
     );
     onChatMenuClick(4);
   };
 
-  const password = useInput('');
+  const [{password}, onChange] = useInput({password: ''});
   const dispatch = useDispatch();
   const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
   return (
@@ -90,8 +82,9 @@ export default function Channel({
             <FormStyles onSubmit={onSubmit}>
               <FormInputStyles
                 type="password"
-                value={password.input}
-                onChange={password.onChange}
+                name="password"
+                value={password}
+                onChange={onChange}
               />
               <FormButtonStyles type="submit">입력</FormButtonStyles>
               <FormButtonStyles type="button" onClick={onCancelButtonClick}>
