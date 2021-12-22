@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ChatFriendList from './ChatFriendList';
+import FriendList from './FriendList';
 import ParticipatingChannel from './ParticipatingChannel';
 import SearchChannel from './SearchChannel';
 import CreateChannel from './CreateChannel';
@@ -32,7 +32,7 @@ function ChatBody({contentIdx}: ChatBodyProps): JSX.Element {
   let element;
   switch (contentIdx) {
     case 0:
-      element = <ChatFriendList />;
+      element = <FriendList />;
       break;
     case 1:
       element = <ParticipatingChannel />;

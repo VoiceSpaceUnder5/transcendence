@@ -36,13 +36,14 @@ interface FriendProps {
 
 export default function Friend({
   userId,
+  imagePath,
   isOnline,
   matchRecord,
   description,
 }: FriendProps): JSX.Element {
   return (
     <FriendStyle>
-      <ProfileImageStyle src="testImage.png" isOnline={isOnline} />
+      <ProfileImageStyle src={imagePath} isOnline={isOnline} />
       <MenuInfoList>
         {userId && <MenuInfo>{userId}</MenuInfo>}
         {description && <MenuInfo>{description}</MenuInfo>}

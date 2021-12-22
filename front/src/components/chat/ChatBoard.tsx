@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from 'react-redux';
-import ChatHead from './ChatHead';
+import ChatMenu from './ChatMenu';
 import ChatBody from './ChatBody';
 import {selectChatMenu} from '../../modules/chatting';
 import {RootState} from '../../modules';
@@ -36,7 +36,7 @@ export default function ChatBoard({visible}: ChatBoardProps): JSX.Element {
   const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
   return (
     <ChatBoardStyles visible={visible}>
-      <ChatHead onClick={onChatMenuClick} clickedIdx={menuIdx} />
+      <ChatMenu onClick={onChatMenuClick} clickedIdx={menuIdx} />
       <ChatBody contentIdx={menuIdx} />
     </ChatBoardStyles>
   );

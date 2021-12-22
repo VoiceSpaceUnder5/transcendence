@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, {css} from 'styled-components';
 
-const ChatHeadList = styled.div`
+const ChatMenuList = styled.div`
   /* Layout */
   display: flex;
   flex-direction: row;
@@ -10,7 +10,7 @@ const ChatHeadList = styled.div`
   align-self: stretch;
 `;
 
-const ChatHeadItem = styled.button<{index: number; clickedIdx: number}>`
+const ChatMenuItem = styled.button<{index: number; clickedIdx: number}>`
   /* Text */
 
   font-style: normal;
@@ -57,29 +57,29 @@ const ChatHeadItem = styled.button<{index: number; clickedIdx: number}>`
   }
 `;
 
-interface ChatHeadProps {
+interface ChatMenuProps {
   onClick: (idx: number) => void;
   clickedIdx: number;
 }
 
-function ChatHead({onClick, clickedIdx}: ChatHeadProps): JSX.Element {
+function ChatMenu({onClick, clickedIdx}: ChatMenuProps): JSX.Element {
   const items = ['친구 목록', '참여 중', '채널 탐색', '채널 생성'];
   return (
-    <ChatHeadList>
+    <ChatMenuList>
       {items.map((item, idx) => {
         return (
-          <ChatHeadItem
+          <ChatMenuItem
             key={idx}
             index={idx}
             onClick={() => onClick(idx)}
             clickedIdx={clickedIdx}
           >
             {item}
-          </ChatHeadItem>
+          </ChatMenuItem>
         );
       })}
-    </ChatHeadList>
+    </ChatMenuList>
   );
 }
 
-export default ChatHead;
+export default ChatMenu;
