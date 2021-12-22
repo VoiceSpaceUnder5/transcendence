@@ -34,12 +34,13 @@ interface ChatBoardProps {
 }
 
 export default function ChatBoard({visible}: ChatBoardProps): JSX.Element {
-  const {menuIdx} = useSelector((state: RootState) => ({
+  const {menuIdx, channelId} = useSelector((state: RootState) => ({
     menuIdx: state.chatting.menuIdx,
+    channelId: state.chatting.channelId,
   }));
   const dispatch = useDispatch();
   const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
-  const [element, setElement] = useState<undefined | JSX.Element>(undefined);
+  const [element, setElement] = useState<JSX.Element | undefined>(undefined);
   useEffect(() => {
     switch (menuIdx) {
       case 0:
@@ -55,7 +56,7 @@ export default function ChatBoard({visible}: ChatBoardProps): JSX.Element {
         setElement(<CreateChannel />);
         break;
       case 4:
-        setElement(<Chatting />);
+        setElement(<Chatting id={channelId as number} />);
         break;
     }
   }, [menuIdx]);

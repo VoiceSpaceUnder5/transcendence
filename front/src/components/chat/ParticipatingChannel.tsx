@@ -1,8 +1,6 @@
 import React from 'react';
 import {MenuList} from '../common/MenuList';
 import Channel from '../channel/Channel';
-import {useDispatch} from 'react-redux';
-import {joinChannel} from '../../modules/chatting';
 
 export default function ParticipatingChannel(): JSX.Element {
   const channelList = [
@@ -19,11 +17,6 @@ export default function ParticipatingChannel(): JSX.Element {
       isPrivate: false,
     },
   ];
-  const dispatch = useDispatch();
-  const onClickChannel = (id: number) => {
-    dispatch(joinChannel(id));
-    console.log(`참여 중인 방(room ID: ${id})에 참여 시도`);
-  };
   return (
     <MenuList>
       {channelList.map(channel => (
@@ -34,7 +27,6 @@ export default function ParticipatingChannel(): JSX.Element {
           number={channel.number}
           isJoin={true}
           isPrivate={channel.isPrivate}
-          onClick={onClickChannel}
         ></Channel>
       ))}
     </MenuList>

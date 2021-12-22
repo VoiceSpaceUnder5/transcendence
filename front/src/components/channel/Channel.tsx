@@ -3,7 +3,7 @@ import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
 import {MenuInfoList, MenuInfo} from '../common/MenuList';
 import {useDispatch} from 'react-redux';
-import {selectChatMenu} from '../../modules/chatting';
+import {joinChannel} from '../../modules/chatting';
 
 const FormStyles = styled.form`
   display: flex;
@@ -57,21 +57,20 @@ export default function Channel({
 }: ChannelProps): JSX.Element {
   const [isClick, setIsClick] = useState(false);
   const onDivClick = () => {
-    if (isJoin || !isPrivate) onChatMenuClick(4);
+    if (isJoin || !isPrivate) dispatch(joinChannel(id));
     if (!isClick) setIsClick(true);
   };
   const onCancelButtonClick = () => setIsClick(false);
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(
-      `${id}랑 ${password} 보내고, 유효성 검사가 되면 채팅방으로 이동`,
-    );
-    onChatMenuClick(4);
+    console.log('비공개방');
+    onJoinChannel(id);
   };
 
   const [{password}, onChange] = useInput({password: ''});
   const dispatch = useDispatch();
-  const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
+  const onJoinChannel = (id: number) => dispatch(joinChannel(id));
   return (
     <ChannelStyles onClick={onDivClick}>
       <MenuInfoList>

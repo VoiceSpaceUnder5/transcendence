@@ -12,6 +12,7 @@ const ChattingHead = styled.div`
   flex-direction: row;
   justify-content: space-between;
   padding: 4px 16px;
+  margin-top: 2px;
   align-items: center;
   align-self: stretch;
 
@@ -40,12 +41,17 @@ const MessageForm = styled.form`
   background-color: white;
 `;
 
-export default function Chatting(): JSX.Element {
+interface ChattingProps {
+  id: number;
+}
+
+// 해당하는 채팅방의 고유한 id를 통해 채팅방 데이터를 fetching 해야 함.
+export default function Chatting({id}: ChattingProps): JSX.Element {
   const [{message}, onChange, reset] = useInput({message: ''});
+  // 이것도 서버에서 뿌려줄 것
   const [messages, setMessages] = useState<string[]>([]);
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('메시지 제출됨');
     reset();
     setMessages(messages.concat(message as string));
   };
@@ -55,7 +61,7 @@ export default function Chatting(): JSX.Element {
   return (
     <>
       <ChattingHead>
-        <Div>채널 이름</Div>
+        <Div>채널 ID: {id}</Div>
       </ChattingHead>
       <MessageBoxStyles>
         {messages.map((message, idx) => (

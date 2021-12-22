@@ -1,8 +1,6 @@
 import React from 'react';
 import Channel from '../channel/Channel';
 import {MenuList} from '../common/MenuList';
-import {useDispatch} from 'react-redux';
-import {joinChannel} from '../../modules/chatting';
 
 export default function SearchChannel(): JSX.Element {
   const channelList = [
@@ -55,11 +53,6 @@ export default function SearchChannel(): JSX.Element {
       isPrivate: false,
     },
   ];
-  const dispatch = useDispatch();
-  const onClickChannel = (id: number) => {
-    dispatch(joinChannel(id));
-    console.log(`참여 중이 아닌 방(room ID: ${id})에 참여 시도`);
-  };
   return (
     <MenuList>
       {channelList.map(channel => (
@@ -70,7 +63,6 @@ export default function SearchChannel(): JSX.Element {
           isJoin={false}
           number={channel.number}
           isPrivate={channel.isPrivate}
-          onClick={onClickChannel}
         ></Channel>
       ))}
     </MenuList>
