@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
-import ChannelInfoList from './ChannelInfoList';
-import ChannelInfo from './ChannelInfo';
+import {MenuInfoList, MenuInfo} from '../common/MenuList';
 import {useDispatch} from 'react-redux';
 import {selectChatMenu} from '../../modules/chatting';
 
@@ -75,10 +74,10 @@ export default function Channel({
   const onChatMenuClick = (idx: number) => dispatch(selectChatMenu(idx));
   return (
     <ChannelStyles onClick={onDivClick}>
-      <ChannelInfoList>
+      <MenuInfoList>
         {isPrivate && isClick && !isJoin ? (
           <>
-            <ChannelInfo>비밀번호를 입력하세요.</ChannelInfo>
+            <MenuInfo>비밀번호를 입력하세요.</MenuInfo>
             <FormStyles onSubmit={onSubmit}>
               <FormInputStyles
                 type="password"
@@ -94,14 +93,14 @@ export default function Channel({
           </>
         ) : (
           <>
-            <ChannelInfo>
+            <MenuInfo>
               {name}
               {isPrivate && ' (비)'}
-            </ChannelInfo>
-            <ChannelInfo>{number}명</ChannelInfo>
+            </MenuInfo>
+            <MenuInfo>{number}명</MenuInfo>
           </>
         )}
-      </ChannelInfoList>
+      </MenuInfoList>
     </ChannelStyles>
   );
 }

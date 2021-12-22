@@ -1,5 +1,5 @@
 import React from 'react';
-import FriendsList from '../friend/FriendList';
+import {MenuList} from '../common/MenuList';
 import Friend from '../friend/Friend';
 
 export default function ChatFriendList(): JSX.Element {
@@ -24,7 +24,7 @@ export default function ChatFriendList(): JSX.Element {
     },
   ];
   return (
-    <FriendsList>
+    <MenuList>
       {friendList.map(friend => (
         <Friend
           key={friend.userId}
@@ -34,6 +34,6 @@ export default function ChatFriendList(): JSX.Element {
           isOnline={friend.isOnline}
         ></Friend>
       ))}
-    </FriendsList>
+    </MenuList>
   );
 }

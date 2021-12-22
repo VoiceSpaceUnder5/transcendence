@@ -1,10 +1,8 @@
 import React from 'react';
-import ChannelList from '../channel/ChannelList';
 import Channel from '../channel/Channel';
-
+import {MenuList} from '../common/MenuList';
 import {useDispatch} from 'react-redux';
 import {joinChannel} from '../../modules/chatting';
-// import ChannelInfo from '../channel/ChannelInfo';
 
 export default function SearchChannel(): JSX.Element {
   const channelList = [
@@ -63,7 +61,7 @@ export default function SearchChannel(): JSX.Element {
     console.log(`참여 중이 아닌 방(room ID: ${id})에 참여 시도`);
   };
   return (
-    <ChannelList>
+    <MenuList>
       {channelList.map(channel => (
         <Channel
           key={channel.id}
@@ -75,6 +73,6 @@ export default function SearchChannel(): JSX.Element {
           onClick={onClickChannel}
         ></Channel>
       ))}
-    </ChannelList>
+    </MenuList>
   );
 }

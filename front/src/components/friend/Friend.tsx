@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import FriendInfo from './FriendInfo';
-import FriendInfoList from './FriendInfoList';
+import {MenuInfoList, MenuInfo} from '../common/MenuList';
 
 const FriendStyle = styled.div`
   display: flex;
@@ -44,11 +43,11 @@ export default function Friend({
   return (
     <FriendStyle>
       <ProfileImageStyle src="testImage.png" isOnline={isOnline} />
-      <FriendInfoList>
-        {userId && <FriendInfo>{userId}</FriendInfo>}
-        {description && <FriendInfo>{description}</FriendInfo>}
-        {matchRecord && <FriendInfo>{matchRecord}</FriendInfo>}
-      </FriendInfoList>
+      <MenuInfoList>
+        {userId && <MenuInfo>{userId}</MenuInfo>}
+        {description && <MenuInfo>{description}</MenuInfo>}
+        {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
+      </MenuInfoList>
     </FriendStyle>
   );
 }
