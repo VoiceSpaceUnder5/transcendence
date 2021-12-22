@@ -1,29 +1,40 @@
+// action 타입
 const SELECT_MENU = 'chatting/SELECT_MENU' as const;
 const JOIN = 'chatting/JOIN' as const;
 const AFTER_JOIN = 'chatting/AFTER_JOIN' as const;
 const EXIT = 'chatting/EXIT' as const;
 
-// eslint-disable-next-line
-export const selectMenu = (menuIdx: number) => ({
+// action 생성 함수
+// 아래는 action 생성 함수의 return type
+type ActionReturnType = {
+  type: string;
+  menuIdx: number;
+  channelId?: number;
+  isPrivate?: boolean;
+};
+
+export const selectMenu = (menuIdx: number): ActionReturnType => ({
   type: SELECT_MENU,
   menuIdx,
 });
-// eslint-disable-next-line
-export const join = (channelId: number, isPrivate: boolean) => {
+
+export const join = (
+  channelId: number,
+  isPrivate: boolean,
+): ActionReturnType => {
   const privateRoom = isPrivate ? '비공개방' : '공개방';
   console.log(`channel ID:${channelId}(${privateRoom}) 입장 시도`);
   return {type: JOIN, menuIdx: 4, channelId, isPrivate};
 };
 
-// eslint-disable-next-line
-export const afterJoin = (channelId: number) => {
+export const afterJoin = (channelId: number): ActionReturnType => {
   console.log(`channel ID:${channelId}에 입장 성공!`);
   return {type: AFTER_JOIN, menuIdx: 5, channelId};
 };
 
-// eslint-disable-next-line
-export const exit = () => ({
+export const exit = (): ActionReturnType => ({
   type: EXIT,
+  menuIdx: 1, // 채팅방에서 아예 퇴장 시 1번으로
 });
 
 interface StateTypes {
@@ -36,14 +47,10 @@ const initialState: StateTypes = {
   menuIdx: 1,
 };
 
-type ChattingAction =
-  | ReturnType<typeof selectMenu>
-  | ReturnType<typeof join>
-  | ReturnType<typeof afterJoin>
-  | ReturnType<typeof exit>;
-
-// eslint-disable-next-line
-export default function chatting(state = initialState, action: ChattingAction) {
+export default function chatting(
+  state = initialState,
+  action: ActionReturnType,
+): StateTypes {
   switch (action.type) {
     case SELECT_MENU:
       return {
@@ -53,14 +60,12 @@ export default function chatting(state = initialState, action: ChattingAction) {
       };
     case JOIN:
       return {
-        ...state,
         menuIdx: action.menuIdx,
         channelId: action.channelId,
         isPrivate: action.isPrivate,
       };
     case AFTER_JOIN:
       return {
-        ...state,
         menuIdx: action.menuIdx,
         channelId: action.channelId,
         isPrivate: undefined,

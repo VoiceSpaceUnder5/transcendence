@@ -60,10 +60,7 @@ const NavToggle = styled.div`
 function Navbar(): JSX.Element {
   const [isToggle, setIsToggle] = useState<boolean>(false);
   const navigate = useNavigate();
-  const onToggle = () => {
-    console.log(isToggle);
-    setIsToggle(!isToggle);
-  };
+  const onToggle = () => setIsToggle(!isToggle);
   return (
     <NavbarBackground>
       <Nav align="start">
@@ -97,4 +94,4 @@ function Navbar(): JSX.Element {
   );
 }
 
-export default React.memo(Navbar);
+export default Navbar;

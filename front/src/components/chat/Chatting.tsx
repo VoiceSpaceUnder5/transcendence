@@ -46,7 +46,6 @@ interface ChattingProps {
 
 // 해당하는 채팅방의 고유한 id를 통해 채팅방 데이터를 fetching 해야 함.
 export default function Chatting({channelId}: ChattingProps): JSX.Element {
-  console.log(`현재 켜져있는 채팅 ID: ${channelId}`);
   const [{message}, onChange, reset] = useInput({message: ''});
   const dispatch = useDispatch();
   const onBackClick = (idx: number) => dispatch(selectMenu(idx));
