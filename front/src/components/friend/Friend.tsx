@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import {MenuInfoList, MenuInfo} from '../common/MenuList';
 
@@ -13,6 +13,10 @@ const FriendStyle = styled.div`
   background-color: ${props => props.theme.lightButtonBg};
   border-radius: 12.5px;
 
+  &: hover {
+    background-color: ${props => props.theme.greyButtonBg};
+  }
+
   ${props => props.theme.padSize} {
     width: 90%;
   }
@@ -24,6 +28,35 @@ const ProfileImageStyle = styled.img<{isOnline?: boolean}>`
   border-radius: 50%;
   border: 3px solid
     ${props => (props.isOnline ? `grey;` : `${props.theme.online};`)};
+`;
+
+const FriendOptions = styled.div<{visible: boolean}>`
+  display: flex;
+  width: 80%;
+  max-width: 300px;
+  height: 72px;
+  padding: 0px 8px;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  display: ${props => !props.visible && 'none'};
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 12.5px;
+`;
+
+const OptionButton = styled.button`
+  width: 80px;
+  white-space: nowrap;
+  height: 40px;
+  margin: 16px 8px;
+  padding: 8px;
+  background-color: #bbbbbb;
+  border: 0px;
+  border-radius: 8px;
+
+  &: hover {
+    background-color: #cccccc;
+  }
 `;
 
 interface FriendProps {
@@ -41,57 +74,22 @@ export default function Friend({
   matchRecord,
   description,
 }: FriendProps): JSX.Element {
+  const [visible, setVisible] = useState(false);
+  const onDivClick = () => !visible && setVisible(true);
+  const onBackBtnClick = () => setVisible(false);
   return (
-    <FriendStyle>
+    <FriendStyle onClick={onDivClick}>
       <ProfileImageStyle src={imagePath} isOnline={isOnline} />
       <MenuInfoList>
         {userId && <MenuInfo>{userId}</MenuInfo>}
         {description && <MenuInfo>{description}</MenuInfo>}
         {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
       </MenuInfoList>
+      <FriendOptions visible={visible}>
+        <OptionButton>대화하기</OptionButton>
+        <OptionButton>게임신청</OptionButton>
+        <OptionButton onClick={onBackBtnClick}>뒤로</OptionButton>
+      </FriendOptions>
     </FriendStyle>
   );
 }
-
-// 클릭 시 게임, 채팅, 친구신청하는 데에 아마도 쓸듯
-// const FormStyles = styled.form`
-//   display: flex;
-//   margin: 2px 0px;
-//   padding: 2px 8px;
-// `;
-
-// const FormInputStyles = styled.input`
-//   width: 52%;
-// `;
-
-// const FormButtonStyles = styled.button`
-//   padding: 0px 4px;
-// `;
-
-// const [isClick, setIsClick] = useState(false);
-// const onCancelButtonClick = () => setIsClick(false);
-
-// const onSubmit = (e: React.FormEvent) => {
-//   e.preventDefault();
-//   console.log('비공개방');
-//   onJoinChannel(id);
-// };
-
-// const [{password}, onChange] = useInput({password: ''});
-//  {isPrivate && isClick && !isJoin ? (
-// <>
-//   <MenuInfo>비밀번호를 입력하세요.</MenuInfo>
-//   <FormStyles onSubmit={onSubmit}>
-//     <FormInputStyles
-//       type="password"
-//       name="password"
-//       value={password}
-//       onChange={onChange}
-//     />
-//     <FormButtonStyles type="submit">입력</FormButtonStyles>
-//     <FormButtonStyles type="button" onClick={onCancelButtonClick}>
-//       취소
-//     </FormButtonStyles>
-//   </FormStyles>
-// </>
-// ) : (

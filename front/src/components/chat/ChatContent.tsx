@@ -7,7 +7,7 @@ const ChatContentStyle = styled.div<{idx: number}>`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding-top: 8px;
+  padding-top: 4px;
   ${props => props.idx === 4 && `padding-top: 0px;`}
 
   /* Size */

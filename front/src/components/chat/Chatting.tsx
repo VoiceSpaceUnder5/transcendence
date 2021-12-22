@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import {selectMenu} from '../../modules/chatting';
 import Div from '../common/Div';
 import Button from '../common/Button';
+import ChannelPeople from './ChannelPeople';
 
 const ChattingHead = styled.div`
   /* Layout */
@@ -61,7 +62,8 @@ export default function Chatting({channelId}: ChattingProps): JSX.Element {
   return (
     <>
       <ChattingHead>
-        <Div>채널 ID: {channelId}</Div>
+        <Div>채널 이름 예정: {channelId}</Div>
+        <ChannelPeople channelId={channelId} />
       </ChattingHead>
       <MessageBoxStyles>
         {messages.map((message, idx) => (
