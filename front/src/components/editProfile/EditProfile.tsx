@@ -8,7 +8,7 @@ import Textarea from '../common/Textarea';
 import Button from '../common/Button';
 import {useLocation, useNavigate} from 'react-router-dom';
 
-const ProfileImgStyle = styled.div`
+const ProfileImgStyle = styled.img`
   width: 288px;
   height: 288px;
   border-radius: 25px;
@@ -42,6 +42,7 @@ export default function EditProfile(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
   const [inputs, setInputs] = useState({
+    imagePath: '',
     userId: '',
     email: '',
     description: '',
@@ -57,8 +58,8 @@ export default function EditProfile(): JSX.Element {
     });
   };
   useEffect(() => {
-    const {userId, email, description} = location.state;
-    setInputs({userId, email, description});
+    const {imagePath, userId, email, description} = location.state;
+    setInputs({imagePath, userId, email, description});
   }, []);
   return (
     <BackBoard size="hug">
@@ -66,11 +67,11 @@ export default function EditProfile(): JSX.Element {
       <WholeLayout>
         <InnerLayout>
           <Div>프로필 사진</Div>
-          <ProfileImgStyle></ProfileImgStyle>
+          <ProfileImgStyle src={inputs.imagePath}></ProfileImgStyle>
         </InnerLayout>
         <InnerLayout>
           <Div>이름</Div>
-          <Input name="name" onChange={onChange} value={inputs.userId} />
+          <Input name="userId" onChange={onChange} value={inputs.userId} />
           <Div>email</Div>
           <Input name="email" onChange={onChange} value={inputs.email} />
           <Div>자기소개</Div>
@@ -82,11 +83,9 @@ export default function EditProfile(): JSX.Element {
         </InnerLayout>
       </WholeLayout>
       <div
-        style={{display: 'flex', width: '20%', justifyContent: 'space-evenly'}}
+        style={{display: 'flex', width: '40%', justifyContent: 'space-evenly'}}
       >
-        <Button onClick={() => navigate('/profile', {state: inputs})}>
-          확인
-        </Button>
+        <Button onClick={() => navigate('/profile')}>확인</Button>
         <Button onClick={() => navigate('/profile')}>취소</Button>
       </div>
     </BackBoard>

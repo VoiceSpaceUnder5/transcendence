@@ -1,6 +1,6 @@
 import React from 'react';
 import BackBoard from '../common/BackBoard';
-import FriendsList from '../friend/FriendList';
+import {MenuList} from '../common/MenuList';
 import Friend from '../friend/Friend';
 import TitleDiv from '../common/TitleDiv';
 
@@ -19,7 +19,7 @@ function MatchRecordBoard({
   return (
     <BackBoard>
       <TitleDiv>대전 기록</TitleDiv>
-      <FriendsList>
+      <MenuList>
         {matchRecordData.map(matchRecord => (
           <Friend
             key={matchRecord.userId}
@@ -29,7 +29,7 @@ function MatchRecordBoard({
             matchRecord={matchRecord.record}
           ></Friend>
         ))}
-      </FriendsList>
+      </MenuList>
     </BackBoard>
   );
 }

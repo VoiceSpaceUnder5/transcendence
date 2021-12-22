@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ChannelInfoList from './ChannelInfoList';
-import ChannelInfo from './ChannelInfo';
+import {MenuInfoList, MenuInfo} from '../common/MenuList';
 
 const ChannelStyles = styled.div`
   display: flex;
@@ -17,28 +16,35 @@ const ChannelStyles = styled.div`
   ${props => props.theme.padSize} {
     width: 90%;
   }
+
+  &: hover {
+    background-color: ${props => props.theme.greyButtonBg};
+  }
 `;
 
 interface ChannelProps {
-  channelId: string;
-  channelPeople: number;
+  id: number;
+  name: string;
+  number: number;
   isPrivate: boolean;
+  onClick: () => void;
 }
 
 export default function Channel({
-  channelId,
-  channelPeople,
+  name,
+  number,
   isPrivate,
+  onClick,
 }: ChannelProps): JSX.Element {
   return (
-    <ChannelStyles>
-      <ChannelInfoList>
-        <ChannelInfo>
-          {channelId}
-          {isPrivate && ' 🔑'}
-        </ChannelInfo>
-        <ChannelInfo>{channelPeople}명</ChannelInfo>
-      </ChannelInfoList>
+    <ChannelStyles onClick={onClick}>
+      <MenuInfoList>
+        <MenuInfo>
+          {name}
+          {isPrivate && ' (비)'}
+        </MenuInfo>
+        <MenuInfo>{number}명</MenuInfo>
+      </MenuInfoList>
     </ChannelStyles>
   );
 }

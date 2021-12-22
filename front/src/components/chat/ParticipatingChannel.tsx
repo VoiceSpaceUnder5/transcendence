@@ -1,30 +1,38 @@
 import React from 'react';
-import ChannelList from '../channel/ChannelList';
+import {MenuList} from '../common/MenuList';
 import Channel from '../channel/Channel';
+import {useDispatch} from 'react-redux';
+import {afterJoin} from '../../modules/chatting';
 
 export default function ParticipatingChannel(): JSX.Element {
   const channelList = [
     {
-      channelId: '같이 코딩하실 분',
-      channelPeople: 3,
+      id: 0,
+      name: '노실 분?',
+      number: 3,
       isPrivate: true,
     },
     {
-      channelId: '게임',
-      channelPeople: 50,
+      id: 1,
+      name: '윗방처럼 놀면 망함',
+      number: 50,
       isPrivate: false,
     },
   ];
+  const dispatch = useDispatch();
+  const afterJoinChannel = (id: number) => dispatch(afterJoin(id));
   return (
-    <ChannelList>
-      {channelList.map((channel, idx) => (
+    <MenuList>
+      {channelList.map(channel => (
         <Channel
-          key={idx}
-          channelId={channel.channelId}
-          channelPeople={channel.channelPeople}
+          key={channel.id}
+          id={channel.id}
+          name={channel.name}
+          number={channel.number}
           isPrivate={channel.isPrivate}
+          onClick={() => afterJoinChannel(channel.id)}
         ></Channel>
       ))}
-    </ChannelList>
+    </MenuList>
   );
 }

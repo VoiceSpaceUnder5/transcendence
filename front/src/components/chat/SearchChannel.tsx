@@ -1,60 +1,75 @@
 import React from 'react';
-import ChannelList from '../channel/ChannelList';
 import Channel from '../channel/Channel';
+import {MenuList} from '../common/MenuList';
+import {useDispatch} from 'react-redux';
+import {join} from '../../modules/chatting';
 
 export default function SearchChannel(): JSX.Element {
   const channelList = [
     {
-      channelId: '혼자 코딩하실 분',
-      channelPeople: 3,
+      id: 0,
+      name: '혼자 코딩하실 분',
+      number: 3,
       isPrivate: true,
     },
     {
-      channelId: '다른 게임',
-      channelPeople: 50,
+      id: 1,
+      name: '다른 게임',
+      number: 50,
       isPrivate: false,
     },
     {
-      channelId: '놀 사람',
-      channelPeople: 60,
+      id: 2,
+      name: '놀 사람',
+      number: 60,
       isPrivate: true,
     },
     {
-      channelId: '한강 온도 체크할 사람',
-      channelPeople: 10,
+      id: 3,
+      name: '한강 온도 체크할 사람',
+      number: 10,
       isPrivate: false,
     },
     {
-      channelId: '공부하실 분',
-      channelPeople: 3,
+      id: 4,
+      name: '공부하실 분',
+      number: 3,
       isPrivate: false,
     },
     {
-      channelId: '즐',
-      channelPeople: 3,
+      id: 5,
+      name: '즐',
+      number: 3,
       isPrivate: false,
     },
     {
-      channelId: '즐',
-      channelPeople: 3,
+      id: 6,
+      name: '즐',
+      number: 3,
       isPrivate: false,
     },
     {
-      channelId: '즐',
-      channelPeople: 3,
+      id: 7,
+      name: '즐',
+      number: 3,
       isPrivate: false,
     },
   ];
+  const dispatch = useDispatch();
+  const joinChannel = (id: number, isPrivate: boolean) =>
+    dispatch(join(id, isPrivate));
   return (
-    <ChannelList>
-      {channelList.map((channel, idx) => (
+    <MenuList>
+      {channelList.map(channel => (
         <Channel
-          key={idx}
-          channelId={channel.channelId}
-          channelPeople={channel.channelPeople}
+          key={channel.id}
+          id={channel.id}
+          name={channel.name}
+          number={channel.number}
           isPrivate={channel.isPrivate}
+          onClick={() => joinChannel(channel.id, channel.isPrivate)}
         ></Channel>
       ))}
-    </ChannelList>
+    </MenuList>
   );
 }

@@ -9,6 +9,7 @@ const DivStyle = styled.div<{
 }>`
   display: flex;
   align-self: stretch;
+  align-items: center;
   ${props => props.align === 'center' && `justify-content: center;`}
   // 매직넘버 어케 하징..
   ${props => props.height === 'full' && `height: 182px; overflow-y: auto;`} 
