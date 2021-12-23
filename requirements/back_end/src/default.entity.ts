@@ -7,10 +7,6 @@ import {
 
 @ObjectType()
 export abstract class DefaultEntity {
-  @Field((type) => Int)
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Field((type) => Date)
   @CreateDateColumn()
   created_at: Date;
