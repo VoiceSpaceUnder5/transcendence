@@ -42,7 +42,7 @@ const LadderMarkBoxStyle = styled.div`
 const ImageStyle = styled.img`
   font-style: normal;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 100%;
   line-height: 17px;
   text-align: center;
 
@@ -60,7 +60,7 @@ const TextStyle = styled.div`
 
   font-style: normal;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 100%;
   line-height: 24px;
   text-align: center;
 
