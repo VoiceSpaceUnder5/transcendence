@@ -7,6 +7,7 @@ import {useNavigate} from 'react-router-dom';
 import {HiCube, HiUserCircle, HiMenu} from 'react-icons/hi';
 import Button from './Button';
 import GameStart from './GameStart';
+import Login from './Login';
 
 const NavbarBackground = styled.div`
   /* Layout */
@@ -86,7 +87,7 @@ function Navbar(): JSX.Element {
           <Button bg="dark" icon onClick={() => navigate('/profile')}>
             <HiUserCircle />
           </Button>
-          <Button bg="dark">Login</Button>
+          <Login></Login>
         </NavCollapse>
       </Nav>
       <GameStart />
