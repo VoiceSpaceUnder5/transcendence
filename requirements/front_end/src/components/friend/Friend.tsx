@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import {MenuInfoList, MenuInfo} from '../common/MenuList';
+import {OptionButton} from '../common/Button';
+import DirectMessages from '../chat/DirectMessage';
 
 const FriendStyle = styled.div`
   display: flex;
@@ -44,21 +46,6 @@ const FriendOptions = styled.div<{visible: boolean}>`
   border-radius: 12.5px;
 `;
 
-const OptionButton = styled.button`
-  width: 80px;
-  white-space: nowrap;
-  height: 40px;
-  margin: 16px 8px;
-  padding: 8px;
-  background-color: #bbbbbb;
-  border: 0px;
-  border-radius: 8px;
-
-  &: hover {
-    background-color: #cccccc;
-  }
-`;
-
 interface FriendProps {
   imagePath?: string;
   userId: string;
@@ -76,7 +63,7 @@ export default function Friend({
 }: FriendProps): JSX.Element {
   const [visible, setVisible] = useState(false);
   const onDivClick = () => !visible && setVisible(true);
-  const onBackBtnClick = () => setVisible(false);
+  const changeVisible = () => setVisible(false);
   return (
     <FriendStyle onClick={onDivClick}>
       <ProfileImageStyle src={imagePath} isOnline={isOnline} />
@@ -86,9 +73,9 @@ export default function Friend({
         {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
       </MenuInfoList>
       <FriendOptions visible={visible}>
-        <OptionButton>대화하기</OptionButton>
+        <DirectMessages changeVisible={changeVisible} />
         <OptionButton>게임신청</OptionButton>
-        <OptionButton onClick={onBackBtnClick}>뒤로</OptionButton>
+        <OptionButton onClick={changeVisible}>뒤로</OptionButton>
       </FriendOptions>
     </FriendStyle>
   );

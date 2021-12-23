@@ -39,6 +39,7 @@ const MenuInfoStyle = styled.div`
   margin: 2px 0px;
   padding: 2px 8px;
   height: 22px;
+  font-size: 90%;
   white-space: nowrap;
 
   background: ${props => props.theme.greyDivBg};

@@ -15,7 +15,7 @@ const ChatMenuItem = styled.button<{index: number; clickedIdx: number}>`
 
   font-style: normal;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 100%;
   line-height: 19px;
   text-align: center;
 

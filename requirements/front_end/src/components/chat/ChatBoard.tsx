@@ -12,14 +12,14 @@ import CreateChannel from './CreateChannel';
 import JoinChatting from './JoinChatting';
 import Chatting from './Chatting';
 
-const ChatBoardStyles = styled.div<{visible: boolean}>`
+const ChatBoardStyles = styled.div<{isOpen: boolean}>`
   /* Layout */
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 8px;
 
-  ${props => !props.visible && `display: none;`}
+  ${props => !props.isOpen && `display: none;`}
 
   /* Size */
   width: 320px;
@@ -31,10 +31,10 @@ const ChatBoardStyles = styled.div<{visible: boolean}>`
 `;
 
 interface ChatBoardProps {
-  visible: boolean;
+  isOpen: boolean;
 }
 
-export default function ChatBoard({visible}: ChatBoardProps): JSX.Element {
+export default function ChatBoard({isOpen}: ChatBoardProps): JSX.Element {
   const {menuIdx, channelId, isPrivate} = useSelector((state: RootState) => ({
     menuIdx: state.chatting.menuIdx,
     channelId: state.chatting.channelId,
@@ -71,7 +71,7 @@ export default function ChatBoard({visible}: ChatBoardProps): JSX.Element {
     }
   }, [menuIdx]);
   return (
-    <ChatBoardStyles visible={visible}>
+    <ChatBoardStyles isOpen={isOpen}>
       <ChatMenu onClick={onChatMenuClick} clickedIdx={menuIdx} />
       <ChatContent idx={menuIdx}>{element}</ChatContent>
     </ChatBoardStyles>

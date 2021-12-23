@@ -17,7 +17,7 @@ const DivStyle = styled.div<{
   /* font */
   font-style: normal;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 100%;
   line-height: 19px;
 
   background-color: ${props =>

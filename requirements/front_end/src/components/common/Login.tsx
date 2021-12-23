@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from './Button';
 
-export default function Login() {
+export default function Login(): JSX.Element {
   // 로그인 동작
   return <Button bg="dark">Login</Button>;
 }

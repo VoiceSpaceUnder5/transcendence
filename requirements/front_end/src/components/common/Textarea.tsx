@@ -6,7 +6,7 @@ const TextareaStyle = styled.textarea`
   font-family: inherit;
   font-style: normal;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 100%;
   line-height: 16px;
 
   width: 98%;
