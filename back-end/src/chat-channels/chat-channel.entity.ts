@@ -1,0 +1,37 @@
+import { Field, ObjectType } from '@nestjs/graphql';
+import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
+import { Code } from 'src/code/code.entity';
+import { DefaultEntity } from 'src/default.entity';
+import { Message } from 'src/message/message.entity';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+
+@ObjectType({ description: 'Chatting Channel Data' })
+@Entity()
+export class ChatChannel extends DefaultEntity {
+  @Field((type) => String)
+  @Column({ type: 'varchar', length: 30 })
+  name: string;
+
+  @Field((type) => String)
+  @Column({ type: 'varchar', length: 10 })
+  code_type: string;
+
+  @Field((type) => String, { nullable: true })
+  @Column({ type: 'varchar', length: 25, nullable: true })
+  password?: string;
+
+  @Field((type) => Code)
+  @ManyToOne((type) => Code, (code) => code.code)
+  type: Code;
+
+  @Field(() => [ChatChannelUser])
+  @OneToMany(
+    () => ChatChannelUser,
+    (chat_channel_user) => chat_channel_user.chat_channel,
+  )
+  chat_channel_users: ChatChannelUser[];
+
+  @Field(() => [Message])
+  @OneToMany(() => Message, (message) => message.chat_channel)
+  messages: Message[];
+}
