@@ -1,5 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
+import {RootState} from '../../modules';
+import {toggleChat} from '../../modules/chatting';
 import ChatBoard from './ChatBoard';
 
 const ChatBackground = styled.div`
@@ -18,7 +21,7 @@ const ChatButton = styled.button`
   /* Text */
   font-style: normal;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 100%;
   line-height: 19px;
   text-align: center;
   color: ${props => props.theme.lightButtonText};
@@ -35,15 +38,20 @@ const ChatButton = styled.button`
 `;
 
 export default function Chat(): JSX.Element {
-  const [visible, setVisible] = useState(false);
-  const onClick = () => {
-    setVisible(!visible);
-  };
+  // const [isOpen, setisOpen] = useState(false);
+  // const onClick = () => {
+  //   setisOpen(!isOpen);
+  // };
+  const {isOpen} = useSelector((state: RootState) => ({
+    isOpen: state.chatting.isOpen,
+  }));
+  const dispatch = useDispatch();
+  const onClick = () => dispatch(toggleChat(isOpen));
 
   return (
     <ChatBackground>
-      <ChatBoard visible={visible} />
-      <ChatButton onClick={onClick}>{!visible ? '채팅' : '닫기'}</ChatButton>
+      <ChatBoard isOpen={isOpen} />
+      <ChatButton onClick={onClick}>{!isOpen ? '채팅' : '닫기'}</ChatButton>
     </ChatBackground>
   );
 }

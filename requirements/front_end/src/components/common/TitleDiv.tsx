@@ -10,7 +10,7 @@ const TitleDivStyle = styled.div`
 
   font-style: normal;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 120%;
   line-height: 24px;
   text-align: center;
 

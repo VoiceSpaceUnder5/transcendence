@@ -1,7 +1,20 @@
-import React, {FormEvent} from 'react';
-
-import {ReactNode} from 'react';
+import React, {ReactNode, FormEvent} from 'react';
 import styled, {css} from 'styled-components';
+
+export const OptionButton = styled.button`
+  width: 80px;
+  white-space: nowrap;
+  height: 40px;
+  margin: 16px 8px;
+  padding: 8px;
+  background-color: #bbbbbb;
+  border: 0px;
+  border-radius: 8px;
+
+  &: hover {
+    background-color: #cccccc;
+  }
+`;
 
 const ButtonStyle = styled.button.attrs(props => ({
   type: props.type === 'submit' ? ('submit' as string) : ('button' as string),
@@ -19,10 +32,10 @@ const ButtonStyle = styled.button.attrs(props => ({
   ${props =>
     props.icon
       ? css`
-          font-size: 24px;
+          font-size: 150%;
         `
       : css`
-          font-size: 16px;
+          font-size: 100%;
         `}
   line-height: 19px;
   text-align: center;

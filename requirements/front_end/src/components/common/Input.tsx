@@ -12,7 +12,7 @@ const InputStyle = styled.input<{
   /* font */
   font-style: normal;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 100%;
   line-height: 16px;
 
   border-radius: 4px;
