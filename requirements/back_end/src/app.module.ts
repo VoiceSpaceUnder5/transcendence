@@ -31,7 +31,7 @@ import { Message } from './message/message.entity';
     ConfigModule.forRoot({ envFilePath: '.dev.env' }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'db', // docker-compose service 도메인으로 사용되나?
       port: 5432,
       username: 'kilee',
       password: 'kilee',
