@@ -1,4 +1,7 @@
 import React from 'react';
+import Body from '../components/common/Body';
+import Navbar from '../components/common/Navbar';
+import Chat from '../components/chat/Chat';
 import {
   BackboardBoxLayout,
   BackboardBoxInnerLayout,
@@ -41,15 +44,19 @@ function HomePage(): JSX.Element {
   ];
   return (
     <>
-      <BackboardBoxLayout>
-        <BackboardBoxInnerLayout>
-          <MatchRecord matchRecordData={matchRecordData} />
-        </BackboardBoxInnerLayout>
-        <BackboardBoxInnerLayout>
-          <Ladder ladderData={ladderData} />
-          <AchievementBoard achievementData={achievementData} />
-        </BackboardBoxInnerLayout>
-      </BackboardBoxLayout>
+      <Body>
+        <Navbar />
+        <BackboardBoxLayout>
+          <BackboardBoxInnerLayout>
+            <MatchRecord matchRecordData={matchRecordData} />
+          </BackboardBoxInnerLayout>
+          <BackboardBoxInnerLayout>
+            <Ladder ladderData={ladderData} />
+            <AchievementBoard achievementData={achievementData} />
+          </BackboardBoxInnerLayout>
+        </BackboardBoxLayout>
+        <Chat />
+      </Body>
     </>
   );
 }
