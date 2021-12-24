@@ -13,10 +13,10 @@ services:
       POSTGRES_PASSWORD: "${DB_USER_PASSWORD}"
     # volumes:
     #   - ${POSTGRES_HOME_DIR}/data/:/var/lib/postgresql/data
-  back:
-    container_name: back_end
-    build: ${BACKEND_PATH}
-    ports:
-      - 3000:3000
-    # links:
-    #   - "db:databas"
+  # back:
+  #   container_name: back_end
+  #   build: ${BACKEND_PATH}
+  #   ports:
+  #     - 3000:3000
+  #   # links:
+  #   #   - "db:databas"
