@@ -3,12 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Strategy, VarifyCallback } from 'passport-42';
 import { ConfigService } from '@nestjs/config';
+import { CodeService } from 'src/code/code.service';
 
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, 'fortyTwo') {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
+    private readonly codeService: CodeService,
   ) {
     super({
       clientID: configService.get<string>('FT_CLIENT_ID'),
@@ -32,6 +34,6 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, 'fortyTwo') {
       email: emails[0].value,
       profile_image: profileUrl,
     };
-    done(null, user);
+    return done(null, user);
   }
 }

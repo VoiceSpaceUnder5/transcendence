@@ -12,6 +12,11 @@ export class CodeResolver {
     return this.codeService.findCodes();
   }
 
+  @Query(() => Code)
+  async getCodeByCode(@Args('code', { type: () => String }) code: string) {
+    return await this.codeService.findCodeByCode(code);
+  }
+
   @Mutation(() => Code)
   async createCode(@Args('createCodeInput') createCodeInput: CreateCodeInput) {
     return this.codeService.create(createCodeInput);

@@ -6,7 +6,7 @@ import { CodeService } from './code.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Code])],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, CodeService],
   providers: [CodeResolver, CodeService],
 })
 export class CodeModule {}

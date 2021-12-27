@@ -65,15 +65,16 @@ type Query {
   users: [User]!
   getUserById(user_id: Int!): User!
   getUsersByName(user_name: String!): [User!]!
+  codes: [Code]!
+  getCodeByCode(code: String!): Code!
   chatChannels: [ChatChannel]!
   chatChannelUsers: [ChatChannelUser]!
-  codes: [Code]!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
-  createChannel(createChannelInput: CreateChannelInput!): ChatChannel!
   createCode(createCodeInput: CreateCodeInput!): Code!
+  createChannel(createChannelInput: CreateChannelInput!): ChatChannel!
 }
 
 input CreateUserInput {
@@ -87,15 +88,15 @@ input CreateUserInput {
   profile_image: String
 }
 
-input CreateChannelInput {
-  name: String!
-  code_type: String!
-  password: String
-}
-
 input CreateCodeInput {
   group: String!
   code: String!
   label_korean: String
   label_english: String
+}
+
+input CreateChannelInput {
+  name: String!
+  code_type: String!
+  password: String
 }
