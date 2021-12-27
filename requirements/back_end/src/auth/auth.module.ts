@@ -8,9 +8,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtAccessStrategy } from './jwt.strategy';
 import { FortyTwoStrategy } from './fortytwo.strategy';
 import { ConfigModule } from '@nestjs/config';
+import { CodeModule } from 'src/code/code.module';
 
 @Module({
-  imports: [UsersModule, PassportModule, ConfigModule, JwtModule.register({})],
+  imports: [
+    UsersModule,
+    CodeModule,
+    PassportModule,
+    ConfigModule,
+    JwtModule.register({}),
+  ],
   providers: [AuthService, LocalStrategy, JwtAccessStrategy, FortyTwoStrategy],
   controllers: [AuthController],
   exports: [AuthService],

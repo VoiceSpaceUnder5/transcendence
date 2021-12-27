@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-import { config } from 'process';
 import { CreateUserInput } from 'src/users/dto/create-user.input';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -24,6 +23,7 @@ export class AuthService {
   }
 
   async login(user: User, res?: Response) {
+    console.log('In login!');
     if (res) {
       const payload = { username: user.name, sub: user.id };
       console.log('로그인 유저 :', user.name);
@@ -36,16 +36,19 @@ export class AuthService {
         secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
       });
       res.cookie('accessToken', accessToken, {
-        maxAge: 30000,
+        maxAge: 300000000000,
+        domain: '.ts.io',
         // maxAge: +this.configService.get<string>('ACCESS_TOKEN_TIME'),
       });
       res.cookie('refreshToken', refreshToken, {
-        maxAge: 600000,
+        maxAge: 600000000000,
+        domain: '.ts.io',
         // maxAge: +this.configService.get<string>('REFRESH_TOKEN_TIME'),
       });
     }
-    return 'Check Cookie!! There should be AccessToken, RefreshToken';
+    return res.redirect(`${this.configService.get<string>('FRONT_URI')}/auth`);
     // return res.status(200);
+    // return 'Success';
   }
 
   async loginFortyTwo(user: CreateUserInput, res: Response) {
