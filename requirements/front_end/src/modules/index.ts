@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
 import chatting from './chatting';
-import login from './login';
+import auth from './auth';
 
 const rootReducer = combineReducers({
   chatting,
-  login,
+  auth,
 });
 
 export default rootReducer;

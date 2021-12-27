@@ -69,7 +69,7 @@ function Navbar(): JSX.Element {
           <HiCube />
         </Button>
         <NavCollapse isToggle={isToggle}>
-          <Button bg="dark" onClick={() => navigate('/')}>
+          <Button bg="dark" onClick={() => navigate('/home')}>
             Home
           </Button>
           <Button bg="dark" onClick={() => navigate('/profile')}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
-import {logOut} from '../../modules/login';
+import {logOut} from '../../modules/auth';
 import Button from './Button';
 
 export default function LogOut(): JSX.Element {
