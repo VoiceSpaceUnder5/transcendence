@@ -17,9 +17,9 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Message {
-  id: Int!
   created_at: DateTime!
   updated_at: DateTime!
+  id: Int!
   user: User!
   chat_channel: ChatChannel!
   data: String!
@@ -28,9 +28,9 @@ type Message {
 
 """Chatting Channel Data"""
 type ChatChannel {
-  id: Int!
   created_at: DateTime!
   updated_at: DateTime!
+  id: Int!
   name: String!
   code_type: String!
   password: String
@@ -40,9 +40,9 @@ type ChatChannel {
 }
 
 type ChatChannelUser {
-  id: Int!
   created_at: DateTime!
   updated_at: DateTime!
+  id: Int!
   user: User!
   chat_channel: ChatChannel!
   role: Code!
@@ -50,12 +50,11 @@ type ChatChannelUser {
 
 """User data"""
 type User {
-  id: Int!
   created_at: DateTime!
   updated_at: DateTime!
+  id: Int!
   name: String!
-
-  """profile_image_url"""
+  email: String
   profile_image: String
   authority: Code!
   chat_channel_users: [ChatChannelUser!]!
@@ -66,28 +65,27 @@ type Query {
   users: [User]!
   getUserById(user_id: Int!): User!
   getUsersByName(user_name: String!): [User!]!
+  codes: [Code]!
+  getCodeByCode(code: String!): Code!
   chatChannels: [ChatChannel]!
   chatChannelUsers: [ChatChannelUser]!
-  codes: [Code]!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
-  createChannel(createChannelInput: CreateChannelInput!): ChatChannel!
   createCode(createCodeInput: CreateCodeInput!): Code!
+  createChannel(createChannelInput: CreateChannelInput!): ChatChannel!
 }
 
 input CreateUserInput {
+  id: Float!
   name: String!
 
   """profile_image_url"""
-  profile_image: String
-}
+  email: String
 
-input CreateChannelInput {
-  name: String!
-  code_type: String!
-  password: String
+  """profile_image_url"""
+  profile_image: String
 }
 
 input CreateCodeInput {
@@ -95,4 +93,10 @@ input CreateCodeInput {
   code: String!
   label_korean: String
   label_english: String
+}
+
+input CreateChannelInput {
+  name: String!
+  code_type: String!
+  password: String
 }

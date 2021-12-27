@@ -5,19 +5,20 @@ import { UsersModule } from 'src/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtAccessStrategy } from './jwt.strategy';
+import { FortyTwoStrategy } from './fortytwo.strategy';
+import { ConfigModule } from '@nestjs/config';
+import { CodeModule } from 'src/code/code.module';
 
 @Module({
   imports: [
     UsersModule,
+    CodeModule,
     PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret, // 배포시에는 환경변수등으로 보안 신경써야함
-      signOptions: { expiresIn: '60s' },
-    }),
+    ConfigModule,
+    JwtModule.register({}),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtAccessStrategy, FortyTwoStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })
