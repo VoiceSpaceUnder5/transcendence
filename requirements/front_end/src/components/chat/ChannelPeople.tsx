@@ -20,7 +20,7 @@ interface ChannelPeopleProps {
   channelId: number;
 }
 
-export default function ChannelPeople({
+export default React.memo(function ChannelPeople({
   channelId,
 }: ChannelPeopleProps): JSX.Element {
   const [visible, setVisible] = useState(false);
@@ -71,4 +71,4 @@ export default function ChannelPeople({
       )}
     </>
   );
-}
+});

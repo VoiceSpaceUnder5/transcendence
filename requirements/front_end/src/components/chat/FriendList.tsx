@@ -25,6 +25,8 @@ export default function FriendList(): JSX.Element {
   ];
   return (
     <MenuList>
+      {/* <div style={{borderBottom: '1px solid black'}}>친구 요청</div>
+      <div style={{borderBottom: '1px solid black'}}>친구 목록</div> */}
       {friendList.map(friend => (
         <Friend
           key={friend.userId}
