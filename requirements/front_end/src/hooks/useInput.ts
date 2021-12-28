@@ -1,9 +1,12 @@
 import React, {useCallback, useState} from 'react';
 
 interface Inputs {
+  imagePath?: string;
   id?: string;
+  email?: string;
   password?: string;
   message?: string;
+  description?: string;
 }
 
 export default function useInput(
