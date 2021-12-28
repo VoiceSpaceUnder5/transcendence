@@ -30,16 +30,14 @@ interface ImageUploadProps {
 export default function ImageUpload({onClick}: ImageUploadProps): JSX.Element {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 이미지 업로드
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.files);
   };
-  // https://velog.io/@jerrynim_/Graphql-%ED%8C%8C%EC%9D%BC-%EC%97%85%EB%A1%9C%EB%93%9C-tsjxekc19r
   return (
     <ProfileImgUploadStyle>
       <ImageUploadForm onSubmit={onSubmit}>
-        <Input type="file" onChange={onChange}></Input>
+        <Input type="file" onChange={onChange} />
         <div style={{display: 'flex', width: '40%'}}>
           <Button>확인</Button>
           <Button type="button" onClick={onClick}>

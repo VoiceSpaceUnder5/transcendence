@@ -8,44 +8,42 @@ import {BackboardBoxLayout} from '../components/common/Body';
 import {gql, useQuery} from '@apollo/client';
 
 const USERS_QUERY = gql`
-  query me {
-    name
-    id
-    email
-    profile_image
-    description
+  query {
+    me {
+      name
+      id
+      email
+      description
+    }
   }
 `;
 
-interface User {
-  name: string;
-  id: number;
-  email: string;
-  profile_image: string;
-  description: string;
-}
+// interface User {
+//   name: string;
+//   id: number;
+//   email: string;
+//   profile_image: string;
+//   description: string;
+// }
 
 function ProfilePage(): JSX.Element {
-  // state는 어떻게 받지... 404, 500 이런거
-  const {loading, data, error} = useQuery<User>(USERS_QUERY);
+  const {loading, data, error} = useQuery(USERS_QUERY);
   if (error) console.error(error);
 
-  const profileData = {
-    imagePath: data?.profile_image,
-    userId: data?.id,
-    email: data?.email,
-    description: data?.description,
-  };
   return (
     <>
       <Body>
         <Navbar />
         <BackboardBoxLayout>
           <BackboardBoxInnerLayout>
-            {loading ? (
-              <h1>loading...</h1>
-            ) : (
-              <Profile profileData={profileData} />
+            {loading && <h1>loading...</h1>}
+            {data && (
+              <Profile
+                id={data.me.id}
+                name={data.me.name}
+                email={data.me.email}
+                description={data.me.description}
+              />
             )}
           </BackboardBoxInnerLayout>
         </BackboardBoxLayout>

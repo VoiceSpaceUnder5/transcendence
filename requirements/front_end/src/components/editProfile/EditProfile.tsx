@@ -53,9 +53,10 @@ export default function EditProfile(): JSX.Element {
   const [isClick, setIsClick] = useState(false);
   const [image, setImage] = useState('');
 
-  const {imagePath, userId, email, description} = location.state;
+  const {imagePath, id, name, email, description} = location.state;
   const [inputs, onChange] = useInput({
-    id: userId,
+    id: id,
+    name: name,
     email: email,
     description: description,
   });
@@ -88,7 +89,7 @@ export default function EditProfile(): JSX.Element {
         </InnerLayout>
         <InnerLayout>
           <Div>이름</Div>
-          <Input name="userId" onChange={onChange} value={inputs.id} />
+          <Input name="userId" onChange={onChange} value={inputs.name} />
           <Div>email</Div>
           <Input name="email" onChange={onChange} value={inputs.email} />
           <Div>자기소개</Div>
