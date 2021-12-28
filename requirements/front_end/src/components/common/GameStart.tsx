@@ -55,8 +55,8 @@ function GameStart(): JSX.Element {
       <Button icon right bg="grey" onClick={onToggle}>
         {toggle ? <HiChevronUp /> : <HiChevronDown />}
       </Button>
-      <form>
-        <Button left large onClick={onSubmit}>
+      <form onSubmit={onSubmit}>
+        <Button left large>
           <span style={{paddingLeft: '24px'}}>게임 시작</span>
         </Button>
         {toggle && (

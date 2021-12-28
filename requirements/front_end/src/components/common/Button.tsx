@@ -1,4 +1,4 @@
-import React, {ReactNode, FormEvent} from 'react';
+import React, {ReactNode} from 'react';
 import styled, {css} from 'styled-components';
 
 export const OptionButton = styled.button`
@@ -108,7 +108,8 @@ interface ButtonProps {
   right?: boolean;
   large?: boolean;
   type?: string;
-  onClick?: (e: FormEvent) => void;
+  onClick?: () => void;
+  onHover?: () => void;
 }
 
 function Button({
@@ -121,6 +122,7 @@ function Button({
   large,
   type,
   onClick,
+  onHover,
 }: ButtonProps): JSX.Element {
   return (
     <ButtonStyle
@@ -131,6 +133,8 @@ function Button({
       right={right}
       large={large}
       onClick={onClick}
+      onMouseOver={onHover}
+      onMouseLeave={onHover}
       type={type}
     >
       {children}

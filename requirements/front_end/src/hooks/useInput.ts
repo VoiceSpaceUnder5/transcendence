@@ -11,10 +11,13 @@ export default function useInput(
 ): [Inputs, (e: React.ChangeEvent<HTMLInputElement>) => void, () => void] {
   const [inputs, setInputs] = useState(initialValue);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setInputs(inputs => ({...inputs, [name]: value}));
-  };
+  const onChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const {name, value} = e.target;
+      setInputs(inputs => ({...inputs, [name]: value}));
+    },
+    [inputs],
+  );
   const reset = useCallback(() => setInputs(initialValue), [initialValue]);
   return [inputs, onChange, reset];
 }
