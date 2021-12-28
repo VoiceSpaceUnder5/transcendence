@@ -9,14 +9,17 @@ import Button from '../common/Button';
 import ImageUpload from './ImageUpload';
 import {useLocation, useNavigate} from 'react-router-dom';
 import useInput from '../../hooks/useInput';
-// import {useQuery, gql} from '@apollo/client';
+import {useMutation, gql} from '@apollo/client';
 
-// 쿼리 잘 넣어주자.
-// const UPDATE_MY_PROFILE = gql`
-//   updateMyProfile() {
-//     name
-//   }
-// `;
+const UPDATE_MY_PROFILE = gql`
+  mutation UpdateUser($user_id: Int!, $updateUserInput: UpdateUserInput!) {
+    updateUser(user_id: $user_id, updateUserInput: $updateUserInput) {
+      id
+      name
+      description
+    }
+  }
+`;
 
 const ProfileImgStyle = styled.img`
   width: 288px;
@@ -54,24 +57,32 @@ export default function EditProfile(): JSX.Element {
   const [image, setImage] = useState('');
 
   const {imagePath, id, name, email, description} = location.state;
+
   const [inputs, onChange] = useInput({
-    id: id,
-    name: name,
-    email: email,
-    description: description,
+    id,
+    name,
+    email,
+    description,
   });
 
   const onClick = () => setIsClick(!isClick);
   useEffect(() => {
     setImage(imagePath);
   }, []);
+  const [updateMe, {error}] = useMutation(UPDATE_MY_PROFILE, {
+    variables: {
+      user_id: id,
+      updateUserInput: {
+        description: inputs.description,
+      },
+    },
+  });
+  if (error) {
+    console.error(error);
+  }
 
   const onClickConfirm = () => {
-    // const [onClickConfirm, {loading, error}] = useMutation(UPDATE_MY_PROFILE);
-    // if (error) {
-    //   console.error(error);
-    // }
-    // setLoading(loading);
+    updateMe();
     // // 사진 올리자.
     navigate('/profile');
   };

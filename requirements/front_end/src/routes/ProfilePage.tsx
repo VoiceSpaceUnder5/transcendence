@@ -18,14 +18,6 @@ const USERS_QUERY = gql`
   }
 `;
 
-// interface User {
-//   name: string;
-//   id: number;
-//   email: string;
-//   profile_image: string;
-//   description: string;
-// }
-
 function ProfilePage(): JSX.Element {
   const {loading, data, error} = useQuery(USERS_QUERY);
   if (error) console.error(error);

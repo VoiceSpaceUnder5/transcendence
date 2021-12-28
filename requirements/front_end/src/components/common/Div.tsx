@@ -19,6 +19,7 @@ const DivStyle = styled.div<{
   font-weight: 500;
   font-size: 100%;
   line-height: 19px;
+  white-space: normal;
 
   background-color: ${props =>
     props.bg === 'light' ? props.theme.lightButtonBg : 'none'};
