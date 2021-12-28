@@ -9,6 +9,14 @@ import Button from '../common/Button';
 import ImageUpload from './ImageUpload';
 import {useLocation, useNavigate} from 'react-router-dom';
 import useInput from '../../hooks/useInput';
+// import {useQuery, gql} from '@apollo/client';
+
+// 쿼리 잘 넣어주자.
+// const UPDATE_MY_PROFILE = gql`
+//   updateMyProfile() {
+//     name
+//   }
+// `;
 
 const ProfileImgStyle = styled.img`
   width: 288px;
@@ -56,6 +64,16 @@ export default function EditProfile(): JSX.Element {
   useEffect(() => {
     setImage(imagePath);
   }, []);
+
+  const onClickConfirm = () => {
+    // const [onClickConfirm, {loading, error}] = useMutation(UPDATE_MY_PROFILE);
+    // if (error) {
+    //   console.error(error);
+    // }
+    // setLoading(loading);
+    // // 사진 올리자.
+    navigate('/profile');
+  };
   return (
     <BackBoard size="hug">
       <TitleDiv>프로필 편집</TitleDiv>
@@ -63,14 +81,14 @@ export default function EditProfile(): JSX.Element {
         <InnerLayout>
           <Div>프로필 사진</Div>
           {!isClick ? (
-            <ProfileImgStyle onClick={onClick} src={image}></ProfileImgStyle>
+            <ProfileImgStyle src={image} onClick={onClick}></ProfileImgStyle>
           ) : (
             <ImageUpload onClick={onClick} defaultImage={image} />
           )}
         </InnerLayout>
         <InnerLayout>
           <Div>이름</Div>
-          <Input name="id" onChange={onChange} value={inputs.id} />
+          <Input name="userId" onChange={onChange} value={inputs.id} />
           <Div>email</Div>
           <Input name="email" onChange={onChange} value={inputs.email} />
           <Div>자기소개</Div>
@@ -82,9 +100,13 @@ export default function EditProfile(): JSX.Element {
         </InnerLayout>
       </WholeLayout>
       <div
-        style={{display: 'flex', width: '40%', justifyContent: 'space-evenly'}}
+        style={{
+          display: 'flex',
+          width: '40%',
+          justifyContent: 'space-evenly',
+        }}
       >
-        <Button onClick={() => navigate('/profile')}>확인</Button>
+        <Button onClick={onClickConfirm}>확인</Button>
         <Button onClick={() => navigate('/profile')}>취소</Button>
       </div>
     </BackBoard>

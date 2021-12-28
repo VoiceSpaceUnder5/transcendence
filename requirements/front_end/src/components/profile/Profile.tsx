@@ -38,10 +38,10 @@ const InnerLayout = styled.div`
 
 interface ProfileProps {
   profileData: {
-    imagePath: string;
-    userId: string;
-    email: string;
-    description: string;
+    imagePath: string | undefined;
+    userId: number | undefined;
+    email: string | undefined;
+    description: string | undefined;
   };
 }
 
