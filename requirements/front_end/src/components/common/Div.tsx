@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 const DivStyle = styled.div<{
   bg?: string;
@@ -12,7 +12,14 @@ const DivStyle = styled.div<{
   align-items: center;
   ${props => props.align === 'center' && `justify-content: center;`}
   // 매직넘버 어케 하징..
-  ${props => props.height === 'full' && `height: 182px; overflow-y: auto;`} 
+  ${props =>
+    props.height === 'full' &&
+    css`
+      height: 182px;
+      overflow-y: auto;
+      align-items: flex-start;
+      word-break: break-all;
+    `} 
 
   /* font */
   font-style: normal;
