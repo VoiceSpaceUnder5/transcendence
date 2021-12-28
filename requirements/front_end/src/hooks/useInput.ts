@@ -11,11 +11,15 @@ interface Inputs {
 
 export default function useInput(
   initialValue: Inputs,
-): [Inputs, (e: React.ChangeEvent<HTMLInputElement>) => void, () => void] {
+): [
+  Inputs,
+  (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void,
+  () => void,
+] {
   const [inputs, setInputs] = useState(initialValue);
 
   const onChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const {name, value} = e.target;
       setInputs(inputs => ({...inputs, [name]: value}));
     },

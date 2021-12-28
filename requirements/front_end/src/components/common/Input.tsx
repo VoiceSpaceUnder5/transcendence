@@ -1,9 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
-const InputStyle = styled.input<{
-  height?: string;
-}>`
+const InputStyle = styled.input.attrs(props => ({
+  type: props.type && props.type,
+}))`
   display: flex;
   align-self: stretch;
   // 매직넘버 어케 하징..
@@ -18,6 +18,11 @@ const InputStyle = styled.input<{
   border-radius: 4px;
   padding: 4px 0px;
   border: 1px solid black;
+  ${props =>
+    props.type === 'file' &&
+    css`
+      width: 90%;
+    `}
 `;
 
 interface InputProps {
@@ -25,6 +30,7 @@ interface InputProps {
   height?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
+  type?: string;
 }
 
 Input.defaultProps = {
@@ -36,8 +42,15 @@ export default function Input({
   height,
   onChange,
   value,
+  type,
 }: InputProps): JSX.Element {
   return (
-    <InputStyle name={name} height={height} onChange={onChange} value={value} />
+    <InputStyle
+      type={type}
+      name={name}
+      height={height}
+      onChange={onChange}
+      value={value}
+    />
   );
 }
