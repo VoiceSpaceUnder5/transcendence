@@ -7,16 +7,34 @@ import {CookiesProvider} from 'react-cookie';
 import {createStore} from 'redux';
 import rootReducer from './modules';
 import {composeWithDevTools} from 'redux-devtools-extension';
+import {
+  ApolloProvider,
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+} from '@apollo/client';
+
+const httpLink = createHttpLink({
+  // 요로케 쓰면 되나?
+  uri: 'http://api.ts.io:30000/graphql',
+});
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+});
 
 const store = createStore(rootReducer, composeWithDevTools());
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <CookiesProvider>
-        <App />
-      </CookiesProvider>
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <CookiesProvider>
+          <App />
+        </CookiesProvider>
+      </Provider>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
