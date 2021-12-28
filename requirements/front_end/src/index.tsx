@@ -17,6 +17,10 @@ import {
 const httpLink = createHttpLink({
   // 요로케 쓰면 되나?
   uri: 'http://api.ts.io:30000/graphql',
+  credentials: 'include',
+  // fetchOptions: {
+  //   mode: 'no-cors',
+  // },
 });
 
 const client = new ApolloClient({

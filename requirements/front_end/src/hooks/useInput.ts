@@ -3,6 +3,7 @@ import React, {useCallback, useState} from 'react';
 interface Inputs {
   imagePath?: string;
   id?: string;
+  name?: string;
   email?: string;
   password?: string;
   message?: string;
