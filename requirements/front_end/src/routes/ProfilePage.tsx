@@ -8,7 +8,7 @@ import {BackboardBoxLayout} from '../components/common/Body';
 import {gql, useQuery} from '@apollo/client';
 
 const USERS_QUERY = gql`
-  query getMe {
+  query me {
     name
     id
     email
@@ -26,6 +26,7 @@ interface User {
 }
 
 function ProfilePage(): JSX.Element {
+  // state는 어떻게 받지... 404, 500 이런거
   const {loading, data, error} = useQuery<User>(USERS_QUERY);
   if (error) console.error(error);
 
