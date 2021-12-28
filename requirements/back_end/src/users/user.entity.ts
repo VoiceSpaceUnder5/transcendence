@@ -25,8 +25,12 @@ export class User extends DefaultEntity {
   profile_image?: string;
 
   @Field((type) => Code)
-  @ManyToOne((type) => Code, (code) => code.code)
+  @ManyToOne((type) => Code, (code) => code.id)
   authority: Code;
+
+  @Field()
+  @Column()
+  authorityId: string;
 
   @Field(() => [ChatChannelUser])
   @OneToMany(

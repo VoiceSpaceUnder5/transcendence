@@ -26,16 +26,21 @@ export class UsersService {
   }
 
   async create(createUserInput: CreateUserInput): Promise<User> {
-    const authorityCode = await this.codeService.findCodeByCode('UA1');
+    // const authorityId = await this.codeService.findCodeByCode('UA1');
 
     const createUserDto = {
       id: createUserInput.id,
       name: createUserInput.name,
       email: createUserInput.email,
       profile_image: createUserInput.profile_image,
-      authority: authorityCode,
+      // authority: authorityId,
+      authorityId: 'UA1',
     };
     console.log('createUserDto : ', createUserDto);
     return await this.userRepository.save(createUserDto);
+  }
+
+  getAuthority(authorityId: string) {
+    return this.codeService.findCodeByCode(authorityId);
   }
 }

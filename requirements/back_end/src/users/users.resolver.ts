@@ -1,4 +1,14 @@
-import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  ID,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { Code } from 'src/code/code.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
@@ -28,5 +38,10 @@ export class UsersResolver {
   @Mutation(() => User)
   async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.usersService.create(createUserInput);
+  }
+
+  @ResolveField(() => Code)
+  authority(@Parent() user: User) {
+    return this.usersService.getAuthority(user.authorityId);
   }
 }

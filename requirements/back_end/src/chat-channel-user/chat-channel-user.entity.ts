@@ -24,6 +24,6 @@ export class ChatChannelUser extends DefaultEntity {
   chat_channel: ChatChannel;
 
   @Field((type) => Code)
-  @ManyToOne((type) => Code, (role) => role.code)
+  @ManyToOne((type) => Code, (role) => role.id)
   role: Code;
 }

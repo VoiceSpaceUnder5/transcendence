@@ -14,4 +14,7 @@ export class CreateUserInput {
 
   @Field(() => String, { description: 'profile_image_url', nullable: true })
   profile_image?: string;
+
+  @Field(() => String)
+  authorityId: string;
 }

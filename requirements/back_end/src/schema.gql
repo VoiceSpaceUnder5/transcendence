@@ -4,7 +4,7 @@
 
 type Code {
   group: String!
-  code: String!
+  id: String!
   label_korean: String
   label_english: String
   created_at: DateTime!
@@ -57,6 +57,7 @@ type User {
   email: String
   profile_image: String
   authority: Code!
+  authorityId: String!
   chat_channel_users: [ChatChannelUser!]!
   messages: [Message!]!
 }
@@ -86,11 +87,12 @@ input CreateUserInput {
 
   """profile_image_url"""
   profile_image: String
+  authorityId: String!
 }
 
 input CreateCodeInput {
   group: String!
-  code: String!
+  id: String!
   label_korean: String
   label_english: String
 }
