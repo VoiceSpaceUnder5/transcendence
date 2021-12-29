@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { MessageResolver } from './message.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,8 +9,8 @@ import { ChatChannelsModule } from 'src/chat-channels/chat-channels.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Message]),
-    UsersModule,
-    ChatChannelsModule,
+    forwardRef(() => UsersModule),
+    forwardRef(() => ChatChannelsModule),
   ],
   exports: [TypeOrmModule, MessageService],
   providers: [MessageService, MessageResolver],

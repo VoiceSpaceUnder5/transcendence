@@ -10,6 +10,8 @@ import {
 import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
 import { ChatChannelUserService } from 'src/chat-channel-user/chat-channel-user.service';
 import { Code } from 'src/code/code.entity';
+import { Message } from 'src/message/message.entity';
+import { MessageService } from 'src/message/message.service';
 import { ChatChannel } from './chat-channel.entity';
 import { ChatChannelsService } from './chat-channels.service';
 import { CreateChannelInput } from './inputs/create-channel.input';
@@ -19,6 +21,7 @@ export class ChatChannelsResolver {
   constructor(
     private readonly chatChannelsService: ChatChannelsService,
     private readonly chatChannelUserService: ChatChannelUserService,
+    private readonly messageService: MessageService,
   ) {}
 
   @Query(() => [ChatChannel], { name: 'chatChannels', nullable: 'items' })
@@ -71,5 +74,12 @@ export class ChatChannelsResolver {
   @ResolveField(() => [ChatChannelUser])
   async chatChannelUsers(@Parent() chatChannel: ChatChannel) {
     return await this.chatChannelUserService.findByChannelId(chatChannel.id);
+  }
+
+  @ResolveField(() => [Message])
+  async messages(@Parent() chatChannel: ChatChannel): Promise<Message[]> {
+    const channelId = chatChannel.id;
+
+    return await this.messageService.findByChannelId(channelId);
   }
 }

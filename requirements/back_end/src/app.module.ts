@@ -49,7 +49,6 @@ import { ChatModule } from './chat/chat.module';
         origin: [process.env.FRONT_URI, 'https://studio.apollographql.com'], // 여기 코스설정 안해주면, 그래프큐엘(아폴로서버) 리스폰스에 access-control-allow-origin 에 에러남
         credentials: true,
       },
-      // autoSchemaFile: true,
     }),
     ChatChannelUserModule,
     UsersModule,
