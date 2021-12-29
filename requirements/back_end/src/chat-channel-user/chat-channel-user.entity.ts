@@ -12,30 +12,30 @@ export class ChatChannelUser extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field((type) => User)
-  @ManyToOne(() => User, (user) => user.chat_channel_users)
+  // @Field((type) => User) // 이런식으로 graphql 스키마필드에서만 없앨 수 있다.
+  @ManyToOne(() => User, (user) => user.chatChannelUsers)
   user: User;
 
-  @Field()
+  @Field((type) => Int)
   @Column()
   userId: number;
 
-  @Field((type) => ChatChannel)
+  // @Field((type) => ChatChannel)
   @ManyToOne(
     (type) => ChatChannel,
-    (chat_channel) => chat_channel.chat_channel_users,
+    (chatChannel) => chatChannel.chatChannelUsers,
   )
   chatChannel: ChatChannel;
 
-  @Field()
+  @Field((type) => Int)
   @Column()
   chatChannelId: number;
 
-  @Field((type) => Code)
+  // @Field((type) => Code)
   @ManyToOne((type) => Code, (role) => role.id)
   role: Code;
 
-  @Field()
+  @Field((type) => String)
   @Column()
   roleId: string;
 }

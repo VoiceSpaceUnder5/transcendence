@@ -18,6 +18,7 @@ import { ChatChannel } from './chat-channels/chat-channel.entity';
 import { ChatChannelUser } from './chat-channel-user/chat-channel-user.entity';
 import { Code } from './code/code.entity';
 import { Message } from './message/message.entity';
+import { ChatModule } from './chat/chat.module';
 
 // TypeOrmModule.forRootAsync({
 //   useFactory: async () =>
@@ -56,6 +57,7 @@ import { Message } from './message/message.entity';
     CodeModule,
     MessageModule,
     AuthModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService, CodeService],

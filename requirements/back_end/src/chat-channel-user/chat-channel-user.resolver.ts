@@ -47,7 +47,7 @@ export class ChatChannelUserResolver {
   }
 
   @ResolveField(() => Code)
-  async type(@Parent() chatChannelUser: ChatChannelUser) {
+  async role(@Parent() chatChannelUser: ChatChannelUser) {
     return await this.codeService.findCodebyId(chatChannelUser.roleId);
   }
 

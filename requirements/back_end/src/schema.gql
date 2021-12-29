@@ -20,10 +20,11 @@ type Message {
   created_at: DateTime!
   updated_at: DateTime!
   id: Int!
+  userId: Float!
+  chatChannelId: Float!
+  textMessage: String!
   user: User!
-  chat_channel: ChatChannel!
-  data: String!
-  data_type: String!
+  chatChannel: ChatChannel!
 }
 
 """Chatting Channel Data"""
@@ -35,21 +36,20 @@ type ChatChannel {
   password: String
   type: Code!
   typeId: String!
-  chat_channel_users: [ChatChannelUser!]!
-  messages: [Message!]!
+  chatChannelUsers: [ChatChannelUser]!
+  messages: [Message]!
 }
 
 type ChatChannelUser {
   created_at: DateTime!
   updated_at: DateTime!
   id: Int!
-  user: User!
-  userId: Float!
-  chatChannel: ChatChannel!
-  chatChannelId: Float!
-  role: Code!
+  userId: Int!
+  chatChannelId: Int!
   roleId: String!
-  type: Code!
+  user: User!
+  role: Code!
+  chatChannel: ChatChannel!
 }
 
 """User data"""
@@ -63,7 +63,7 @@ type User {
   description: String
   authority: Code!
   authorityId: String!
-  chat_channel_users: [ChatChannelUser!]!
+  chatChannelUsers: [ChatChannelUser!]!
   messages: [Message!]!
 }
 
@@ -74,6 +74,7 @@ type Query {
   getUserById(user_id: Int!): User!
   getUsersByName(user_name: String!): [User!]!
   chatChannels: [ChatChannel]!
+  getChannelById(channelId: Int!): ChatChannel!
   codes: [Code]!
   getCodeByCode(code: String!): Code!
 }
@@ -84,6 +85,7 @@ type Mutation {
   createChannel(createChannelInput: CreateChannelInput!, userId: Int!): ChatChannel!
   updateChannel(updateChannelInput: CreateChannelInput!, channelId: Int!): ChatChannel!
   createCode(createCodeInput: CreateCodeInput!): Code!
+  createMessage(createMessageInput: CreateMessageInput!): Message!
 }
 
 input CreateUserInput {
@@ -111,4 +113,10 @@ input CreateCodeInput {
   id: String!
   label_korean: String
   label_english: String
+}
+
+input CreateMessageInput {
+  chatChannelId: Float!
+  userId: Float!
+  textMessage: String!
 }

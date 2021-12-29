@@ -34,14 +34,14 @@ export class ChatChannel extends DefaultEntity {
   @Column({ type: 'varchar', length: 10 })
   typeId: string;
 
-  @Field(() => [ChatChannelUser])
+  @Field(() => [ChatChannelUser], { nullable: 'items' })
   @OneToMany(
     () => ChatChannelUser,
-    (chat_channel_user) => chat_channel_user.chatChannel,
+    (chatChannelUser) => chatChannelUser.chatChannel,
   )
-  chat_channel_users: ChatChannelUser[];
+  chatChannelUsers: ChatChannelUser[];
 
-  @Field(() => [Message])
-  @OneToMany(() => Message, (message) => message.chat_channel)
+  @Field(() => [Message], { nullable: 'items' })
+  @OneToMany(() => Message, (message) => message.chatChannel)
   messages: Message[];
 }

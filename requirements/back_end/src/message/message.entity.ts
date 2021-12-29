@@ -11,19 +11,23 @@ export class Message extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field(() => User)
+  // @Field(() => User)
   @ManyToOne(() => User, (user) => user.messages)
   user: User;
 
-  @Field(() => ChatChannel)
+  @Field()
+  @Column()
+  userId: number;
+
+  // @Field(() => ChatChannel)
   @ManyToOne(() => ChatChannel, (channel) => channel.messages)
-  chat_channel: ChatChannel;
+  chatChannel: ChatChannel;
+
+  @Field()
+  @Column()
+  chatChannelId: number;
 
   @Field(() => String)
   @Column({ type: 'varchar', length: '255' })
-  data: string;
-
-  @Field(() => String)
-  @Column({ type: 'varchar', length: '20' })
-  data_type: string;
+  textMessage: string;
 }

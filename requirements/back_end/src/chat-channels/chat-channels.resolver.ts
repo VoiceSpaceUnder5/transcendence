@@ -7,6 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
 import { ChatChannelUserService } from 'src/chat-channel-user/chat-channel-user.service';
 import { Code } from 'src/code/code.entity';
 import { ChatChannel } from './chat-channel.entity';
@@ -23,6 +24,13 @@ export class ChatChannelsResolver {
   @Query(() => [ChatChannel], { name: 'chatChannels', nullable: 'items' })
   async chatChannels() {
     return this.chatChannelsService.findChannels();
+  }
+
+  @Query(() => ChatChannel, { name: 'getChannelById' })
+  async getChannelById(
+    @Args('channelId', { type: () => Int }) channelId: number,
+  ) {
+    return this.chatChannelsService.findChannelById(channelId);
   }
 
   //UserId validation check 필요
@@ -58,5 +66,10 @@ export class ChatChannelsResolver {
   @ResolveField(() => Code) // 이렇게 하면 이렇게 쓸 수 있다.
   async type(@Parent() chatChannel: ChatChannel) {
     return await this.chatChannelsService.getType(chatChannel.typeId);
+  }
+
+  @ResolveField(() => [ChatChannelUser])
+  async chatChannelUsers(@Parent() chatChannel: ChatChannel) {
+    return await this.chatChannelUserService.findByChannelId(chatChannel.id);
   }
 }

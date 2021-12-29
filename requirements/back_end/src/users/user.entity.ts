@@ -37,11 +37,8 @@ export class User extends DefaultEntity {
   authorityId: string;
 
   @Field(() => [ChatChannelUser])
-  @OneToMany(
-    () => ChatChannelUser,
-    (chat_channel_user) => chat_channel_user.user,
-  )
-  chat_channel_users: ChatChannelUser[];
+  @OneToMany(() => ChatChannelUser, (chatChannelUser) => chatChannelUser.user)
+  chatChannelUsers: ChatChannelUser[];
 
   @Field(() => [Message])
   @OneToMany(() => Message, (message) => message.user)

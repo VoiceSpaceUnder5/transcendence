@@ -16,6 +16,14 @@ export class ChatChannelUserService {
     return this.chatChannelUserRepository.find();
   }
 
+  findByUserId(userId: number): Promise<ChatChannelUser[]> {
+    return this.chatChannelUserRepository.find({ userId });
+  }
+
+  findByChannelId(chatChannelId: number): Promise<ChatChannelUser[]> {
+    return this.chatChannelUserRepository.find({ chatChannelId });
+  }
+
   async create(
     createchatChannelUserInput: CreateChatChannelUserInput,
   ): Promise<ChatChannelUser> {

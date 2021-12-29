@@ -9,6 +9,8 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
+import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
+import { ChatChannelUserService } from 'src/chat-channel-user/chat-channel-user.service';
 import { Code } from '../code/code.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.update';
@@ -18,13 +20,15 @@ import { UsersService } from './users.service';
 
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly chatChannelUserService: ChatChannelUserService,
+  ) {}
 
   //@GetUser 가드를 통과해서 내려온 컨텍스트에서 user 추출
   @UseGuards(GqlJwtAccessGuard)
   @Query(() => User, { name: 'me' })
   async getMe(@GetUser() user: User) {
-    console.log('Step4', user);
     return user;
   }
 
@@ -62,5 +66,10 @@ export class UsersResolver {
   @ResolveField(() => Code)
   authority(@Parent() user: User) {
     return this.usersService.getAuthority(user.authorityId);
+  }
+
+  @ResolveField(() => [ChatChannelUser])
+  chatChannelUsers(@Parent() user: User): Promise<ChatChannelUser[]> {
+    return this.chatChannelUserService.findByUserId(user.id);
   }
 }
