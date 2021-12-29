@@ -28,15 +28,15 @@ export class MessageResolver {
     return await this.messageService.create(createMessageInput);
   }
 
-  @ResolveField(() => User)
-  async user(@Parent() message: Message) {
-    return await this.userService.findUserById(message.userId);
-  }
+  // @ResolveField(() => User)
+  // async user(@Parent() message: Message) {
+  //   return await this.userService.findUserById(message.userId);
+  // }
 
-  @ResolveField(() => ChatChannel)
-  async chatChannel(@Parent() message: Message) {
-    return await this.chatChannelsService.findChannelById(
-      message.chatChannelId,
-    );
-  }
+  // @ResolveField(() => ChatChannel)
+  // async chatChannel(@Parent() message: Message) {
+  //   return await this.chatChannelsService.findChannelById(
+  //     message.chatChannelId,
+  //   );
+  // }
 }

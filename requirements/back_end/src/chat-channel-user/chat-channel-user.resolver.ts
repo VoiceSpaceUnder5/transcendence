@@ -41,21 +41,20 @@ export class ChatChannelUserResolver {
   //   return await this.chatChannelUserService.create(createChatChannelUserInput);
   // }
 
-  @ResolveField(() => User)
-  async user(@Parent() chatChannelUser: ChatChannelUser) {
-    return await this.userService.findUserById(chatChannelUser.userId);
-  }
-
   @ResolveField(() => Code)
   async role(@Parent() chatChannelUser: ChatChannelUser) {
     return await this.codeService.findCodebyId(chatChannelUser.roleId);
   }
+  // @ResolveField(() => User)
+  // async user(@Parent() chatChannelUser: ChatChannelUser) {
+  //   return await this.userService.findUserById(chatChannelUser.userId);
+  // }
 
-  @ResolveField(() => ChatChannel)
-  async chatChannel(@Parent() chatChannelUser: ChatChannelUser) {
-    // return 'Chat Channel user';
-    return await this.chatChannelService.findChannelById(
-      chatChannelUser.chatChannelId,
-    );
-  }
+  // @ResolveField(() => ChatChannel)
+  // async chatChannel(@Parent() chatChannelUser: ChatChannelUser) {
+  //   // return 'Chat Channel user';
+  //   return await this.chatChannelService.findChannelById(
+  //     chatChannelUser.chatChannelId,
+  //   );
+  // }
 }

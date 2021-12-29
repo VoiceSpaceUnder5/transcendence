@@ -23,8 +23,6 @@ type Message {
   userId: Float!
   chatChannelId: Float!
   textMessage: String!
-  user: User!
-  chatChannel: ChatChannel!
 }
 
 """Chatting Channel Data"""
@@ -47,9 +45,7 @@ type ChatChannelUser {
   userId: Int!
   chatChannelId: Int!
   roleId: String!
-  user: User!
   role: Code!
-  chatChannel: ChatChannel!
 }
 
 """User data"""
