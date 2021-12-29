@@ -3,7 +3,7 @@ import { ChatChannel } from 'src/chat-channels/chat-channel.entity';
 import { Code } from 'src/code/code.entity';
 import { DefaultEntity } from 'src/default.entity';
 import { User } from 'src/users/user.entity';
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
 @Entity()
@@ -12,18 +12,30 @@ export class ChatChannelUser extends DefaultEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field((type) => User)
-  @ManyToOne(() => User, (user) => user.chat_channel_users)
+  // @Field((type) => User) // 이런식으로 graphql 스키마필드에서만 없앨 수 있다.
+  @ManyToOne(() => User, (user) => user.chatChannelUsers)
   user: User;
 
-  @Field((type) => ChatChannel)
+  @Field((type) => Int)
+  @Column()
+  userId: number;
+
+  // @Field((type) => ChatChannel)
   @ManyToOne(
     (type) => ChatChannel,
-    (chat_channel) => chat_channel.chat_channel_users,
+    (chatChannel) => chatChannel.chatChannelUsers,
   )
-  chat_channel: ChatChannel;
+  chatChannel: ChatChannel;
 
-  @Field((type) => Code)
-  @ManyToOne((type) => Code, (role) => role.code)
+  @Field((type) => Int)
+  @Column()
+  chatChannelId: number;
+
+  // @Field((type) => Code)
+  @ManyToOne((type) => Code, (role) => role.id)
   role: Code;
+
+  @Field((type) => String)
+  @Column()
+  roleId: string;
 }

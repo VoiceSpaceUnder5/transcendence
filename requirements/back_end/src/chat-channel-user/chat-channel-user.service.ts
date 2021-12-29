@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { Args } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChatChannelUser } from './chat-channel-user.entity';
+import { CreateChatChannelUserInput } from './inputs/create-chat-channel-user.input';
 
 @Injectable()
 export class ChatChannelUserService {
@@ -12,5 +14,19 @@ export class ChatChannelUserService {
 
   findAll(): Promise<ChatChannelUser[]> {
     return this.chatChannelUserRepository.find();
+  }
+
+  findByUserId(userId: number): Promise<ChatChannelUser[]> {
+    return this.chatChannelUserRepository.find({ userId });
+  }
+
+  findByChannelId(chatChannelId: number): Promise<ChatChannelUser[]> {
+    return this.chatChannelUserRepository.find({ chatChannelId });
+  }
+
+  async create(
+    createchatChannelUserInput: CreateChatChannelUserInput,
+  ): Promise<ChatChannelUser> {
+    return this.chatChannelUserRepository.save(createchatChannelUserInput);
   }
 }

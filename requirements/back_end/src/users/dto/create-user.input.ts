@@ -1,5 +1,4 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Code } from 'src/code/code.entity';
 
 @InputType()
 export class CreateUserInput {
@@ -9,9 +8,15 @@ export class CreateUserInput {
   @Field()
   name: string;
 
-  @Field(() => String, { description: 'profile_image_url', nullable: true })
+  @Field(() => String, { nullable: true })
   email?: string;
 
-  @Field(() => String, { description: 'profile_image_url', nullable: true })
+  @Field(() => String, { nullable: true })
   profile_image?: string;
+
+  @Field(() => String, { defaultValue: 'UA1' })
+  authorityId: string;
+
+  @Field(() => String, { nullable: true })
+  description?: string;
 }

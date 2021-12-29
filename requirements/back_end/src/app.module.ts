@@ -18,6 +18,7 @@ import { ChatChannel } from './chat-channels/chat-channel.entity';
 import { ChatChannelUser } from './chat-channel-user/chat-channel-user.entity';
 import { Code } from './code/code.entity';
 import { Message } from './message/message.entity';
+import { ChatModule } from './chat/chat.module';
 
 // TypeOrmModule.forRootAsync({
 //   useFactory: async () =>
@@ -44,14 +45,18 @@ import { Message } from './message/message.entity';
     }), //
     GraphQLModule.forRoot({
       autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
-      // autoSchemaFile: true,
+      cors: {
+        origin: [process.env.FRONT_URI, 'https://studio.apollographql.com'], // 여기 코스설정 안해주면, 그래프큐엘(아폴로서버) 리스폰스에 access-control-allow-origin 에 에러남
+        credentials: true,
+      },
     }),
+    ChatChannelUserModule,
     UsersModule,
     ChatChannelsModule,
-    ChatChannelUserModule,
     CodeModule,
     MessageModule,
     AuthModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService, CodeService],

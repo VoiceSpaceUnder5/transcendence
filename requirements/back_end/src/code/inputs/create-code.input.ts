@@ -6,7 +6,7 @@ export class CreateCodeInput {
   group: string;
 
   @Field(() => String)
-  code: string;
+  id: string;
 
   @Field({ nullable: true })
   label_korean?: string;

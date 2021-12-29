@@ -4,7 +4,7 @@
 
 type Code {
   group: String!
-  code: String!
+  id: String!
   label_korean: String
   label_english: String
   created_at: DateTime!
@@ -20,10 +20,9 @@ type Message {
   created_at: DateTime!
   updated_at: DateTime!
   id: Int!
-  user: User!
-  chat_channel: ChatChannel!
-  data: String!
-  data_type: String!
+  userId: Float!
+  chatChannelId: Float!
+  textMessage: String!
 }
 
 """Chatting Channel Data"""
@@ -32,19 +31,20 @@ type ChatChannel {
   updated_at: DateTime!
   id: Int!
   name: String!
-  code_type: String!
   password: String
   type: Code!
-  chat_channel_users: [ChatChannelUser!]!
-  messages: [Message!]!
+  typeId: String!
+  chatChannelUsers: [ChatChannelUser]!
+  messages: [Message]!
 }
 
 type ChatChannelUser {
   created_at: DateTime!
   updated_at: DateTime!
   id: Int!
-  user: User!
-  chat_channel: ChatChannel!
+  userId: Int!
+  chatChannelId: Int!
+  roleId: String!
   role: Code!
 }
 
@@ -56,47 +56,63 @@ type User {
   name: String!
   email: String
   profile_image: String
+  description: String
   authority: Code!
-  chat_channel_users: [ChatChannelUser!]!
+  authorityId: String!
+  chatChannelUsers: [ChatChannelUser!]!
   messages: [Message!]!
 }
 
 type Query {
+  chatChannelUsers: [ChatChannelUser]!
+  me: User!
   users: [User]!
   getUserById(user_id: Int!): User!
   getUsersByName(user_name: String!): [User!]!
+  chatChannels: [ChatChannel]!
+  getChannelById(channelId: Int!): ChatChannel!
   codes: [Code]!
   getCodeByCode(code: String!): Code!
-  chatChannels: [ChatChannel]!
-  chatChannelUsers: [ChatChannelUser]!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!
+  createChannel(createChannelInput: CreateChannelInput!, userId: Int!): ChatChannel!
+  updateChannel(updateChannelInput: CreateChannelInput!, channelId: Int!): ChatChannel!
   createCode(createCodeInput: CreateCodeInput!): Code!
-  createChannel(createChannelInput: CreateChannelInput!): ChatChannel!
+  createMessage(createMessageInput: CreateMessageInput!): Message!
 }
 
 input CreateUserInput {
   id: Float!
   name: String!
-
-  """profile_image_url"""
   email: String
-
-  """profile_image_url"""
   profile_image: String
+  authorityId: String = "UA1"
+  description: String
 }
 
-input CreateCodeInput {
-  group: String!
-  code: String!
-  label_korean: String
-  label_english: String
+input UpdateUserInput {
+  profile_image: String
+  description: String
 }
 
 input CreateChannelInput {
   name: String!
-  code_type: String!
+  typeId: String!
   password: String
+}
+
+input CreateCodeInput {
+  group: String!
+  id: String!
+  label_korean: String
+  label_english: String
+}
+
+input CreateMessageInput {
+  chatChannelId: Float!
+  userId: Float!
+  textMessage: String!
 }

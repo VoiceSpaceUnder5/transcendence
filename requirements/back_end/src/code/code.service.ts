@@ -15,7 +15,7 @@ export class CodeService {
     return this.codeRepository.find();
   }
 
-  findCodeByCode(code: string): Promise<Code> {
+  findCodebyId(code: string): Promise<Code> {
     return this.codeRepository.findOneOrFail(code);
   }
   async create(createCodeInput: CreateCodeInput): Promise<Code> {

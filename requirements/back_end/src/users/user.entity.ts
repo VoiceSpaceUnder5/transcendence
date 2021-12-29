@@ -24,16 +24,21 @@ export class User extends DefaultEntity {
   @Column({ nullable: true })
   profile_image?: string;
 
+  @Field(() => String, { nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  description?: string;
+
   @Field((type) => Code)
-  @ManyToOne((type) => Code, (code) => code.code)
+  @ManyToOne((type) => Code, (code) => code.id)
   authority: Code;
 
+  @Field()
+  @Column()
+  authorityId: string;
+
   @Field(() => [ChatChannelUser])
-  @OneToMany(
-    () => ChatChannelUser,
-    (chat_channel_user) => chat_channel_user.user,
-  )
-  chat_channel_users: ChatChannelUser[];
+  @OneToMany(() => ChatChannelUser, (chatChannelUser) => chatChannelUser.user)
+  chatChannelUsers: ChatChannelUser[];
 
   @Field(() => [Message])
   @OneToMany(() => Message, (message) => message.user)

@@ -16,7 +16,7 @@ export class Code {
 
   @Field()
   @PrimaryColumn({ type: 'varchar', length: '10', unique: true })
-  code: string;
+  id: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
