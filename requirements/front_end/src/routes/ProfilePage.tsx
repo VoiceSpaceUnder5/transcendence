@@ -6,13 +6,15 @@ import {BackboardBoxInnerLayout} from '../components/common/Body';
 import Profile from '../components/profile/Profile';
 import {BackboardBoxLayout} from '../components/common/Body';
 import {gql, useQuery} from '@apollo/client';
+import Loader from 'react-loader-spinner';
 
 const USERS_QUERY = gql`
   query {
     me {
-      name
       id
+      name
       email
+      profile_image
       description
     }
   }
@@ -28,12 +30,20 @@ function ProfilePage(): JSX.Element {
         <Navbar />
         <BackboardBoxLayout>
           <BackboardBoxInnerLayout>
-            {loading && <h1>loading...</h1>}
+            {loading && (
+              <Loader
+                type="TailSpin"
+                color="#343a40"
+                width={160}
+                height={160}
+              />
+            )}
             {data && (
               <Profile
                 id={data.me.id}
                 name={data.me.name}
                 email={data.me.email}
+                imagePath={data.me.profile_image}
                 description={data.me.description}
               />
             )}

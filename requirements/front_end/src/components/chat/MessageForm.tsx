@@ -32,7 +32,9 @@ export default React.memo(function MessageForm({
         onChange={onInputChange}
         required
       />
-      <Button bg="dark">입력</Button>
+      <Button bg="dark" type="submit">
+        입력
+      </Button>
       <Button bg="dark" type="button" onClick={() => onBackClick(1)}>
         뒤로
       </Button>

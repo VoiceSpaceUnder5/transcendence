@@ -13,6 +13,7 @@ export const OptionButton = styled.button`
 
   &: hover {
     background-color: #cccccc;
+    transition: 0.2s;
   }
 `;
 
@@ -67,6 +68,7 @@ const ButtonStyle = styled.button.attrs(props => ({
         color: ${props.theme.darkButtonText};
         &: hover {
           background-color: ${props.theme.darkButtonHover};
+          transition: 0.5s;
         }
       `;
     } else if (props.bg === 'grey') {
@@ -75,6 +77,7 @@ const ButtonStyle = styled.button.attrs(props => ({
         color: ${props.theme.greyButtonText};
         &: hover {
           background-color: ${props.theme.greyButtonHover};
+          transition: 0.5s;
         }
       `;
     } else {
@@ -83,6 +86,7 @@ const ButtonStyle = styled.button.attrs(props => ({
         color: ${props.theme.lightButtonText};
         &: hover {
           background-color: ${props.theme.lightButtonHover};
+          transition: 0.5s;
         }
       `;
     }
@@ -97,6 +101,19 @@ const ButtonStyle = styled.button.attrs(props => ({
   border-radius: 4px;
   ${props => props.left && `border-radius: 4px 0px 0px 4px;`}
   ${props => props.right && `border-radius: 0px 4px 4px 0px;`}
+
+  @keyframes smoothAppear {
+    from {
+      opacity: 0.7;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  & {
+    animation: smoothAppear 0.5s ease-in-out;
+  }
 `;
 
 interface ButtonProps {

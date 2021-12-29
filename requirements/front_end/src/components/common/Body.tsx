@@ -22,11 +22,26 @@ export const BackboardBoxLayout = styled.div`
     flex-direction: column;
     height: 100%;
     justify-content: start;
-  } ;
+  }
 `;
 
-export const BackboardBoxInnerLayout = styled.div`
+export const BackboardBoxInnerLayout = styled.div<{speed?: number}>`
   display: 'flex';
+
+  @keyframes smoothAppear {
+    from {
+      opacity: 0;
+      transform: translateY(2%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  & {
+    animation: smoothAppear 1s ease-in-out;
+  }
 `;
 
 interface BodyProps {

@@ -40,6 +40,7 @@ export interface ProfileProps {
   id: number;
   name: string;
   email: string;
+  imagePath: string;
   description: string;
 }
 
@@ -47,6 +48,7 @@ export default function Profile({
   id,
   name,
   email,
+  imagePath,
   description,
 }: ProfileProps): JSX.Element {
   const navigate = useNavigate();
@@ -56,7 +58,7 @@ export default function Profile({
       <WholeLayout>
         <InnerLayout>
           <Div>프로필 사진</Div>
-          <ProfileImgStyle src={''}></ProfileImgStyle>
+          <ProfileImgStyle src={imagePath}></ProfileImgStyle>
         </InnerLayout>
         <InnerLayout>
           <Div>이름</Div>

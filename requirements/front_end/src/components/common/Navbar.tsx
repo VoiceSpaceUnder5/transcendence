@@ -122,4 +122,4 @@ function Navbar(): JSX.Element {
   );
 }
 
-export default Navbar;
+export default React.memo(Navbar);

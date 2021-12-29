@@ -8,6 +8,9 @@ type ActionReturnType = {
   type: string;
   isLogin: boolean;
   id?: number;
+  name?: string;
+  email?: string;
+  imagePath?: string;
 };
 
 export const onLogin = (): ActionReturnType => ({
@@ -15,10 +18,18 @@ export const onLogin = (): ActionReturnType => ({
   isLogin: false,
 });
 
-export const loginSuccess = (id: number): ActionReturnType => ({
+export const loginSuccess = (
+  id: number,
+  name: string,
+  email: string,
+  imagePath: string,
+): ActionReturnType => ({
   type: LOGIN_SUCESS,
   isLogin: true,
   id,
+  name,
+  email,
+  imagePath,
 });
 
 export const loginFail = (): ActionReturnType => ({
@@ -34,6 +45,9 @@ export const logOut = (): ActionReturnType => ({
 interface StateTypes {
   isLogin: boolean;
   id?: number;
+  name?: string;
+  email?: string;
+  imagePath?: string;
 }
 
 const initialState: StateTypes = {
@@ -60,6 +74,10 @@ export default function login(
       return {
         ...state,
         isLogin: action.isLogin,
+        id: action.id,
+        name: action.name,
+        email: action.email,
+        imagePath: action.imagePath,
       };
     case LOGIN_FAIL:
       return {

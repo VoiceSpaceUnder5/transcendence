@@ -17,6 +17,7 @@ const FriendStyle = styled.div`
 
   &: hover {
     background-color: ${props => props.theme.greyButtonBg};
+    transition: 0.5s;
   }
 
   ${props => props.theme.padSize} {
@@ -44,6 +45,19 @@ const FriendOptions = styled.div<{visible: boolean}>`
   display: ${props => !props.visible && 'none'};
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12.5px;
+
+  @keyframes smoothAppear {
+    from {
+      opacity: 0.7;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  & {
+    animation: smoothAppear 0.5s ease-in-out;
+  }
 `;
 
 interface FriendProps {

@@ -11,6 +11,7 @@ import SearchChannel from './SearchChannel';
 import CreateChannel from './CreateChannel';
 import JoinChatting from './JoinChatting';
 import Chatting from './Chatting';
+import {useLazyQuery, gql} from '@apollo/client';
 
 const ChatBoardStyles = styled.div<{isOpen: boolean}>`
   /* Layout */
@@ -28,6 +29,29 @@ const ChatBoardStyles = styled.div<{isOpen: boolean}>`
   /* Background */
   background-color: ${props => props.theme.lightButtonBg};
   border-radius: 8px;
+
+  @keyframes smoothAppear {
+    from {
+      opacity: 0;
+      transform: translateY(2%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  & {
+    animation: smoothAppear 0.5s ease-in-out;
+  }
+`;
+
+const GET_NAME = gql`
+  {
+    me {
+      id
+    }
+  }
 `;
 
 interface ChatBoardProps {
@@ -35,6 +59,7 @@ interface ChatBoardProps {
 }
 
 export default function ChatBoard({isOpen}: ChatBoardProps): JSX.Element {
+  const [getMe, {called, data}] = useLazyQuery(GET_NAME);
   const {menuIdx, channelId, isPrivate} = useSelector((state: RootState) => ({
     menuIdx: state.chatting.menuIdx,
     channelId: state.chatting.channelId,
@@ -44,31 +69,33 @@ export default function ChatBoard({isOpen}: ChatBoardProps): JSX.Element {
   const onChatMenuClick = (idx: number) => dispatch(selectMenu(idx));
   const [element, setElement] = useState<JSX.Element | undefined>(undefined);
   useEffect(() => {
-    switch (menuIdx) {
-      case 0:
-        setElement(<FriendList />);
-        break;
-      case 1:
-        setElement(<ParticipatingChannel />);
-        break;
-      case 2:
-        setElement(<SearchChannel />);
-        break;
-      case 3:
-        setElement(<CreateChannel />);
-        break;
-      case 4:
-        setElement(
-          <JoinChatting
-            channelId={channelId as number}
-            isPrivate={isPrivate as boolean}
-          />,
-        );
-        break;
-      case 5:
-        setElement(<Chatting channelId={channelId as number} />);
-        break;
-    }
+    getMe();
+    if (called && data)
+      switch (menuIdx) {
+        case 0:
+          setElement(<FriendList />);
+          break;
+        case 1:
+          setElement(<ParticipatingChannel />);
+          break;
+        case 2:
+          setElement(<SearchChannel />);
+          break;
+        case 3:
+          setElement(<CreateChannel userId={data.me.id} />);
+          break;
+        case 4:
+          setElement(
+            <JoinChatting
+              channelId={channelId as number}
+              isPrivate={isPrivate as boolean}
+            />,
+          );
+          break;
+        case 5:
+          setElement(<Chatting channelId={channelId as number} />);
+          break;
+      }
   }, [menuIdx]);
   return (
     <ChatBoardStyles isOpen={isOpen}>
