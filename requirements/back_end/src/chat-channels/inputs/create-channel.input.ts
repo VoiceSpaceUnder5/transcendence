@@ -7,7 +7,7 @@ export class CreateChannelInput {
   name: string;
 
   @Field(() => String)
-  code_type: string;
+  typeId: string;
 
   @Field(() => String, { nullable: true })
   password?: string;

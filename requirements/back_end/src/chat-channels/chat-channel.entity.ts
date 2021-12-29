@@ -22,10 +22,6 @@ export class ChatChannel extends DefaultEntity {
   @Column({ type: 'varchar', length: 30 })
   name: string;
 
-  @Field((type) => String)
-  @Column({ type: 'varchar', length: 10 })
-  code_type: string;
-
   @Field((type) => String, { nullable: true })
   @Column({ type: 'varchar', length: 25, nullable: true })
   password?: string;
@@ -34,10 +30,14 @@ export class ChatChannel extends DefaultEntity {
   @ManyToOne((type) => Code, (code) => code.id)
   type: Code;
 
+  @Field((type) => String)
+  @Column({ type: 'varchar', length: 10 })
+  typeId: string;
+
   @Field(() => [ChatChannelUser])
   @OneToMany(
     () => ChatChannelUser,
-    (chat_channel_user) => chat_channel_user.chat_channel,
+    (chat_channel_user) => chat_channel_user.chatChannel,
   )
   chat_channel_users: ChatChannelUser[];
 

@@ -14,7 +14,7 @@ export class CodeResolver {
 
   @Query(() => Code)
   async getCodeByCode(@Args('code', { type: () => String }) code: string) {
-    return await this.codeService.findCodeByCode(code);
+    return await this.codeService.findCodebyId(code);
   }
 
   @Mutation(() => Code)

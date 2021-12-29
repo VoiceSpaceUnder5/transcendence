@@ -24,6 +24,10 @@ export class User extends DefaultEntity {
   @Column({ nullable: true })
   profile_image?: string;
 
+  @Field(() => String, { nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  description?: string;
+
   @Field((type) => Code)
   @ManyToOne((type) => Code, (code) => code.id)
   authority: Code;

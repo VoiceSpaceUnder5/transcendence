@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
 import { Strategy, VarifyCallback } from 'passport-42';
 import { ConfigService } from '@nestjs/config';
 import { CodeService } from 'src/code/code.service';

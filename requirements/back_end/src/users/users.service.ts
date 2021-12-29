@@ -1,8 +1,9 @@
-import { Injectable, Param } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CodeService } from 'src/code/code.service';
 import { Like, Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
+import { UpdateUserInput } from './dto/update-user.update';
 import { User } from './user.entity';
 
 @Injectable()
@@ -18,6 +19,7 @@ export class UsersService {
   }
 
   findUserById(id: number): Promise<User> {
+    console.log('Step5 id: ', id);
     return this.userRepository.findOneOrFail(id);
   }
 
@@ -26,21 +28,19 @@ export class UsersService {
   }
 
   async create(createUserInput: CreateUserInput): Promise<User> {
-    // const authorityId = await this.codeService.findCodeByCode('UA1');
+    createUserInput.authorityId = 'UA1'; // 권한 설정
+    return await this.userRepository.save(createUserInput);
+  }
 
-    const createUserDto = {
-      id: createUserInput.id,
-      name: createUserInput.name,
-      email: createUserInput.email,
-      profile_image: createUserInput.profile_image,
-      // authority: authorityId,
-      authorityId: 'UA1',
-    };
-    console.log('createUserDto : ', createUserDto);
-    return await this.userRepository.save(createUserDto);
+  async updateUser(
+    id: number,
+    updateUserInput: UpdateUserInput,
+  ): Promise<User> {
+    await this.userRepository.update(id, updateUserInput);
+    return await this.userRepository.findOneOrFail(id);
   }
 
   getAuthority(authorityId: string) {
-    return this.codeService.findCodeByCode(authorityId);
+    return this.codeService.findCodebyId(authorityId);
   }
 }
