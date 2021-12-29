@@ -1,15 +1,11 @@
 import React, {FormEvent, useEffect} from 'react';
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {afterJoin, selectMenu} from '../../modules/chatting';
 import Div from '../common/Div';
 import Button from '../common/Button';
-
-interface ChattingProps {
-  channelId: number;
-  isPrivate: boolean;
-}
+import {RootState} from '../../modules';
 
 const Form = styled.form`
   display: flex;
@@ -30,23 +26,28 @@ const Buttons = styled.div`
   display: flex;
 `;
 
-export default function JoinChatting({
-  channelId,
-  isPrivate,
-}: ChattingProps): JSX.Element {
+interface JoinChannelProps {
+  userId: number;
+}
+
+// eslint-disable-next-line
+export default function JoinChatting({userId}: JoinChannelProps): JSX.Element {
+  const {channelId, isPrivate} = useSelector((state: RootState) => ({
+    channelId: state.chatting.channelId,
+    isPrivate: state.chatting.isPrivate,
+  }));
   const dispatch = useDispatch();
   const [{password}, onChange, reset] = useInput({password: ''});
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     // 유효성 검사
     // 성공하면 방으로 이동
-    dispatch(afterJoin(channelId));
+    // dispatch(afterJoin(channelId));
     reset();
   };
   const onClick = () => dispatch(selectMenu(2));
-
   useEffect(() => {
-    if (isPrivate === false) dispatch(afterJoin(channelId));
+    if (isPrivate === false) dispatch(afterJoin(channelId as number));
   }, []);
 
   return (
