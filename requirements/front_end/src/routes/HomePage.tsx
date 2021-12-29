@@ -47,10 +47,10 @@ function HomePage(): JSX.Element {
       <Body>
         <Navbar />
         <BackboardBoxLayout>
-          <BackboardBoxInnerLayout>
+          <BackboardBoxInnerLayout speed={5}>
             <MatchRecord matchRecordData={matchRecordData} />
           </BackboardBoxInnerLayout>
-          <BackboardBoxInnerLayout>
+          <BackboardBoxInnerLayout speed={20}>
             <Ladder ladderData={ladderData} />
             <AchievementBoard achievementData={achievementData} />
           </BackboardBoxInnerLayout>

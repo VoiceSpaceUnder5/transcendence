@@ -19,6 +19,7 @@ const ChannelStyles = styled.div`
 
   &: hover {
     background-color: ${props => props.theme.greyButtonBg};
+    transition: 0.5s;
   }
 `;
 

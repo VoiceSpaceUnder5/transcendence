@@ -1,4 +1,4 @@
-import React, {ReactNode, FormEvent} from 'react';
+import React, {ReactNode} from 'react';
 import styled, {css} from 'styled-components';
 
 export const OptionButton = styled.button`
@@ -13,6 +13,7 @@ export const OptionButton = styled.button`
 
   &: hover {
     background-color: #cccccc;
+    transition: 0.2s;
   }
 `;
 
@@ -67,6 +68,7 @@ const ButtonStyle = styled.button.attrs(props => ({
         color: ${props.theme.darkButtonText};
         &: hover {
           background-color: ${props.theme.darkButtonHover};
+          transition: 0.5s;
         }
       `;
     } else if (props.bg === 'grey') {
@@ -75,6 +77,7 @@ const ButtonStyle = styled.button.attrs(props => ({
         color: ${props.theme.greyButtonText};
         &: hover {
           background-color: ${props.theme.greyButtonHover};
+          transition: 0.5s;
         }
       `;
     } else {
@@ -83,6 +86,7 @@ const ButtonStyle = styled.button.attrs(props => ({
         color: ${props.theme.lightButtonText};
         &: hover {
           background-color: ${props.theme.lightButtonHover};
+          transition: 0.5s;
         }
       `;
     }
@@ -97,6 +101,19 @@ const ButtonStyle = styled.button.attrs(props => ({
   border-radius: 4px;
   ${props => props.left && `border-radius: 4px 0px 0px 4px;`}
   ${props => props.right && `border-radius: 0px 4px 4px 0px;`}
+
+  @keyframes smoothAppear {
+    from {
+      opacity: 0.7;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  & {
+    animation: smoothAppear 0.5s ease-in-out;
+  }
 `;
 
 interface ButtonProps {
@@ -108,7 +125,8 @@ interface ButtonProps {
   right?: boolean;
   large?: boolean;
   type?: string;
-  onClick?: (e: FormEvent) => void;
+  onClick?: () => void;
+  onHover?: () => void;
 }
 
 function Button({
@@ -121,6 +139,7 @@ function Button({
   large,
   type,
   onClick,
+  onHover,
 }: ButtonProps): JSX.Element {
   return (
     <ButtonStyle
@@ -131,6 +150,8 @@ function Button({
       right={right}
       large={large}
       onClick={onClick}
+      onMouseOver={onHover}
+      onMouseLeave={onHover}
       type={type}
     >
       {children}

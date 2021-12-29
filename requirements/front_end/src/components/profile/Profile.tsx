@@ -36,16 +36,21 @@ const InnerLayout = styled.div`
   margin: 0px 24px;
 `;
 
-interface ProfileProps {
-  profileData: {
-    imagePath: string;
-    userId: string;
-    email: string;
-    description: string;
-  };
+export interface ProfileProps {
+  id: number;
+  name: string;
+  email: string;
+  imagePath: string;
+  description: string;
 }
 
-export default function Profile({profileData}: ProfileProps): JSX.Element {
+export default function Profile({
+  id,
+  name,
+  email,
+  imagePath,
+  description,
+}: ProfileProps): JSX.Element {
   const navigate = useNavigate();
   return (
     <BackBoard size="hug">
@@ -53,26 +58,28 @@ export default function Profile({profileData}: ProfileProps): JSX.Element {
       <WholeLayout>
         <InnerLayout>
           <Div>프로필 사진</Div>
-          <ProfileImgStyle src={profileData.imagePath}></ProfileImgStyle>
+          <ProfileImgStyle src={imagePath}></ProfileImgStyle>
         </InnerLayout>
         <InnerLayout>
           <Div>이름</Div>
           <Div bg="light" width="large" align="center">
-            {profileData.userId}
+            {name}
           </Div>
           <Div>email</Div>
           <Div bg="light" width="large" align="center">
-            {profileData.email}
+            {email}
           </Div>
           <Div>자기소개</Div>
           <Div bg="light" width="large" align="center" height="full">
-            {profileData.description}
+            {description}
           </Div>
         </InnerLayout>
       </WholeLayout>
       <Button
         large
-        onClick={() => navigate('/profile/edit', {state: profileData})}
+        onClick={() =>
+          navigate('/profile/edit', {state: {id, name, email, description}})
+        }
       >
         프로필 수정
       </Button>

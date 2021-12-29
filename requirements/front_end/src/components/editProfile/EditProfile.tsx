@@ -6,7 +6,20 @@ import Div from '../common/Div';
 import BackBoard from '../common/BackBoard';
 import Textarea from '../common/Textarea';
 import Button from '../common/Button';
+import ImageUpload from './ImageUpload';
 import {useLocation, useNavigate} from 'react-router-dom';
+import useInput from '../../hooks/useInput';
+import {useMutation, gql} from '@apollo/client';
+
+const UPDATE_MY_PROFILE = gql`
+  mutation UpdateUser($user_id: Int!, $updateUserInput: UpdateUserInput!) {
+    updateUser(user_id: $user_id, updateUserInput: $updateUserInput) {
+      id
+      name
+      description
+    }
+  }
+`;
 
 const ProfileImgStyle = styled.img`
   width: 288px;
@@ -34,58 +47,78 @@ const InnerLayout = styled.div`
   flex-direction: column;
 
   width: 288px;
-
   margin: 0px 24px;
 `;
 
 export default function EditProfile(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
-  const [inputs, setInputs] = useState({
-    imagePath: '',
-    userId: '',
-    email: '',
-    description: '',
+  const [isClick, setIsClick] = useState(false);
+  const [image, setImage] = useState('');
+
+  const {imagePath, id, name, email, description} = location.state;
+
+  const [inputs, onChange] = useInput({
+    id,
+    name,
+    email,
+    description,
   });
 
-  const onChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const {value, name} = e.target;
-    setInputs({
-      ...inputs,
-      [name]: value,
-    });
-  };
+  const onClick = () => setIsClick(!isClick);
   useEffect(() => {
-    const {imagePath, userId, email, description} = location.state;
-    setInputs({imagePath, userId, email, description});
+    setImage(imagePath);
   }, []);
+  const [updateMe, {error}] = useMutation(UPDATE_MY_PROFILE, {
+    variables: {
+      user_id: id,
+      updateUserInput: {
+        description: inputs.description,
+      },
+    },
+  });
+  if (error) {
+    console.error(error);
+  }
+
+  const onClickConfirm = () => {
+    updateMe();
+    // // 사진 올리자.
+    navigate('/profile');
+  };
   return (
     <BackBoard size="hug">
       <TitleDiv>프로필 편집</TitleDiv>
       <WholeLayout>
         <InnerLayout>
           <Div>프로필 사진</Div>
-          <ProfileImgStyle src={inputs.imagePath}></ProfileImgStyle>
+          {!isClick ? (
+            <ProfileImgStyle src={image} onClick={onClick}></ProfileImgStyle>
+          ) : (
+            <ImageUpload onClick={onClick} defaultImage={image} />
+          )}
         </InnerLayout>
         <InnerLayout>
           <Div>이름</Div>
-          <Input name="userId" onChange={onChange} value={inputs.userId} />
+          <Input name="userId" onChange={onChange} value={inputs.name} />
           <Div>email</Div>
           <Input name="email" onChange={onChange} value={inputs.email} />
           <Div>자기소개</Div>
           <Textarea
             name="description"
-            value={inputs.description}
+            value={inputs.description as string}
             onChange={onChange}
           ></Textarea>
         </InnerLayout>
       </WholeLayout>
       <div
-        style={{display: 'flex', width: '40%', justifyContent: 'space-evenly'}}
+        style={{
+          display: 'flex',
+          width: '40%',
+          justifyContent: 'space-evenly',
+        }}
       >
-        <Button onClick={() => navigate('/profile')}>확인</Button>
+        <Button onClick={onClickConfirm}>확인</Button>
         <Button onClick={() => navigate('/profile')}>취소</Button>
       </div>
     </BackBoard>

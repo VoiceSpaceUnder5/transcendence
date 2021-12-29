@@ -29,5 +29,12 @@ export default function Textarea({
   value,
   onChange,
 }: TextareaProps): JSX.Element {
-  return <TextareaStyle name={name} value={value} onChange={onChange} />;
+  return (
+    <TextareaStyle
+      name={name}
+      value={value}
+      onChange={onChange}
+      maxLength={100}
+    />
+  );
 }

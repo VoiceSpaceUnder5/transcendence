@@ -46,14 +46,21 @@ const ChatMenuItem = styled.button<{index: number; clickedIdx: number}>`
   }}
   &: hover {
     background-color: #f3f3f3;
+    transition: 0.3s;
+  }
+
+  &: not(: hover) {
+    transition: 0.3s;
   }
 
   &: active {
     background-color: #ffffff;
+    transition: 0.3s;
   }
 
   &: focus {
     background-color: #ffffff;
+    transition: 0.3s;
   }
 `;
 

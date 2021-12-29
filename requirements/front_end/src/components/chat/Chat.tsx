@@ -34,6 +34,22 @@ const ChatButton = styled.button`
 
   &: hover {
     background-color: ${props => props.theme.lightButtonHover};
+    transition: 0.3s;
+  }
+
+  @keyframes smoothAppear {
+    from {
+      opacity: 0;
+      transform: translateY(2%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  & {
+    animation: smoothAppear 1s ease-in-out;
   }
 `;
 
