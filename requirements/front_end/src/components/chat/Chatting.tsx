@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectMenu} from '../../modules/chatting';
 import Div from '../common/Div';
-import ChannelPeople from './ChannelPeople';
+import ChannelUsers from '../channel/ChannelUsers';
 import MessageBox from './MessageBox';
 import MessageForm from './MessageForm';
 import {RootState} from '../../modules';
@@ -39,7 +39,7 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
       channelId,
     },
   });
-  const [socket, setSocket] = useState<Socket>(io('http://api.ts.io:30000'));
+  const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
   const [messages, setMessages] = useState<string[]>([]);
   const [{message}, onChange, reset] = useInput({message: ''});
   const dispatch = useDispatch();
@@ -73,7 +73,7 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
       }
     });
     return () => {
-      setSocket(socket => socket.close());
+      socket.close();
     };
   }, []);
 
@@ -84,10 +84,10 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
     <>
       {/* 나가는 버튼도 추가해야 함 */}
       {/* <button>나가기</button> */}
-      <ChattingHead>
+      <ChattingHeadStyles>
         <Div>{data.getChannelById.name}</Div>
-        <ChannelPeople channelId={channelId as number} />
-      </ChattingHead>
+        <ChannelUsers channelId={channelId as number} />
+      </ChattingHeadStyles>
       <MessageBox messages={messages} />
       <MessageForm
         message={message}
@@ -99,7 +99,7 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
   );
 }
 
-const ChattingHead = styled.div`
+const ChattingHeadStyles = styled.div`
   /* Layout */
   display: flex;
   flex-direction: row;

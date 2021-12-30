@@ -1,5 +1,6 @@
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -35,9 +36,10 @@ export class ChatChannelUserResolver {
 
   @Query(() => [ChatChannelUser], {
     name: 'chatChannelUsersByChannelId',
-    nullable: 'items',
   })
-  async chatChannelUsersByChannelId(@Args('channelId') channelId: number) {
+  async chatChannelUsersByChannelId(
+    @Args('channelId', { type: () => Int }) channelId: number,
+  ) {
     return this.chatChannelUserService.findByChannelId(channelId);
   }
 

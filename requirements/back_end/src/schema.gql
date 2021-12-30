@@ -65,10 +65,11 @@ type User {
 
 type Query {
   chatChannelUsers: [ChatChannelUser]!
-  chatChannelUsersByChannelId(channelId: Float!): [ChatChannelUser]!
+  chatChannelUsersByChannelId(channelId: Int!): [ChatChannelUser!]!
   me: User!
   users: [User]!
   getUserById(user_id: Int!): User!
+  getUsersByIds(userIds: [Int!]!): [User!]!
   getUsersByName(user_name: String!): [User!]!
   chatChannels: [ChatChannel]!
   getChannelById(channelId: Int!): ChatChannel!

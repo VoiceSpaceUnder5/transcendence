@@ -23,6 +23,11 @@ export class UsersService {
     return this.userRepository.findOneOrFail(id);
   }
 
+  findUsersByIds(id: number[]): Promise<User[]> {
+    console.log('Step5 id: ', id);
+    return this.userRepository.findByIds(id);
+  }
+
   findUsersByName(name: string): Promise<User[]> {
     return this.userRepository.find({ name: Like(`%${name}%`) });
   }
