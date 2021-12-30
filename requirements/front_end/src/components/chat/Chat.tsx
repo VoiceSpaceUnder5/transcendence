@@ -1,10 +1,49 @@
+import {gql, useQuery} from '@apollo/client';
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 import {RootState} from '../../modules';
-import {toggleChat} from '../../modules/chatting';
-import ChatBoard from './ChatBoard';
+import {toggleChat, selectMenu} from '../../modules/chatting';
+import ChatContent from './ChatContent';
+import ChatMenu from './ChatMenu';
 
+const GET_MY_NAME = gql`
+  {
+    me {
+      id
+      name
+    }
+  }
+`;
+
+export default function Chat(): JSX.Element {
+  const {loading, error, data} = useQuery(GET_MY_NAME);
+  const {isOpen, menuIdx} = useSelector((state: RootState) => ({
+    isOpen: state.chatting.isOpen,
+    menuIdx: state.chatting.menuIdx,
+  }));
+  const dispatch = useDispatch();
+  const onButtonClick = () => dispatch(toggleChat(isOpen));
+  const onMenuClick = (idx: number) => dispatch(selectMenu(idx));
+
+  if (error) return <>에러가 발생했습니다</>;
+  return (
+    <ChatBackground>
+      {loading && <>로딩 중</>}
+      {data && isOpen && (
+        <ChatBoard>
+          <ChatMenu onClick={onMenuClick} clickedIdx={menuIdx} />
+          <ChatContent menuIdx={menuIdx} id={data.me.id} name={data.me.name} />
+        </ChatBoard>
+      )}
+      <ChatButton onClick={onButtonClick}>
+        {!isOpen ? '채팅' : '닫기'}
+      </ChatButton>
+    </ChatBackground>
+  );
+}
+
+/* styles */
 const ChatBackground = styled.div`
   /* Position */
   position: fixed;
@@ -15,6 +54,37 @@ const ChatBackground = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+`;
+
+const ChatBoard = styled.div`
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 8px;
+
+  /* Size */
+  width: 320px;
+  height: 45vh;
+
+  /* Background */
+  background-color: ${props => props.theme.lightButtonBg};
+  border-radius: 8px;
+
+  @keyframes smoothAppear {
+    from {
+      opacity: 0;
+      transform: translateY(2%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  & {
+    animation: smoothAppear 0.5s ease-in-out;
+  }
 `;
 
 const ChatButton = styled.button`
@@ -52,22 +122,3 @@ const ChatButton = styled.button`
     animation: smoothAppear 1s ease-in-out;
   }
 `;
-
-export default function Chat(): JSX.Element {
-  // const [isOpen, setisOpen] = useState(false);
-  // const onClick = () => {
-  //   setisOpen(!isOpen);
-  // };
-  const {isOpen} = useSelector((state: RootState) => ({
-    isOpen: state.chatting.isOpen,
-  }));
-  const dispatch = useDispatch();
-  const onClick = () => dispatch(toggleChat(isOpen));
-
-  return (
-    <ChatBackground>
-      <ChatBoard isOpen={isOpen} />
-      <ChatButton onClick={onClick}>{!isOpen ? '채팅' : '닫기'}</ChatButton>
-    </ChatBackground>
-  );
-}

@@ -4,7 +4,14 @@ import {MenuList} from '../common/MenuList';
 import {useDispatch} from 'react-redux';
 import {joinChannel} from '../../modules/chatting';
 
-export default function SearchChannel(): JSX.Element {
+interface SearchChannelProps {
+  userId: number;
+}
+
+export default function SearchChannel({
+  // eslint-disable-next-line
+  userId,
+}: SearchChannelProps): JSX.Element {
   const channelList = [
     {
       id: 0,

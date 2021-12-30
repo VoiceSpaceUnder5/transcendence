@@ -1,5 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import FriendList from './FriendList';
+import ParticipatingChannel from './ParticipatingChannel';
+import SearchChannel from './SearchChannel';
+import CreateChannel from './CreateChannel';
+import JoinChatting from './JoinChatting';
+import Chatting from './Chatting';
 
 const ChatContentStyle = styled.div<{idx: number}>`
   /* Layout */
@@ -19,12 +25,36 @@ const ChatContentStyle = styled.div<{idx: number}>`
 `;
 
 interface ChatContentProps {
-  children: React.ReactNode;
-  idx: number;
+  id: number;
+  name: string;
+  menuIdx: number;
 }
 
-function ChatContent({children, idx}: ChatContentProps): JSX.Element {
-  return <ChatContentStyle idx={idx}>{children}</ChatContentStyle>;
-}
-
-export default ChatContent;
+export default React.memo(function ChatContent({
+  id,
+  name,
+  menuIdx,
+}: ChatContentProps): JSX.Element {
+  let element;
+  switch (menuIdx) {
+    case 0:
+      element = <FriendList userId={id} />;
+      break;
+    case 1:
+      element = <ParticipatingChannel userId={id} />;
+      break;
+    case 2:
+      element = <SearchChannel userId={id} />;
+      break;
+    case 3:
+      element = <CreateChannel userId={id} />;
+      break;
+    case 4:
+      element = <JoinChatting userId={id} />;
+      break;
+    case 5:
+      element = <Chatting userId={id} name={name} />;
+      break;
+  }
+  return <ChatContentStyle idx={menuIdx}>{element}</ChatContentStyle>;
+});

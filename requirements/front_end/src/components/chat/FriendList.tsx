@@ -2,7 +2,12 @@ import React from 'react';
 import {MenuList} from '../common/MenuList';
 import Friend from '../friend/Friend';
 
-export default function FriendList(): JSX.Element {
+interface FriendListProps {
+  userId: number;
+}
+
+// eslint-disable-next-line
+export default function FriendList({userId}: FriendListProps): JSX.Element {
   const friendList = [
     {
       userId: 'kilee',
