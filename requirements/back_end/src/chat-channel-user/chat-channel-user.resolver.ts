@@ -48,6 +48,8 @@ export class ChatChannelUserResolver {
     @Args('createChatChannelUserInput')
     createChatChannelUserInput: CreateChatChannelUserInput,
   ) {
+    // 유효성검사 어떡하지?
+    // 내가 이미 방에 들어가있는데 또 들어가려고 하면??
     return await this.chatChannelUserService.create(createChatChannelUserInput);
   }
 
