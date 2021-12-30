@@ -65,6 +65,7 @@ type User {
 
 type Query {
   chatChannelUsers: [ChatChannelUser]!
+  chatChannelUsersByChannelId(channelId: Float!): [ChatChannelUser]!
   me: User!
   users: [User]!
   getUserById(user_id: Int!): User!
@@ -78,12 +79,19 @@ type Query {
 }
 
 type Mutation {
+  createChatChannelUser(createChatChannelUserInput: CreateChatChannelUserInput!): ChatChannelUser!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!
   createChannel(createChannelInput: CreateChannelInput!, userId: Int!): ChatChannel!
   updateChannel(updateChannelInput: CreateChannelInput!, channelId: Int!): ChatChannel!
   createCode(createCodeInput: CreateCodeInput!): Code!
   createMessage(createMessageInput: CreateMessageInput!): Message!
+}
+
+input CreateChatChannelUserInput {
+  chatChannelId: Int!
+  userId: Int!
+  roleId: String!
 }
 
 input CreateUserInput {

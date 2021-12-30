@@ -63,6 +63,7 @@ export default function SearchChannel({
   );
   const join = (id: number, isPrivate: boolean) =>
     dispatch(joinChannel(id, isPrivate));
+  if (channelList.length === 0) return <>채널이 없습니다.</>;
   return (
     <MenuList>
       {channelList.map(channel => (

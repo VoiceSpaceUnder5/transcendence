@@ -11,19 +11,6 @@ import {RootState} from '../../modules';
 import {gql, useQuery} from '@apollo/client';
 import {io, Socket} from 'socket.io-client';
 
-const ChattingHead = styled.div`
-  /* Layout */
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 4px 16px;
-  align-items: center;
-  align-self: stretch;
-
-  background-color: white;
-  border-radius: 4px;
-`;
-
 const GET_CHANNEL_DATA = gql`
   query getChannelData($channelId: Int!) {
     getChannelById(channelId: $channelId) {
@@ -37,6 +24,7 @@ const GET_CHANNEL_DATA = gql`
     }
   }
 `;
+
 interface ChattingProps {
   userId: number;
   name: string;
@@ -51,7 +39,7 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
       channelId,
     },
   });
-  const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
+  const [socket, setSocket] = useState<Socket>(io('http://api.ts.io:30000'));
   const [messages, setMessages] = useState<string[]>([]);
   const [{message}, onChange, reset] = useInput({message: ''});
   const dispatch = useDispatch();
@@ -85,15 +73,17 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
       }
     });
     return () => {
-      socket.close();
+      setSocket(socket => socket.close());
     };
   }, []);
+
   if (loading) return <>로딩 중..</>;
   if (error) return <>에러!</>;
   // 이전 메시지들을 맨처음에 붙이는 작업도 필요
-
   return (
     <>
+      {/* 나가는 버튼도 추가해야 함 */}
+      {/* <button>나가기</button> */}
       <ChattingHead>
         <Div>{data.getChannelById.name}</Div>
         <ChannelPeople channelId={channelId as number} />
@@ -108,3 +98,16 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
     </>
   );
 }
+
+const ChattingHead = styled.div`
+  /* Layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 4px 16px;
+  align-items: center;
+  align-self: stretch;
+
+  background-color: white;
+  border-radius: 4px;
+`;

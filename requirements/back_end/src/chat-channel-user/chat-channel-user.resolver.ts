@@ -33,13 +33,21 @@ export class ChatChannelUserResolver {
     return this.chatChannelUserService.findAll();
   }
 
-  // @Mutation(() => ChatChannelUser, { name: 'createChatChannelUser' })
-  // async createChatChannelUser(
-  //   @Args('createChatChannelUserInput')
-  //   createChatChannelUserInput: CreateChatChannelUserInput,
-  // ) {
-  //   return await this.chatChannelUserService.create(createChatChannelUserInput);
-  // }
+  @Query(() => [ChatChannelUser], {
+    name: 'chatChannelUsersByChannelId',
+    nullable: 'items',
+  })
+  async chatChannelUsersByChannelId(@Args('channelId') channelId: number) {
+    return this.chatChannelUserService.findByChannelId(channelId);
+  }
+
+  @Mutation(() => ChatChannelUser, { name: 'createChatChannelUser' })
+  async createChatChannelUser(
+    @Args('createChatChannelUserInput')
+    createChatChannelUserInput: CreateChatChannelUserInput,
+  ) {
+    return await this.chatChannelUserService.create(createChatChannelUserInput);
+  }
 
   @ResolveField(() => Code)
   async role(@Parent() chatChannelUser: ChatChannelUser) {

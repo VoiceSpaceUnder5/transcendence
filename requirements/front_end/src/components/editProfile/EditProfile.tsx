@@ -21,35 +21,6 @@ const UPDATE_MY_PROFILE = gql`
   }
 `;
 
-const ProfileImgStyle = styled.img`
-  width: 288px;
-  height: 288px;
-  border-radius: 25px;
-  border: 1px solid #000000;
-`;
-
-const WholeLayout = styled.div`
-  display: flex;
-  justify-content: center;
-  algin-items: center;
-
-  margin-bottom: 16px;
-
-  ${props => props.theme.padSize} {
-    flex-direction: column;
-  }
-`;
-
-const InnerLayout = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  flex-direction: column;
-
-  width: 288px;
-  margin: 0px 24px;
-`;
-
 export default function EditProfile(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
@@ -124,3 +95,32 @@ export default function EditProfile(): JSX.Element {
     </BackBoard>
   );
 }
+
+const ProfileImgStyle = styled.img`
+  width: 288px;
+  height: 288px;
+  border-radius: 25px;
+  border: 1px solid #000000;
+`;
+
+const WholeLayout = styled.div`
+  display: flex;
+  justify-content: center;
+  algin-items: center;
+
+  margin-bottom: 16px;
+
+  ${props => props.theme.padSize} {
+    flex-direction: column;
+  }
+`;
+
+const InnerLayout = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+
+  width: 288px;
+  margin: 0px 24px;
+`;

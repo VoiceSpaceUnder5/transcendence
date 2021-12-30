@@ -61,9 +61,9 @@ export default function ParticipatingChannel({
       };
     },
   );
+  if (channelList.length === 0) return <>참여 중인 채널이 없습니다.</>;
   const afterParticipatingChannel = (channelId: number) =>
     dispatch(afterJoin(channelId));
-
   return (
     <MenuList>
       {channelList.map(channel => (

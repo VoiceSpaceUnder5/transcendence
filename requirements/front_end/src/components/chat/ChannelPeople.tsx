@@ -1,20 +1,8 @@
+// import {useQuery} from '@apollo/client';
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import Button from '../common/Button';
 import ChannelPerson from './ChannelPerson';
-
-const ChannelPeopleList = styled.ul`
-  position: absolute;
-  top: 80px;
-  left: 45%;
-  width: 152px;
-  background-color: #dddddd;
-  lists-tyle: none;
-  padding: 4px;
-  max-height: 68%;
-  overflow-y: auto;
-  border-radius: 8px;
-`;
 
 interface ChannelPeopleProps {
   channelId: number;
@@ -23,6 +11,7 @@ interface ChannelPeopleProps {
 export default React.memo(function ChannelPeople({
   channelId,
 }: ChannelPeopleProps): JSX.Element {
+  // const {loading, data, error} = useQuery();
   const [visible, setVisible] = useState(false);
   const onClick = () => setVisible(!visible);
   console.log(`${channelId}로 채널에 있는 사람 조회`);
@@ -72,3 +61,16 @@ export default React.memo(function ChannelPeople({
     </>
   );
 });
+
+const ChannelPeopleList = styled.ul`
+  position: absolute;
+  top: 80px;
+  left: 45%;
+  width: 152px;
+  background-color: #dddddd;
+  lists-tyle: none;
+  padding: 4px;
+  max-height: 68%;
+  overflow-y: auto;
+  border-radius: 8px;
+`;
