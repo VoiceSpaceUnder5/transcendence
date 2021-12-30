@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Channel from '../channel/Channel';
 import {MenuList} from '../common/MenuList';
 import {useDispatch} from 'react-redux';
-import {ParticipatingChannel} from '../../modules/chatting';
+import {joinChannel} from '../../modules/chatting';
 import {gql, useQuery} from '@apollo/client';
 
-const GET_PARTICIPATING_CHANNEL = gql`
-  query getChannels {
-    chatChannels {
+const GET_SEARCH_CHANNEL = gql`
+  query notParticipatingChannel($userId: Int!) {
+    notParticipatingChannel(userId: $userId) {
       type {
         id
       }
@@ -36,33 +36,33 @@ interface SearchChannelProps {
 }
 
 export default function SearchChannel({
-  // eslint-disable-next-line
   userId,
 }: SearchChannelProps): JSX.Element {
-  const {loading, data, error} = useQuery(GET_PARTICIPATING_CHANNEL);
+  const {loading, data, error, refetch} = useQuery(GET_SEARCH_CHANNEL, {
+    variables: {
+      userId,
+    },
+  });
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  console.log(data);
-  const channelList = (data.chatChannels as ChatChannel[]).map(chatChannel => {
-    return {
-      id: chatChannel.id,
-      name: chatChannel.name,
-      number: chatChannel.chatChannelUsers.length,
-      isPrivate: chatChannel.type.id === 'CT1' ? true : false,
-    };
-  });
-  // const channelList = [
-  //   {
-  //     id: 0,
-  //     name: '혼자 코딩하실 분',
-  //     number: 3,
-  //     isPrivate: true,
-  //   },
-  // ];
+  const channelList = (data.notParticipatingChannel as ChatChannel[]).map(
+    chatChannel => {
+      return {
+        id: chatChannel.id,
+        name: chatChannel.name,
+        number: chatChannel.chatChannelUsers.length,
+        isPrivate: chatChannel.type.id === 'CT1' ? true : false,
+      };
+    },
+  );
   const join = (id: number, isPrivate: boolean) =>
-    dispatch(ParticipatingChannel(id, isPrivate));
+    dispatch(joinChannel(id, isPrivate));
   return (
     <MenuList>
       {channelList.map(channel => (

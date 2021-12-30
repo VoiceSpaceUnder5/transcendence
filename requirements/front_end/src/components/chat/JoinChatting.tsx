@@ -26,14 +26,12 @@ const Buttons = styled.div`
   display: flex;
 `;
 
-interface ParticipatingChannelProps {
+interface JoinChattingProps {
   userId: number;
 }
 
 // eslint-disable-next-line
-export default function JoinChatting({
-  userId,
-}: ParticipatingChannelProps): JSX.Element {
+export default function JoinChatting({userId}: JoinChattingProps): JSX.Element {
   const {channelId, isPrivate} = useSelector((state: RootState) => ({
     channelId: state.chatting.channelId,
     isPrivate: state.chatting.isPrivate,

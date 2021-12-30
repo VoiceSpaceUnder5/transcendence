@@ -36,15 +36,45 @@ export class ChatChannelsResolver {
     return await this.chatChannelsService.findChannelById(channelId);
   }
 
-  @Query(() => [ChatChannel], { name: 'ParticipatingChannel' })
-  async ParticipatingChannel(
+  @Query(() => [ChatChannel], { name: 'participatingChannel' })
+  async participatingChannel(
     @Args('userId', { type: () => Int }) userId: number,
   ) {
+    // 내가 속한 chatChannelUsers를 가져오고, 그 채널들의 Id를 긁어옴
     const channelUsers = await this.chatChannelUserService.findByUserId(userId);
     const channelsId = channelUsers.map((channelUser) => {
       return channelUser.chatChannelId;
     });
-    return this.chatChannelsService.findChannelsByUserId(channelsId);
+
+    // 내가 있는 채널 Id를 기준으로 채널들을 긁어옴
+    return this.chatChannelsService.findChannelsByIds(channelsId);
+  }
+
+  @Query(() => [ChatChannel], { name: 'notParticipatingChannel' })
+  async notParticipatingChannel(
+    @Args('userId', { type: () => Int }) userId: number,
+  ) {
+    // 모든 chatChannelUsers를 가져오고, 그 채널들의 Id를 긁어옴
+    const allChannelUsers = await this.chatChannelUserService.findAll();
+    const allChannelsId = allChannelUsers.map(
+      (channelUser) => channelUser.chatChannelId,
+    );
+
+    // 내가 속한 chatChannelUsers를 가져오고, 그 채널들의 Id를 긁어옴
+    const meChannelUsers = await this.chatChannelUserService.findByUserId(
+      userId,
+    );
+    const channelsId = meChannelUsers.map(
+      (channelUser) => channelUser.chatChannelId,
+    );
+
+    // 모든 channelId에서 내가 속한 채널 Id를 뺌
+    const channelsExceptMeId = allChannelsId.filter(
+      (channelId) => !channelsId.includes(channelId),
+    );
+
+    // 내가 없는 채널 Id를 기준으로 채널들을 긁어옴
+    return this.chatChannelsService.findChannelsByIds(channelsExceptMeId);
   }
 
   //UserId validation check 필요

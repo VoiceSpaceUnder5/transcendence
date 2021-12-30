@@ -5,13 +5,9 @@ import {useDispatch} from 'react-redux';
 import {afterJoin} from '../../modules/chatting';
 import {gql, useQuery} from '@apollo/client';
 
-interface ParticipatingChannelProps {
-  userId: number;
-}
-
-const GET_JOIN_CHANNEL = gql`
-  query ParticipatingChannel($userId: Int!) {
-    ParticipatingChannel(userId: $userId) {
+const GET_PARTICIPATING_CHANNEL = gql`
+  query participatingChannel($userId: Int!) {
+    participatingChannel(userId: $userId) {
       type {
         id
       }
@@ -35,10 +31,14 @@ interface ChatChannel {
   }[];
 }
 
+interface ParticipatingChannelProps {
+  userId: number;
+}
+
 export default function ParticipatingChannel({
   userId,
 }: ParticipatingChannelProps): JSX.Element {
-  const {loading, data, error, refetch} = useQuery(GET_JOIN_CHANNEL, {
+  const {loading, data, error, refetch} = useQuery(GET_PARTICIPATING_CHANNEL, {
     variables: {
       userId,
     },
@@ -51,7 +51,7 @@ export default function ParticipatingChannel({
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  const channelList = (data.ParticipatingChannel as ChatChannel[]).map(
+  const channelList = (data.participatingChannel as ChatChannel[]).map(
     chatChannel => {
       return {
         id: chatChannel.id,
