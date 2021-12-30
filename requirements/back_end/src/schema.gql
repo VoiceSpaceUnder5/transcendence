@@ -71,6 +71,7 @@ type Query {
   getUsersByName(user_name: String!): [User!]!
   chatChannels: [ChatChannel]!
   getChannelById(channelId: Int!): ChatChannel!
+  ParticipatingChannel(userId: Int!): [ChatChannel!]!
   codes: [Code]!
   getCodeByCode(code: String!): Code!
 }

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Socket } from 'dgram';
 import { ChatGateway } from './chat.gateway';
 
 describe('ChatGateway', () => {

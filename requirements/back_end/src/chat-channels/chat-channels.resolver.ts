@@ -33,7 +33,18 @@ export class ChatChannelsResolver {
   async getChannelById(
     @Args('channelId', { type: () => Int }) channelId: number,
   ) {
-    return this.chatChannelsService.findChannelById(channelId);
+    return await this.chatChannelsService.findChannelById(channelId);
+  }
+
+  @Query(() => [ChatChannel], { name: 'ParticipatingChannel' })
+  async ParticipatingChannel(
+    @Args('userId', { type: () => Int }) userId: number,
+  ) {
+    const channelUsers = await this.chatChannelUserService.findByUserId(userId);
+    const channelsId = channelUsers.map((channelUser) => {
+      return channelUser.chatChannelId;
+    });
+    return this.chatChannelsService.findChannelsByUserId(channelsId);
   }
 
   //UserId validation check 필요

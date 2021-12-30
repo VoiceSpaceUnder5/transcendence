@@ -28,6 +28,10 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+client.refetchQueries({
+  include: 'all',
+});
+
 const store = createStore(rootReducer, composeWithDevTools());
 
 ReactDOM.render(

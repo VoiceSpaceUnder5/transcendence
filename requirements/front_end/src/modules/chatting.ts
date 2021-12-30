@@ -37,7 +37,7 @@ export const createChannel = (): ActionReturnType => ({
   menuIdx: 4,
 });
 
-export const joinChannel = (
+export const ParticipatingChannel = (
   channelId: number,
   isPrivate: boolean,
 ): ActionReturnType => {
