@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import TitleDiv from '../common/TitleDiv';
-import Input from '../common/Input';
 import Div from '../common/Div';
 import BackBoard from '../common/BackBoard';
 import Textarea from '../common/Textarea';
@@ -30,9 +29,6 @@ export default function EditProfile(): JSX.Element {
   const {imagePath, id, name, email, description} = location.state;
 
   const [inputs, onChange] = useInput({
-    id,
-    name,
-    email,
     description,
   });
 
@@ -70,10 +66,18 @@ export default function EditProfile(): JSX.Element {
           )}
         </InnerLayout>
         <InnerLayout>
-          <Div>이름</Div>
-          <Input name="userId" onChange={onChange} value={inputs.name} />
-          <Div>email</Div>
-          <Input name="email" onChange={onChange} value={inputs.email} />
+          <Div>
+            이름<span style={{fontSize: '10px'}}>(수정 불가)</span>
+          </Div>
+          <Div bg="light" width="large" align="center">
+            {name}
+          </Div>
+          <Div>
+            email<span style={{fontSize: '10px'}}>(수정 불가)</span>
+          </Div>
+          <Div bg="light" width="large" align="center">
+            {email}
+          </Div>
           <Div>자기소개</Div>
           <Textarea
             name="description"
