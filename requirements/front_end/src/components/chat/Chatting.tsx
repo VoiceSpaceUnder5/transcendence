@@ -8,7 +8,7 @@ import ChannelUsers from '../channel/ChannelUsers';
 import MessageBox from './MessageBox';
 import MessageForm from './MessageForm';
 import {RootState} from '../../modules';
-import {gql, useQuery} from '@apollo/client';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import {io, Socket} from 'socket.io-client';
 
 const GET_CHANNEL_DATA = gql`
@@ -16,11 +16,22 @@ const GET_CHANNEL_DATA = gql`
     getChannelById(channelId: $channelId) {
       name
       messages {
+        userId
         textMessage
       }
       chatChannelUsers {
         id
       }
+    }
+  }
+`;
+
+const CREATE_MESSAGE = gql`
+  mutation createMessage($createMessageInput: CreateMessageInput!) {
+    createMessage(createMessageInput: $createMessageInput) {
+      chatChannelId
+      userId
+      textMessage
     }
   }
 `;
@@ -34,21 +45,45 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
   const {channelId} = useSelector((state: RootState) => ({
     channelId: state.chatting.channelId,
   }));
-  const {loading, error, data} = useQuery(GET_CHANNEL_DATA, {
+  const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
+  const [userIds, setUserIds] = useState<number[]>([]);
+  const [messages, setMessages] = useState<
+    {userId: number; username?: string; textMessage: string}[]
+  >([]);
+  const [{message}, onChange, reset] = useInput({message: ''});
+  const dispatch = useDispatch();
+
+  const {loading, error, data, refetch} = useQuery(GET_CHANNEL_DATA, {
     variables: {
       channelId,
     },
   });
-  const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
-  const [messages, setMessages] = useState<string[]>([]);
-  const [{message}, onChange, reset] = useInput({message: ''});
-  const dispatch = useDispatch();
+
+  const [sendMessage] = useMutation(CREATE_MESSAGE, {
+    variables: {
+      createMessageInput: {
+        userId,
+        chatChannelId: channelId,
+        textMessage: message,
+      },
+    },
+  });
 
   const onSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      socket.emit('sendToServer', {channelId, userId, name, message});
-      reset();
+      sendMessage()
+        .then(data => {
+          const sendedMessage = data.data.createMessage;
+          socket.emit('sendToServer', {
+            channelId: sendedMessage.chatChannelId,
+            userId: sendedMessage.userId,
+            name,
+            message: sendedMessage.textMessage,
+          });
+          reset();
+        })
+        .catch(e => console.log(e));
     },
     [message],
   );
@@ -65,10 +100,20 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
     socket.on('notice', body => console.log(body.message));
     socket.on('sendToClient', body => {
       if (body.userId === userId) {
-        setMessages(messages => messages.concat(`나: ${body.message}`));
+        setMessages(messages =>
+          messages.concat({
+            userId: body.userId,
+            username: '나',
+            textMessage: body.message,
+          }),
+        );
       } else {
         setMessages(messages =>
-          messages.concat(`${body.name}: ${body.message}`),
+          messages.concat({
+            userId: body.userId,
+            username: body.username,
+            textMessage: body.message,
+          }),
         );
       }
     });
@@ -77,9 +122,22 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
     };
   }, []);
 
+  useEffect(() => {
+    refetch().then(data => {
+      const userIds = data.data.getChannelById.messages.map(
+        (message: {userId: number}) => message.userId,
+      );
+      const uniqueArr = userIds.filter(
+        (id: number, idx: number, self: number[]) => self.indexOf(id) === idx,
+      );
+      setUserIds(uniqueArr);
+      setMessages(data.data.getChannelById.messages);
+    });
+  }, []);
+
   if (loading) return <>로딩 중..</>;
   if (error) return <>에러!</>;
-  // 이전 메시지들을 맨처음에 붙이는 작업도 필요
+
   return (
     <>
       {/* 나가는 버튼도 추가해야 함 */}
@@ -88,7 +146,7 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
         <Div>{data.getChannelById.name}</Div>
         <ChannelUsers channelId={channelId as number} />
       </ChattingHeadStyles>
-      <MessageBox messages={messages} />
+      <MessageBox myId={userId} userIds={userIds} messages={messages} />
       <MessageForm
         message={message}
         onSubmit={onSubmit}
