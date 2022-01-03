@@ -120,4 +120,130 @@ export const dbSeed = async () => {
     },
     ['id'],
   );
+
+  // ** 관계 타입 relation.type
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'RE',
+      id: 'RE0',
+      label_korean: '1이 2의 수락 대기 중',
+      label_english: 'pending_first_second',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'RE',
+      id: 'RE1',
+      label_korean: '2가 1의 수락 대기 중',
+      label_english: 'pending_second_first',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'RE',
+      id: 'RE2',
+      label_korean: '친구',
+      label_english: 'friends',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'RE',
+      id: 'RE3',
+      label_korean: '1이 2 차단',
+      label_english: 'blocked_first_second',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'RE',
+      id: 'RE4',
+      label_korean: '2가 1 차단',
+      label_english: 'blocked_second_first',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'RE',
+      id: 'RE5',
+      label_korean: '서로 차단',
+      label_english: 'blocked_both',
+    },
+    ['id'],
+  );
+
+  // ** 경기 결과 record.result
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'BR',
+      id: 'BR0',
+      label_korean: '왼쪽 승',
+      label_english: 'left_win',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'BR',
+      id: 'BR1',
+      label_korean: '오른쪽 승',
+      label_english: 'right_win',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'BR',
+      id: 'BR2',
+      label_korean: '무승부',
+      label_english: 'draw',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'BR',
+      id: 'BR3',
+      label_korean: '취소됨',
+      label_english: 'cancled',
+    },
+    ['id'],
+  );
+
+  // ** 경기 타입 record.type
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'BT',
+      id: 'BT0',
+      label_korean: '일반',
+      label_english: 'normal',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'BT',
+      id: 'BT1',
+      label_korean: '레더',
+      label_english: 'ladder',
+    },
+    ['id'],
+  );
 };

@@ -48,6 +48,16 @@ type ChatChannelUser {
   role: Code!
 }
 
+"""Relation data"""
+type Relation {
+  created_at: DateTime!
+  updated_at: DateTime!
+  user_first_id: Int!
+  user_second_id: Int!
+  type: Code!
+  typeId: String!
+}
+
 """User data"""
 type User {
   created_at: DateTime!
@@ -61,38 +71,49 @@ type User {
   authorityId: String!
   chatChannelUsers: [ChatChannelUser!]!
   messages: [Message!]!
+  relations(typeId: String!): [Relation]!
 }
 
 type Query {
-  chatChannelUsers: [ChatChannelUser]!
-  chatChannelUsersByChannelId(channelId: Int!): [ChatChannelUser!]!
-  me: User!
-  users: [User]!
+  getChatChannelUsers: [ChatChannelUser]!
+  getChatChannelUsersByChannelId(channelId: Int!): [ChatChannelUser!]!
+  getMe: User!
+  getUsers: [User]!
   getUserById(user_id: Int!): User!
   getUsersByIds(userIds: [Int!]!): [User!]!
   getUsersByName(user_name: String!): [User!]!
-  chatChannels: [ChatChannel]!
+  getChatChannels: [ChatChannel]!
   getChannelById(channelId: Int!): ChatChannel!
-  participatingChannel(userId: Int!): [ChatChannel!]!
-  notParticipatingChannel(userId: Int!): [ChatChannel!]!
-  codes: [Code]!
+  getParticipatingChannel(userId: Int!): [ChatChannel]!
+  getNotParticipatingChannel(userId: Int!): [ChatChannel!]!
+  getCodes: [Code]!
   getCodeByCode(code: String!): Code!
+  getRelations: [Relation!]!
+  getRelation(user_first_id: Int!, user_second_id: Int!, typeId: Int): Relation!
 }
 
 type Mutation {
   createChatChannelUser(createChatChannelUserInput: CreateChatChannelUserInput!): ChatChannelUser!
+  deleteChatChannelUser(deleteChatChannelUserInput: DeleteChatChannelUserInput!): Boolean!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!
   createChannel(createChannelInput: CreateChannelInput!, userId: Int!): ChatChannel!
   updateChannel(updateChannelInput: CreateChannelInput!, channelId: Int!): ChatChannel!
   createCode(createCodeInput: CreateCodeInput!): Code!
   createMessage(createMessageInput: CreateMessageInput!): Message!
+  createRelation(createRelationInput: CreateRelationInput!): Relation!
+  updateRelation(updateRelationInput: CreateRelationInput!): Relation!
 }
 
 input CreateChatChannelUserInput {
   chatChannelId: Int!
   userId: Int!
   roleId: String!
+}
+
+input DeleteChatChannelUserInput {
+  chatChannelId: Int!
+  userId: Int!
 }
 
 input CreateUserInput {
@@ -126,4 +147,10 @@ input CreateMessageInput {
   chatChannelId: Float!
   userId: Float!
   textMessage: String!
+}
+
+input CreateRelationInput {
+  user_first_id: Int!
+  user_second_id: Int!
+  typeId: String!
 }

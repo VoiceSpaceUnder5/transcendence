@@ -11,11 +11,12 @@ import { ChatChannel } from 'src/chat-channels/chat-channel.entity';
 import { ChatChannelsService } from 'src/chat-channels/chat-channels.service';
 import { Code } from 'src/code/code.entity';
 import { CodeService } from 'src/code/code.service';
-import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
+import { DeleteResult } from 'typeorm';
 import { ChatChannelUser } from './chat-channel-user.entity';
 import { ChatChannelUserService } from './chat-channel-user.service';
 import { CreateChatChannelUserInput } from './inputs/create-chat-channel-user.input';
+import { DeleteChatChannelUserInput } from './inputs/delete-chat-channel-user.input';
 
 @Resolver(() => ChatChannelUser)
 export class ChatChannelUserResolver {
@@ -27,17 +28,17 @@ export class ChatChannelUserResolver {
   ) {}
 
   @Query(() => [ChatChannelUser], {
-    name: 'chatChannelUsers',
+    name: 'getChatChannelUsers',
     nullable: 'items',
   })
-  async chatChannelUsers() {
+  async getChatChannelUsers() {
     return this.chatChannelUserService.findAll();
   }
 
   @Query(() => [ChatChannelUser], {
-    name: 'chatChannelUsersByChannelId',
+    name: 'getChatChannelUsersByChannelId',
   })
-  async chatChannelUsersByChannelId(
+  async getChatChannelUsersByChannelId(
     @Args('channelId', { type: () => Int }) channelId: number,
   ) {
     return this.chatChannelUserService.findByChannelId(channelId);
@@ -51,6 +52,14 @@ export class ChatChannelUserResolver {
     // 유효성검사 어떡하지?
     // 내가 이미 방에 들어가있는데 또 들어가려고 하면??
     return await this.chatChannelUserService.create(createChatChannelUserInput);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteChatChannelUser(
+    @Args('deleteChatChannelUserInput')
+    deleteChatChannelUser: DeleteChatChannelUserInput,
+  ) {
+    return await this.chatChannelUserService.delete(deleteChatChannelUser);
   }
 
   @ResolveField(() => Code)

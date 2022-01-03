@@ -11,6 +11,8 @@ import {
 import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
 import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
 import { ChatChannelUserService } from 'src/chat-channel-user/chat-channel-user.service';
+import { Relation } from 'src/relation/relation.entity';
+import { RelationService } from 'src/relation/relation.service';
 import { Code } from '../code/code.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.update';
@@ -23,16 +25,17 @@ export class UsersResolver {
   constructor(
     private readonly usersService: UsersService,
     private readonly chatChannelUserService: ChatChannelUserService,
+    private readonly relationService: RelationService,
   ) {}
 
   //@GetUser 가드를 통과해서 내려온 컨텍스트에서 user 추출
   @UseGuards(GqlJwtAccessGuard)
-  @Query(() => User, { name: 'me' })
+  @Query(() => User, { name: 'getMe' })
   async getMe(@GetUser() user: User) {
     return user;
   }
 
-  @Query(() => [User], { name: 'users', nullable: 'items' })
+  @Query(() => [User], { name: 'getUsers', nullable: 'items' })
   async users() {
     return this.usersService.findUsers();
   }
@@ -77,5 +80,19 @@ export class UsersResolver {
   @ResolveField(() => [ChatChannelUser])
   chatChannelUsers(@Parent() user: User): Promise<ChatChannelUser[]> {
     return this.chatChannelUserService.findByUserId(user.id);
+  }
+
+  @ResolveField(() => [Relation])
+  async relations(
+    @Parent() user: User,
+    @Args('typeId') typeId: string,
+  ): Promise<Relation[]> {
+    const allRelation = await this.relationService.findRelationByUserId(
+      user.id,
+    );
+    const selectedRelations = allRelation.map((relation) => {
+      if (relation.typeId === typeId) return relation;
+    });
+    return selectedRelations;
   }
 }

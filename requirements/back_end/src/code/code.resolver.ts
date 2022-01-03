@@ -7,8 +7,8 @@ import { CreateCodeInput } from './inputs/create-code.input';
 export class CodeResolver {
   constructor(private readonly codeService: CodeService) {}
 
-  @Query(() => [Code], { name: 'codes', nullable: 'items' })
-  async codes() {
+  @Query(() => [Code], { name: 'getCodes', nullable: 'items' })
+  async getCodes() {
     return this.codeService.findCodes();
   }
 

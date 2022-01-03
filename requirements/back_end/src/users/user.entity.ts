@@ -3,6 +3,7 @@ import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity'
 import { Code } from 'src/code/code.entity';
 import { DefaultEntity } from 'src/default.entity';
 import { Message } from 'src/message/message.entity';
+import { Relation } from 'src/relation/relation.entity';
 import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 
 @ObjectType({ description: 'User data' })
@@ -43,4 +44,7 @@ export class User extends DefaultEntity {
   @Field(() => [Message])
   @OneToMany(() => Message, (message) => message.user)
   messages: Message[];
+
+  @Field(() => [Relation], { nullable: 'items' })
+  relations: Relation[];
 }
