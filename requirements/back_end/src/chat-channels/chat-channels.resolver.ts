@@ -24,8 +24,8 @@ export class ChatChannelsResolver {
     private readonly messageService: MessageService,
   ) {}
 
-  @Query(() => [ChatChannel], { name: 'chatChannels', nullable: 'items' })
-  async chatChannels() {
+  @Query(() => [ChatChannel], { name: 'getChatChannels', nullable: 'items' })
+  async getChannels() {
     return this.chatChannelsService.findChannels();
   }
 
@@ -36,8 +36,11 @@ export class ChatChannelsResolver {
     return await this.chatChannelsService.findChannelById(channelId);
   }
 
-  @Query(() => [ChatChannel], { name: 'participatingChannel' })
-  async participatingChannel(
+  @Query(() => [ChatChannel], {
+    name: 'getParticipatingChannel',
+    nullable: 'items',
+  })
+  async getParticipatingChannel(
     @Args('userId', { type: () => Int }) userId: number,
   ) {
     // 내가 속한 chatChannelUsers를 가져오고, 그 채널들의 Id를 긁어옴
@@ -50,8 +53,8 @@ export class ChatChannelsResolver {
     return this.chatChannelsService.findChannelsByIds(channelsId);
   }
 
-  @Query(() => [ChatChannel], { name: 'notParticipatingChannel' })
-  async notParticipatingChannel(
+  @Query(() => [ChatChannel], { name: 'getNotParticipatingChannel' })
+  async getNotParticipatingChannel(
     @Args('userId', { type: () => Int }) userId: number,
   ) {
     // 모든 chatChannelUsers를 가져오고, 그 채널들의 Id를 긁어옴
