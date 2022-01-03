@@ -7,7 +7,7 @@ import {gql, useQuery} from '@apollo/client';
 
 const GET_PARTICIPATING_CHANNEL = gql`
   query participatingChannel($userId: Int!) {
-    participatingChannel(userId: $userId) {
+    getParticipatingChannel(userId: $userId) {
       type {
         id
       }
@@ -51,7 +51,7 @@ export default function ParticipatingChannel({
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  const channelList = (data.participatingChannel as ChatChannel[]).map(
+  const channelList = (data.getParticipatingChannel as ChatChannel[]).map(
     chatChannel => {
       return {
         id: chatChannel.id,

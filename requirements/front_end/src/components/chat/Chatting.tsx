@@ -144,7 +144,7 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
       {/* <button>나가기</button> */}
       <ChattingHeadStyles>
         <Div>{data.getChannelById.name}</Div>
-        <ChannelUsers channelId={channelId as number} />
+        <ChannelUsers meId={userId} channelId={channelId as number} />
       </ChattingHeadStyles>
       <MessageBox myId={userId} userIds={userIds} messages={messages} />
       <MessageForm

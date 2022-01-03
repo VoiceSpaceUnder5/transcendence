@@ -9,7 +9,7 @@ import ChatMenu from './ChatMenu';
 
 const GET_MY_NAME = gql`
   {
-    me {
+    getMe {
       id
       name
     }
@@ -33,7 +33,11 @@ export default function Chat(): JSX.Element {
       {data && isOpen && (
         <ChatBoard>
           <ChatMenu onClick={onMenuClick} clickedIdx={menuIdx} />
-          <ChatContent menuIdx={menuIdx} id={data.me.id} name={data.me.name} />
+          <ChatContent
+            menuIdx={menuIdx}
+            id={data.getMe.id}
+            name={data.getMe.name}
+          />
         </ChatBoard>
       )}
       <ChatButton onClick={onButtonClick}>

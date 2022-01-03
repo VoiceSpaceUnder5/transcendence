@@ -1,15 +1,32 @@
+// import {gql} from '@apollo/client';
 import React from 'react';
 import {MenuList} from '../common/MenuList';
 import Friend from '../friend/Friend';
 
-interface FriendListProps {
+interface RelationListProps {
   userId: number;
 }
 
+// const GET_RELATIONS = gql`
+//   query getMe {
+//     getMe {
+//       id
+//       name
+//       relations(typeId: "RE2") {
+//         user_first_id
+//         user_second_id
+//         type {
+//           id
+//         }
+//       }
+//     }
+//   }
+// `;
+
 // eslint-disable-next-line
-export default function FriendList({userId}: FriendListProps): JSX.Element {
+export default function RelationList({userId}: RelationListProps): JSX.Element {
   // 친구추가 기능도 필요!!!!!
-  const friendList = [
+  const RelationList = [
     {
       userId: 'kilee',
       imagePath: './imagePath.png',
@@ -29,11 +46,15 @@ export default function FriendList({userId}: FriendListProps): JSX.Element {
       isOnline: false,
     },
   ];
+  // const {loading, error, data} = useQuery(GET_RELATIONS);
+  // if (loading) return <>로딩 중..</>;
+  // if (error) return <>에러...</>;
+  // console.log(data);
   return (
     <MenuList>
       {/* <div style={{borderBottom: '1px solid black'}}>친구 요청</div>
       <div style={{borderBottom: '1px solid black'}}>친구 목록</div> */}
-      {friendList.map(friend => (
+      {RelationList.map(friend => (
         <Friend
           key={friend.userId}
           imagePath={friend.imagePath}

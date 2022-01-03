@@ -5,7 +5,7 @@ import ChannelUsersList from './ChannelUsersList';
 
 const GET_CHANNEL_USERS = gql`
   query getChannelUsersByChannelId($channelId: Int!) {
-    chatChannelUsersByChannelId(channelId: $channelId) {
+    getChatChannelUsersByChannelId(channelId: $channelId) {
       userId
     }
   }
@@ -16,10 +16,12 @@ interface User {
 }
 
 interface ChannelUsersProps {
+  meId: number;
   channelId: number;
 }
 
 export default React.memo(function ChannelUsers({
+  meId,
   channelId,
 }: ChannelUsersProps): JSX.Element {
   const {loading, data, error, refetch} = useQuery(GET_CHANNEL_USERS, {
@@ -35,7 +37,7 @@ export default React.memo(function ChannelUsers({
   }, []);
   if (loading) return <>로딩</>;
   if (error) return <>에러</>;
-  const users: User[] = data.chatChannelUsersByChannelId;
+  const users: User[] = data.getChatChannelUsersByChannelId;
   return (
     <>
       <Button bg="dark" onClick={onClick} ani={false}>
@@ -43,6 +45,7 @@ export default React.memo(function ChannelUsers({
       </Button>
       {visible && (
         <ChannelUsersList
+          meId={meId}
           userIds={users.map(user => user.userId)}
         ></ChannelUsersList>
       )}
