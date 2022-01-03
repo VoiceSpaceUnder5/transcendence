@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import FriendList from './FriendList';
+import RelationList from './RelationsList';
 import ParticipatingChannel from './ParticipatingChannel';
 import SearchChannel from './SearchChannel';
 import CreateChannel from './CreateChannel';
@@ -38,7 +38,7 @@ export default React.memo(function ChatContent({
   let element;
   switch (menuIdx) {
     case 0:
-      element = <FriendList userId={id} />;
+      element = <RelationList userId={id} />;
       break;
     case 1:
       element = <ParticipatingChannel userId={id} />;
