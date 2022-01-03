@@ -1,70 +1,69 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Channel from '../channel/Channel';
 import {MenuList} from '../common/MenuList';
 import {useDispatch} from 'react-redux';
 import {joinChannel} from '../../modules/chatting';
+import {gql, useQuery} from '@apollo/client';
+
+const GET_SEARCH_CHANNEL = gql`
+  query notParticipatingChannel($userId: Int!) {
+    notParticipatingChannel(userId: $userId) {
+      type {
+        id
+      }
+      id
+      name
+      chatChannelUsers {
+        userId
+      }
+    }
+  }
+`;
+
+interface ChatChannel {
+  id: number;
+  name: string;
+  type: {
+    id: string;
+  };
+  chatChannelUsers: {
+    userId: number;
+  }[];
+}
 
 interface SearchChannelProps {
   userId: number;
 }
 
 export default function SearchChannel({
-  // eslint-disable-next-line
   userId,
 }: SearchChannelProps): JSX.Element {
-  const channelList = [
-    {
-      id: 0,
-      name: '혼자 코딩하실 분',
-      number: 3,
-      isPrivate: true,
+  const {loading, data, error, refetch} = useQuery(GET_SEARCH_CHANNEL, {
+    variables: {
+      userId,
     },
-    {
-      id: 1,
-      name: '다른 게임',
-      number: 50,
-      isPrivate: false,
-    },
-    {
-      id: 2,
-      name: '놀 사람',
-      number: 60,
-      isPrivate: true,
-    },
-    {
-      id: 3,
-      name: '한강 온도 체크할 사람',
-      number: 10,
-      isPrivate: false,
-    },
-    {
-      id: 4,
-      name: '공부하실 분',
-      number: 3,
-      isPrivate: false,
-    },
-    {
-      id: 5,
-      name: '즐',
-      number: 3,
-      isPrivate: false,
-    },
-    {
-      id: 6,
-      name: '즐',
-      number: 3,
-      isPrivate: false,
-    },
-    {
-      id: 7,
-      name: '즐',
-      number: 3,
-      isPrivate: false,
-    },
-  ];
+  });
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  if (loading) return <>로딩 중</>;
+  if (error) return <>에러</>;
+  const channelList = (data.notParticipatingChannel as ChatChannel[]).map(
+    chatChannel => {
+      return {
+        id: chatChannel.id,
+        name: chatChannel.name,
+        number: chatChannel.chatChannelUsers.length,
+        isPrivate: chatChannel.type.id === 'CT1' ? true : false,
+      };
+    },
+  );
   const join = (id: number, isPrivate: boolean) =>
     dispatch(joinChannel(id, isPrivate));
+  if (channelList.length === 0) return <>채널이 없습니다.</>;
   return (
     <MenuList>
       {channelList.map(channel => (

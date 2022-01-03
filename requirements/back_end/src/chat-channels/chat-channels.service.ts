@@ -21,6 +21,10 @@ export class ChatChannelsService {
     return this.chatChannelRepository.findOneOrFail(channelId);
   }
 
+  findChannelsByIds(channelsId: number[]): Promise<ChatChannel[]> {
+    return this.chatChannelRepository.findByIds(channelsId);
+  }
+
   async createChannel(
     createChannelInput: CreateChannelInput,
   ): Promise<ChatChannel> {

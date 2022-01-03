@@ -1,5 +1,6 @@
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -33,13 +34,24 @@ export class ChatChannelUserResolver {
     return this.chatChannelUserService.findAll();
   }
 
-  // @Mutation(() => ChatChannelUser, { name: 'createChatChannelUser' })
-  // async createChatChannelUser(
-  //   @Args('createChatChannelUserInput')
-  //   createChatChannelUserInput: CreateChatChannelUserInput,
-  // ) {
-  //   return await this.chatChannelUserService.create(createChatChannelUserInput);
-  // }
+  @Query(() => [ChatChannelUser], {
+    name: 'chatChannelUsersByChannelId',
+  })
+  async chatChannelUsersByChannelId(
+    @Args('channelId', { type: () => Int }) channelId: number,
+  ) {
+    return this.chatChannelUserService.findByChannelId(channelId);
+  }
+
+  @Mutation(() => ChatChannelUser, { name: 'createChatChannelUser' })
+  async createChatChannelUser(
+    @Args('createChatChannelUserInput')
+    createChatChannelUserInput: CreateChatChannelUserInput,
+  ) {
+    // 유효성검사 어떡하지?
+    // 내가 이미 방에 들어가있는데 또 들어가려고 하면??
+    return await this.chatChannelUserService.create(createChatChannelUserInput);
+  }
 
   @ResolveField(() => Code)
   async role(@Parent() chatChannelUser: ChatChannelUser) {

@@ -1,17 +1,13 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {MenuList} from '../common/MenuList';
 import Channel from '../channel/Channel';
 import {useDispatch} from 'react-redux';
 import {afterJoin} from '../../modules/chatting';
 import {gql, useQuery} from '@apollo/client';
 
-interface ParticipatingChannelProps {
-  userId: number;
-}
-
 const GET_PARTICIPATING_CHANNEL = gql`
-  query getChannels {
-    chatChannels {
+  query participatingChannel($userId: Int!) {
+    participatingChannel(userId: $userId) {
       type {
         id
       }
@@ -35,27 +31,39 @@ interface ChatChannel {
   }[];
 }
 
+interface ParticipatingChannelProps {
+  userId: number;
+}
+
 export default function ParticipatingChannel({
-  // eslint-disable-next-line
   userId,
 }: ParticipatingChannelProps): JSX.Element {
-  const {loading, data, error} = useQuery(GET_PARTICIPATING_CHANNEL);
+  const {loading, data, error, refetch} = useQuery(GET_PARTICIPATING_CHANNEL, {
+    variables: {
+      userId,
+    },
+  });
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  console.log(data);
-  const channelList = (data.chatChannels as ChatChannel[]).map(chatChannel => {
-    return {
-      id: chatChannel.id,
-      name: chatChannel.name,
-      number: chatChannel.chatChannelUsers.length,
-      isPrivate: chatChannel.type.id === 'CT1' ? true : false,
-    };
-  });
-  const afterJoinChannel = (channelId: number) =>
+  const channelList = (data.participatingChannel as ChatChannel[]).map(
+    chatChannel => {
+      return {
+        id: chatChannel.id,
+        name: chatChannel.name,
+        number: chatChannel.chatChannelUsers.length,
+        isPrivate: chatChannel.type.id === 'CT1' ? true : false,
+      };
+    },
+  );
+  if (channelList.length === 0) return <>참여 중인 채널이 없습니다.</>;
+  const afterParticipatingChannel = (channelId: number) =>
     dispatch(afterJoin(channelId));
-
   return (
     <MenuList>
       {channelList.map(channel => (
@@ -65,7 +73,7 @@ export default function ParticipatingChannel({
           name={channel.name}
           number={channel.number}
           isPrivate={channel.isPrivate}
-          onClick={() => afterJoinChannel(channel.id)}
+          onClick={() => afterParticipatingChannel(channel.id)}
         ></Channel>
       ))}
     </MenuList>

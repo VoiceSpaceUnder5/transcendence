@@ -8,6 +8,7 @@ interface FriendListProps {
 
 // eslint-disable-next-line
 export default function FriendList({userId}: FriendListProps): JSX.Element {
+  // 친구추가 기능도 필요!!!!!
   const friendList = [
     {
       userId: 'kilee',

@@ -26,6 +26,7 @@ const ButtonStyle = styled.button.attrs(props => ({
   left?: boolean;
   right?: boolean;
   large?: boolean;
+  ani?: boolean;
 }>`
   /* font */
   font-style: normal;
@@ -102,18 +103,22 @@ const ButtonStyle = styled.button.attrs(props => ({
   ${props => props.left && `border-radius: 4px 0px 0px 4px;`}
   ${props => props.right && `border-radius: 0px 4px 4px 0px;`}
 
-  @keyframes smoothAppear {
-    from {
-      opacity: 0.7;
-    }
-    to {
-      opacity: 1;
-    }
-  }
+  ${props =>
+    props.ani !== false &&
+    css`
+      @keyframes smoothAppear {
+        from {
+          opacity: 0.7;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
-  & {
-    animation: smoothAppear 0.5s ease-in-out;
-  }
+      & {
+        animation: smoothAppear 0.5s ease-in-out;
+      }
+    `}
 `;
 
 interface ButtonProps {
@@ -125,6 +130,7 @@ interface ButtonProps {
   right?: boolean;
   large?: boolean;
   type?: string;
+  ani?: boolean;
   onClick?: () => void;
   onHover?: () => void;
 }
@@ -138,6 +144,7 @@ function Button({
   right,
   large,
   type,
+  ani,
   onClick,
   onHover,
 }: ButtonProps): JSX.Element {
@@ -153,6 +160,7 @@ function Button({
       onMouseOver={onHover}
       onMouseLeave={onHover}
       type={type}
+      ani={ani}
     >
       {children}
     </ButtonStyle>

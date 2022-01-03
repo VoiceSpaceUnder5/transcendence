@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 
-const ChannelPersonStyles = styled.li`
+const ChannelUserStyles = styled.li`
   display: flex;
 
   padding: 4px;
@@ -25,21 +25,21 @@ const PersonName = styled.div`
   text-overflow: ellipsis;
 `;
 
-interface ChannelPersonProps {
-  imagePath: string;
+interface ChannelUserProps {
+  imagePath?: string;
   name: string;
 }
 
-export default function ChannelPerson({
+export default function ChannelUser({
   imagePath,
   name,
-}: ChannelPersonProps): JSX.Element {
+}: ChannelUserProps): JSX.Element {
   const [isClicked, setIsClicked] = useState(false);
 
   const onDivClick = () => !isClicked && setIsClicked(true);
   const onBtnClick = () => isClicked && setIsClicked(false);
   return (
-    <ChannelPersonStyles onClick={onDivClick}>
+    <ChannelUserStyles onClick={onDivClick}>
       {!isClicked ? (
         <>
           <PersonImg src={imagePath} />
@@ -51,6 +51,6 @@ export default function ChannelPerson({
           <button onClick={onBtnClick}>뒤로</button>
         </>
       )}
-    </ChannelPersonStyles>
+    </ChannelUserStyles>
   );
 }

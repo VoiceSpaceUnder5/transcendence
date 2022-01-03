@@ -4,25 +4,12 @@ import styled from 'styled-components';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectMenu} from '../../modules/chatting';
 import Div from '../common/Div';
-import ChannelPeople from './ChannelPeople';
+import ChannelUsers from '../channel/ChannelUsers';
 import MessageBox from './MessageBox';
 import MessageForm from './MessageForm';
 import {RootState} from '../../modules';
 import {gql, useQuery} from '@apollo/client';
 import {io, Socket} from 'socket.io-client';
-
-const ChattingHead = styled.div`
-  /* Layout */
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 4px 16px;
-  align-items: center;
-  align-self: stretch;
-
-  background-color: white;
-  border-radius: 4px;
-`;
 
 const GET_CHANNEL_DATA = gql`
   query getChannelData($channelId: Int!) {
@@ -37,6 +24,7 @@ const GET_CHANNEL_DATA = gql`
     }
   }
 `;
+
 interface ChattingProps {
   userId: number;
   name: string;
@@ -88,16 +76,18 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
       socket.close();
     };
   }, []);
+
   if (loading) return <>로딩 중..</>;
   if (error) return <>에러!</>;
   // 이전 메시지들을 맨처음에 붙이는 작업도 필요
-
   return (
     <>
-      <ChattingHead>
+      {/* 나가는 버튼도 추가해야 함 */}
+      {/* <button>나가기</button> */}
+      <ChattingHeadStyles>
         <Div>{data.getChannelById.name}</Div>
-        <ChannelPeople channelId={channelId as number} />
-      </ChattingHead>
+        <ChannelUsers channelId={channelId as number} />
+      </ChattingHeadStyles>
       <MessageBox messages={messages} />
       <MessageForm
         message={message}
@@ -108,3 +98,16 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
     </>
   );
 }
+
+const ChattingHeadStyles = styled.div`
+  /* Layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 4px 16px;
+  align-items: center;
+  align-self: stretch;
+
+  background-color: white;
+  border-radius: 4px;
+`;

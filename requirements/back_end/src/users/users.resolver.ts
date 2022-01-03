@@ -39,8 +39,14 @@ export class UsersResolver {
 
   @Query(() => User)
   async getUserById(@Args('user_id', { type: () => Int }) id: number) {
-    const result = await this.usersService.findUserById(id);
-    return result;
+    return this.usersService.findUserById(id);
+  }
+
+  @Query(() => [User])
+  async getUsersByIds(
+    @Args('userIds', { type: () => [Int] }) userIds: number[],
+  ) {
+    return this.usersService.findUsersByIds(userIds);
   }
 
   @Query(() => [User])
