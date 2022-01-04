@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {gql, useQuery} from '@apollo/client';
 import Div from '../../common/Div';
 
@@ -19,7 +19,10 @@ const GET_RELATIONS = gql`
 `;
 
 export default function RequestingList(): JSX.Element {
-  const {loading, error, data} = useQuery(GET_RELATIONS);
+  const {loading, error, data, refetch} = useQuery(GET_RELATIONS);
+  useEffect(() => {
+    refetch().then(data => console.log(data));
+  }, []);
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
   return (

@@ -22,7 +22,7 @@ export default function BlockList(): JSX.Element {
   const {loading, error, data} = useQuery(GET_RELATIONS);
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  console.log(data.getMe.relations.length);
+  // console.log(data.getMe.relations.length);
   return (
     <>
       <Div align="center">차단 중</Div>

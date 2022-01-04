@@ -2,9 +2,11 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import {MenuInfoList, MenuInfo} from '../common/MenuList';
 import {OptionButton} from '../common/Button';
+import UserProfile from './UserProfile';
 // import DirectMessages from '../chat/DirectMessage';
 
 interface FriendProps {
+  userId?: number;
   imagePath?: string;
   username: string;
   isOnline?: boolean;
@@ -13,6 +15,7 @@ interface FriendProps {
 }
 
 export default function Friend({
+  userId,
   username,
   imagePath,
   isOnline,
@@ -20,8 +23,10 @@ export default function Friend({
   description,
 }: FriendProps): JSX.Element {
   const [visible, setVisible] = useState(false);
+  const [profileVisible, setProfileVisible] = useState(false);
   const onDivClick = () => !visible && setVisible(true);
   const changeVisible = () => setVisible(false);
+  const onBackClick = () => setProfileVisible(!profileVisible);
   return (
     <FriendStyle onClick={onDivClick}>
       <ProfileImageStyle src={imagePath} isOnline={isOnline} />
@@ -33,7 +38,15 @@ export default function Friend({
       <FriendOptions visible={visible}>
         {/* <DirectMessages changeVisible={changeVisible} /> */}
         {/* <OptionButton>게임신청</OptionButton> */}
-        <button>프로필 보기</button>
+        <OptionButton onClick={() => setProfileVisible(!profileVisible)}>
+          프로필 보기
+        </OptionButton>
+        {profileVisible && (
+          <UserProfile
+            userId={userId as number}
+            onBackClick={onBackClick}
+          ></UserProfile>
+        )}
         <OptionButton onClick={changeVisible}>뒤로</OptionButton>
       </FriendOptions>
     </FriendStyle>
@@ -75,7 +88,7 @@ const FriendOptions = styled.div<{visible: boolean}>`
   max-width: 300px;
   height: 72px;
   padding: 0px 8px;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   position: absolute;
   display: ${props => !props.visible && 'none'};

@@ -10,6 +10,7 @@ export default function LogOut(): JSX.Element {
   const navigate = useNavigate();
   const onClick = () => {
     dispatch(logOut());
+    localStorage.removeItem('userId');
     navigate('/');
   };
   return (

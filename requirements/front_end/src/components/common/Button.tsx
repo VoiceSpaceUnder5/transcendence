@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react';
 import styled, {css} from 'styled-components';
 
 export const OptionButton = styled.button`
-  width: 80px;
+  width: 40%;
   white-space: nowrap;
   height: 40px;
   margin: 16px 8px;

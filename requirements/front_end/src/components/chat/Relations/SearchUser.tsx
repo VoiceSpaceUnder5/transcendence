@@ -19,6 +19,7 @@ interface SearchUserProps {
 }
 
 interface UserData {
+  id: number;
   name: string;
   profile_image: string;
   description?: string;
@@ -63,7 +64,11 @@ export default function SearchUser({
         <button type="submit">검색</button>
       </form>
       {user && visible && (
-        <Friend username={user.name} description={user.description}></Friend>
+        <Friend
+          userId={user.id}
+          username={user.name}
+          description={user.description}
+        ></Friend>
       )}
     </>
   );
