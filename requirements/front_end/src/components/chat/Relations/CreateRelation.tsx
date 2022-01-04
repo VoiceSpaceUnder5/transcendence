@@ -17,7 +17,7 @@ interface CreateRelationProps {
 export default function CreateRelation({
   userId,
 }: CreateRelationProps): JSX.Element {
-  const [meId] = useState<number>(Number(localStorage.getItem('userId')));
+  const [meId] = useState<number>(Number(localStorage.getItem('meId')));
   const [createRelation] = useMutation(CREATE_RELATION, {
     variables: {
       createRelationInput: {

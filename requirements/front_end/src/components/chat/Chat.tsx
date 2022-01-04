@@ -1,4 +1,3 @@
-import {gql, useQuery} from '@apollo/client';
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
@@ -7,17 +6,7 @@ import {toggleChat, selectMenu} from '../../modules/chatting';
 import ChatContent from './ChatContent';
 import ChatMenu from './ChatMenu';
 
-const GET_MY_NAME = gql`
-  {
-    getMe {
-      id
-      name
-    }
-  }
-`;
-
 export default React.memo(function Chat(): JSX.Element {
-  const {loading, error, data} = useQuery(GET_MY_NAME);
   const {isOpen, menuIdx} = useSelector((state: RootState) => ({
     isOpen: state.chatting.isOpen,
     menuIdx: state.chatting.menuIdx,
@@ -26,18 +15,12 @@ export default React.memo(function Chat(): JSX.Element {
   const onButtonClick = () => dispatch(toggleChat(isOpen));
   const onMenuClick = (idx: number) => dispatch(selectMenu(idx));
 
-  if (error) return <>에러가 발생했습니다</>;
   return (
     <ChatBackground>
-      {loading && <>로딩 중</>}
-      {data && isOpen && (
+      {isOpen && (
         <ChatBoard>
           <ChatMenu onClick={onMenuClick} clickedIdx={menuIdx} />
-          <ChatContent
-            menuIdx={menuIdx}
-            id={data.getMe.id}
-            name={data.getMe.name}
-          />
+          <ChatContent menuIdx={menuIdx} />
         </ChatBoard>
       )}
       <ChatButton onClick={onButtonClick}>

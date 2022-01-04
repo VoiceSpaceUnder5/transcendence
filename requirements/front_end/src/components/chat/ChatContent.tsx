@@ -25,35 +25,31 @@ const ChatContentStyle = styled.div<{idx: number}>`
 `;
 
 interface ChatContentProps {
-  id: number;
-  name: string;
   menuIdx: number;
 }
 
 export default React.memo(function ChatContent({
-  id,
-  name,
   menuIdx,
 }: ChatContentProps): JSX.Element {
   let element;
   switch (menuIdx) {
     case 0:
-      element = <RelationList userId={id} />;
+      element = <RelationList />;
       break;
     case 1:
-      element = <ParticipatingChannel userId={id} />;
+      element = <ParticipatingChannel />;
       break;
     case 2:
-      element = <SearchChannel userId={id} />;
+      element = <SearchChannel />;
       break;
     case 3:
-      element = <CreateChannel userId={id} />;
+      element = <CreateChannel />;
       break;
     case 4:
-      element = <JoinChatting userId={id} />;
+      element = <JoinChatting />;
       break;
     case 5:
-      element = <Chatting userId={id} name={name} />;
+      element = <Chatting />;
       break;
   }
   return <ChatContentStyle idx={menuIdx}>{element}</ChatContentStyle>;

@@ -6,6 +6,7 @@ const GET_ME = gql`
   query {
     getMe {
       id
+      name
     }
   }
 `;
@@ -16,8 +17,9 @@ export default function AuthPage(): JSX.Element {
 
   useEffect(() => {
     getMe().then(data => {
-      const userId = data.data.getMe.id;
-      localStorage.setItem('userId', userId);
+      const user = data.data.getMe;
+      localStorage.setItem('meId', user.id);
+      localStorage.setItem('meName', user.name);
       navigate('/home');
     });
   }, []);
