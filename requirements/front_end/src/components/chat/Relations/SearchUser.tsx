@@ -28,17 +28,15 @@ export default function SearchUser({
   name,
   onChange,
 }: SearchUserProps): JSX.Element {
-  const [searchName, setSearchName] = useState('');
   const [user, setUser] = useState<UserData>();
   const [visible, setVisible] = useState(false);
   const [getUserByName] = useLazyQuery(GET_USER_BY_NAME, {
     variables: {
-      user_name: searchName,
+      user_name: name,
     },
   });
   const onSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    setSearchName(name);
     getUserByName()
       .then(data => {
         const userData = data.data.getUsersByName[0];
