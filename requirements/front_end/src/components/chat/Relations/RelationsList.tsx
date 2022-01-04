@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import useInput from '../../../hooks/useInput';
 import {MenuList} from '../../common/MenuList';
 import BlockList from './BlockList';
@@ -6,9 +6,7 @@ import FriendList from './FriendList';
 import RequestedList from './RequestedList';
 import RequestingList from './RequestingList';
 import SearchUser from './SearchUser';
-// import Friend from '../../friend/Friend';
 
-// eslint-disable-next-line
 export default function RelationList(): JSX.Element {
   // 친구추가 기능도 필요!!!!!
   // const RelationList = [
@@ -38,7 +36,6 @@ export default function RelationList(): JSX.Element {
   // if (loading) return <>로딩 중..</>;
   // if (error) return <>에러...</>;
   // console.log(data);
-  const [meName] = useState(localStorage.getItem('meName'));
   const [{name}, onChange] = useInput({name: '' as string});
   return (
     <MenuList>
@@ -53,7 +50,7 @@ export default function RelationList(): JSX.Element {
           isOnline={friend.isOnline}
         ></Friend>
       ))} */}
-      <SearchUser name={meName as string} onChange={onChange} />
+      <SearchUser name={name as string} onChange={onChange} />
       {!name && (
         <>
           <FriendList />

@@ -39,14 +39,14 @@ export default function UserProfile({
         <UserProfileStyles>
           <UserProfileBackboard>
             <TitleDiv color="black">친구 프로필</TitleDiv>
-            <div>{data.getUserById.name}</div>
             <Div align="center">기본 정보</Div>
+            <div>{data.getUserById.name}</div>
             <div style={{display: 'flex', width: '70%'}}>
               <Div align="center">대전 기록</Div>
               <Div align="center">업적</Div>
             </div>
             {/* 친구 상태에 따라 신청할지 차단할지? */}
-            <div style={{display: 'flex', width: '70%'}}>
+            <div style={{display: 'flex', width: '100%', maxWidth: '400px'}}>
               <CreateRelation userId={userId} />
               <OptionButton>대화하기</OptionButton>
               <OptionButton>게임하기</OptionButton>
@@ -74,6 +74,7 @@ const UserProfileStyles = styled.div`
 
 const UserProfileBackboard = styled.div`
   width: 50%;
+  min-width: 320px;
   height: 70%;
 
   display: flex;
