@@ -25,11 +25,21 @@ export class RelationResolver {
     return this.realtionService.findAll();
   }
 
+  @Query(() => [Relation])
+  async getRelationsByUserIdTreatAsFirst(
+    @Args('userId') userId: number,
+    @Args('typeId', { nullable: true }) typeId?: string,
+  ) {
+    return this.realtionService.getRelationsByUserIdTreatAsFirst(
+      userId,
+      typeId,
+    );
+  }
+
   @Query(() => Relation)
   async getRelation(@Args() relation: RelationArgs) {
     return this.realtionService.findRelation(relation);
   }
-
   @Mutation(() => Relation)
   async createRelation(
     @Args('createRelationInput') relation: CreateRelationInput,

@@ -89,6 +89,7 @@ type Query {
   getCodes: [Code]!
   getCodeByCode(code: String!): Code!
   getRelations: [Relation!]!
+  getRelationsByUserIdTreatAsFirst(typeId: String, userId: Float!): [Relation!]!
   getRelation(user_first_id: Int!, user_second_id: Int!, typeId: Int): Relation!
 }
 

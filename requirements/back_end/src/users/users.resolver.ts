@@ -87,12 +87,9 @@ export class UsersResolver {
     @Parent() user: User,
     @Args('typeId') typeId: string,
   ): Promise<Relation[]> {
-    const allRelation = await this.relationService.findRelationByUserId(
+    return this.relationService.getRelationsByUserIdTreatAsFirst(
       user.id,
+      typeId,
     );
-    const selectedRelations = allRelation.map((relation) => {
-      if (relation.typeId === typeId) return relation;
-    });
-    return selectedRelations;
   }
 }
