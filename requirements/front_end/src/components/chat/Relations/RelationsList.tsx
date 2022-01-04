@@ -12,8 +12,8 @@ export default function RelationList(): JSX.Element {
       {!name && (
         <>
           <RelationUserList typeId="RE2" type="친구" />
-          <RelationUserList typeId="RE0" type="수락 대기" />
-          <RelationUserList typeId="RE1" type="요청 중" />
+          <RelationUserList typeId="RE0" type="요청 받음" />
+          <RelationUserList typeId="RE1" type="요청 보냄" />
           <RelationUserList typeId="RE3" type="차단 중" />
         </>
       )}
