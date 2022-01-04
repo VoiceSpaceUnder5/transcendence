@@ -36,8 +36,6 @@ export default function Friend({
         {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
       </MenuInfoList>
       <FriendOptions visible={visible}>
-        {/* <DirectMessages changeVisible={changeVisible} /> */}
-        {/* <OptionButton>게임신청</OptionButton> */}
         <OptionButton onClick={() => setProfileVisible(!profileVisible)}>
           프로필 보기
         </OptionButton>
@@ -90,7 +88,7 @@ const FriendOptions = styled.div<{visible: boolean}>`
   padding: 0px 8px;
   justify-content: space-around;
   align-items: center;
-  position: absolute;
+  // position: absolute;
   display: ${props => !props.visible && 'none'};
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12.5px;

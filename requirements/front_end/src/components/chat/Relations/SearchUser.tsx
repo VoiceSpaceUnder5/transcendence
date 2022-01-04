@@ -56,6 +56,7 @@ export default function SearchUser({
     <>
       <form onSubmit={onSubmit} style={{marginBottom: '8px'}}>
         <input
+          required
           name="name"
           value={name}
           onChange={onChange}
