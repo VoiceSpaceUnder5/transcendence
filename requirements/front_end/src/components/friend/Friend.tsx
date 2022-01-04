@@ -2,7 +2,43 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import {MenuInfoList, MenuInfo} from '../common/MenuList';
 import {OptionButton} from '../common/Button';
-import DirectMessages from '../chat/DirectMessage';
+// import DirectMessages from '../chat/DirectMessage';
+
+interface FriendProps {
+  imagePath?: string;
+  username: string;
+  isOnline?: boolean;
+  matchRecord?: string;
+  description?: string;
+}
+
+export default function Friend({
+  username,
+  imagePath,
+  isOnline,
+  matchRecord,
+  description,
+}: FriendProps): JSX.Element {
+  const [visible, setVisible] = useState(false);
+  const onDivClick = () => !visible && setVisible(true);
+  const changeVisible = () => setVisible(false);
+  return (
+    <FriendStyle onClick={onDivClick}>
+      <ProfileImageStyle src={imagePath} isOnline={isOnline} />
+      <MenuInfoList>
+        {username && <MenuInfo>{username}</MenuInfo>}
+        {description && <MenuInfo>{description}</MenuInfo>}
+        {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
+      </MenuInfoList>
+      <FriendOptions visible={visible}>
+        {/* <DirectMessages changeVisible={changeVisible} /> */}
+        {/* <OptionButton>게임신청</OptionButton> */}
+        <button>프로필 보기</button>
+        <OptionButton onClick={changeVisible}>뒤로</OptionButton>
+      </FriendOptions>
+    </FriendStyle>
+  );
+}
 
 const FriendStyle = styled.div`
   display: flex;
@@ -59,38 +95,3 @@ const FriendOptions = styled.div<{visible: boolean}>`
     animation: smoothAppear 0.5s ease-in-out;
   }
 `;
-
-interface FriendProps {
-  imagePath?: string;
-  userId: string;
-  isOnline: boolean;
-  matchRecord?: string;
-  description?: string;
-}
-
-export default function Friend({
-  userId,
-  imagePath,
-  isOnline,
-  matchRecord,
-  description,
-}: FriendProps): JSX.Element {
-  const [visible, setVisible] = useState(false);
-  const onDivClick = () => !visible && setVisible(true);
-  const changeVisible = () => setVisible(false);
-  return (
-    <FriendStyle onClick={onDivClick}>
-      <ProfileImageStyle src={imagePath} isOnline={isOnline} />
-      <MenuInfoList>
-        {userId && <MenuInfo>{userId}</MenuInfo>}
-        {description && <MenuInfo>{description}</MenuInfo>}
-        {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
-      </MenuInfoList>
-      <FriendOptions visible={visible}>
-        <DirectMessages changeVisible={changeVisible} />
-        <OptionButton>게임신청</OptionButton>
-        <OptionButton onClick={changeVisible}>뒤로</OptionButton>
-      </FriendOptions>
-    </FriendStyle>
-  );
-}

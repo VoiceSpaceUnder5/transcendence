@@ -6,7 +6,7 @@ import TitleDiv from '../common/TitleDiv';
 
 interface MatchRecordBoardProps {
   matchRecordData: {
-    userId: string;
+    username: string;
     imagePath: string;
     record: string;
     isOnline: boolean;
@@ -22,9 +22,9 @@ function MatchRecordBoard({
       <MenuList>
         {matchRecordData.map(matchRecord => (
           <Friend
-            key={matchRecord.userId}
+            key={matchRecord.username}
             imagePath={matchRecord.imagePath}
-            userId={matchRecord.userId}
+            username={matchRecord.username}
             isOnline={matchRecord.isOnline}
             matchRecord={matchRecord.record}
           ></Friend>

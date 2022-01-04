@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import RelationList from './RelationsList';
+import RelationList from './Relations/RelationsList';
 import ParticipatingChannel from './ParticipatingChannel';
 import SearchChannel from './SearchChannel';
 import CreateChannel from './CreateChannel';

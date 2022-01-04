@@ -16,7 +16,7 @@ const GET_MY_NAME = gql`
   }
 `;
 
-export default function Chat(): JSX.Element {
+export default React.memo(function Chat(): JSX.Element {
   const {loading, error, data} = useQuery(GET_MY_NAME);
   const {isOpen, menuIdx} = useSelector((state: RootState) => ({
     isOpen: state.chatting.isOpen,
@@ -45,7 +45,7 @@ export default function Chat(): JSX.Element {
       </ChatButton>
     </ChatBackground>
   );
-}
+});
 
 /* styles */
 const ChatBackground = styled.div`

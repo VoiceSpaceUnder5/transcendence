@@ -10,7 +10,7 @@ import Loader from 'react-loader-spinner';
 
 const USERS_QUERY = gql`
   query {
-    me {
+    getMe {
       id
       name
       email
@@ -40,11 +40,11 @@ function ProfilePage(): JSX.Element {
             )}
             {data && (
               <Profile
-                id={data.me.id}
-                name={data.me.name}
-                email={data.me.email}
-                imagePath={data.me.profile_image}
-                description={data.me.description}
+                id={data.getMe.id}
+                name={data.getMe.name}
+                email={data.getMe.email}
+                imagePath={data.getMe.profile_image}
+                description={data.getMe.description}
               />
             )}
           </BackboardBoxInnerLayout>

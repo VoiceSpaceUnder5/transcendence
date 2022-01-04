@@ -19,19 +19,19 @@ function HomePage(): JSX.Element {
   };
   const matchRecordData = [
     {
-      userId: 'kilee',
+      username: 'kilee',
       imagePath: '',
       record: '승',
       isOnline: true,
     },
     {
-      userId: 'mijeong',
+      username: 'mijeong',
       imagePath: '',
       record: '패',
       isOnline: true,
     },
     {
-      userId: 'hyeonkim',
+      username: 'hyeonkim',
       imagePath: '',
       record: '승',
       isOnline: false,
