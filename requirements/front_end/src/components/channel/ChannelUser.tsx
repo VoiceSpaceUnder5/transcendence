@@ -1,19 +1,7 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import {gql, useMutation} from '@apollo/client';
-
-const CREATE_RELATION = gql`
-  mutation CreateRelation($createRelationInput: CreateRelationInput!) {
-    createRelation(createRelationInput: $createRelationInput) {
-      user_first_id
-      user_second_id
-      type {
-        id
-        label_korean
-      }
-    }
-  }
-`;
+import Button from '../common/Button';
+import ChannelUserProfile from './ChannelUserProfile';
 
 interface ChannelUserProps {
   meId: number;
@@ -31,25 +19,13 @@ export default function ChannelUser({
 }: // role,
 ChannelUserProps): JSX.Element {
   const [isClicked, setIsClicked] = useState(false);
-  const [createRelation] = useMutation(CREATE_RELATION, {
-    variables: {
-      createRelationInput: {
-        user_first_id: meId,
-        user_second_id: userId,
-        typeId: 'RE1',
-      },
-    },
-  });
-
   const onDivClick = () => {
     if (userId !== meId) !isClicked && setIsClicked(true);
   };
   const onBtnClick = () => isClicked && setIsClicked(false);
-  const onRelationClick = () => {
-    createRelation();
-  };
+
   return (
-    <ChannelUserStyles onClick={onDivClick}>
+    <ChannelUserStyles onClick={onDivClick} isClicked={isClicked}>
       {!isClicked ? (
         <>
           <PersonImg src={imagePath} />
@@ -57,17 +33,23 @@ ChannelUserProps): JSX.Element {
         </>
       ) : (
         <>
-          <button onClick={onRelationClick}>친구 신청</button>
-          <button onClick={onBtnClick}>뒤로</button>
+          <ChannelUserProfile meId={meId} userId={userId} />
+          <Button bg="grey" onClick={onBtnClick}>
+            뒤로
+          </Button>
         </>
       )}
     </ChannelUserStyles>
   );
 }
 
-const ChannelUserStyles = styled.li`
+const ChannelUserStyles = styled.li<{isClicked: boolean}>`
   display: flex;
+  ${props => props.isClicked && 'justify-content: space-around;'}
+  // justify-content: space-around;
+  align-items: center;
 
+  height: 32px;
   padding: 4px;
   padding-right: 0px;
   overflow-x: hidden;
