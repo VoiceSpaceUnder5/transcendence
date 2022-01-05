@@ -39,8 +39,9 @@ const CREATE_MESSAGE = gql`
 export default function Chatting(): JSX.Element {
   const [meId] = useState(Number(localStorage.getItem('meId')));
   const [meName] = useState(localStorage.getItem('meName'));
-  const {channelId} = useSelector((state: RootState) => ({
+  const {channelId, role} = useSelector((state: RootState) => ({
     channelId: state.chatting.channelId,
+    role: state.chatting.role,
   }));
   const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
   const [userIds, setUserIds] = useState<number[]>([]);
@@ -143,7 +144,11 @@ export default function Chatting(): JSX.Element {
       {/* <button>나가기</button> */}
       <ChattingHeadStyles>
         <Div>{data.getChannelById.name}</Div>
-        <ChannelUsers meId={meId} channelId={channelId as number} />
+        <ChannelUsers
+          meId={meId}
+          channelId={channelId as number}
+          role={role as string}
+        />
       </ChattingHeadStyles>
       <MessageBox meId={meId} userIds={userIds} messages={messages} />
       <MessageForm

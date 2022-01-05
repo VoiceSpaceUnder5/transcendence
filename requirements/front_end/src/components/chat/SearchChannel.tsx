@@ -56,6 +56,8 @@ export default function SearchChannel(): JSX.Element {
       };
     },
   );
+  // 각각의 채널을 클릭하면
+  // 비밀번호를 요구하는 JoinChatting으로 넘어감
   const join = (id: number, isPrivate: boolean) =>
     dispatch(joinChannel(id, isPrivate));
   if (channelList.length === 0) return <>채널이 없습니다.</>;

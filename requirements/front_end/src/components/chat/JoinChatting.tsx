@@ -20,7 +20,7 @@ const JOIN_CHATTING = gql`
   }
 `;
 
-// eslint-disable-next-line
+// 채팅방이 비공개방이면 비밀번호를 요구하고, 그렇지 않으면 자동으로 채팅방 안으로 이동
 export default function JoinChatting(): JSX.Element {
   const [meId] = useState(Number(localStorage.getItem('meId')));
   const {channelId, isPrivate} = useSelector((state: RootState) => ({
@@ -34,6 +34,7 @@ export default function JoinChatting(): JSX.Element {
       createChatChannelUserInput: {
         chatChannelId: channelId,
         userId: meId,
+        // 참여자
         roleId: 'UR2',
         // 패스워드도 보내야할듯?
       },
@@ -55,8 +56,9 @@ export default function JoinChatting(): JSX.Element {
   const goToChatting = () => {
     joinChatting().then(data => {
       const {createChatChannelUser} = data.data;
+      // console.log(createChatChannelUser);
       // 여기서 패스워드랑 비교해서 다르면 fail같은 거 리턴 받아서 조건분기 해야할듯?
-      dispatch(afterJoin(createChatChannelUser.chatChannelId));
+      dispatch(afterJoin(createChatChannelUser.chatChannelId, 'UR2'));
     });
   };
   return (

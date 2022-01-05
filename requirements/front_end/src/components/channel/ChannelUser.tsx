@@ -20,6 +20,7 @@ interface ChannelUserProps {
   userId: number;
   imagePath?: string;
   name: string;
+  role: string;
 }
 
 export default function ChannelUser({
@@ -27,7 +28,8 @@ export default function ChannelUser({
   userId,
   imagePath,
   name,
-}: ChannelUserProps): JSX.Element {
+}: // role,
+ChannelUserProps): JSX.Element {
   const [isClicked, setIsClicked] = useState(false);
   const [createRelation] = useMutation(CREATE_RELATION, {
     variables: {
@@ -39,7 +41,9 @@ export default function ChannelUser({
     },
   });
 
-  const onDivClick = () => !isClicked && setIsClicked(true);
+  const onDivClick = () => {
+    if (userId !== meId) !isClicked && setIsClicked(true);
+  };
   const onBtnClick = () => isClicked && setIsClicked(false);
   const onRelationClick = () => {
     createRelation();

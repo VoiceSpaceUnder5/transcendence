@@ -29,6 +29,7 @@ const CREATE_CHANNEL = gql`
   }
 `;
 
+// 방 생성에 성공하면 바로 채팅방으로 이동
 export default function CreateChannel(): JSX.Element {
   const [meId] = useState(Number(localStorage.getItem('meId')));
   const [{name, password}, onChange, reset] = useInput({
@@ -51,7 +52,7 @@ export default function CreateChannel(): JSX.Element {
     // 백엔드에 방 생성 요청해서 방 번호 받으면 afterJoin 액션 실행
     createChannel().then(data => {
       const {createChannel} = data.data;
-      dispatch(afterJoin(createChannel.id));
+      dispatch(afterJoin(createChannel.id, 'UR0'));
       reset();
     });
   };

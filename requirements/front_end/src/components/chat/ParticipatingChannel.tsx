@@ -15,6 +15,9 @@ const GET_PARTICIPATING_CHANNEL = gql`
       name
       chatChannelUsers {
         userId
+        role {
+          id
+        }
       }
     }
   }
@@ -28,6 +31,9 @@ interface ChatChannel {
   };
   chatChannelUsers: {
     userId: number;
+    role: {
+      id: string;
+    };
   }[];
 }
 
@@ -46,19 +52,23 @@ export default function ParticipatingChannel(): JSX.Element {
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
+  // console.log(data);
   const channelList = (data.getParticipatingChannel as ChatChannel[]).map(
     chatChannel => {
       return {
         id: chatChannel.id,
         name: chatChannel.name,
         number: chatChannel.chatChannelUsers.length,
+        role: chatChannel.chatChannelUsers.filter(
+          user => user.userId === meId,
+        )[0].role.id,
         isPrivate: chatChannel.type.id === 'CT1' ? true : false,
       };
     },
   );
   if (channelList.length === 0) return <>참여 중인 채널이 없습니다.</>;
-  const afterParticipatingChannel = (channelId: number) =>
-    dispatch(afterJoin(channelId));
+  const afterParticipatingChannel = (channelId: number, role: string) =>
+    dispatch(afterJoin(channelId, role));
   return (
     <MenuList>
       {channelList.map(channel => (
@@ -68,7 +78,8 @@ export default function ParticipatingChannel(): JSX.Element {
           name={channel.name}
           number={channel.number}
           isPrivate={channel.isPrivate}
-          onClick={() => afterParticipatingChannel(channel.id)}
+          role={channel.role}
+          onClick={() => afterParticipatingChannel(channel.id, channel.role)}
         ></Channel>
       ))}
     </MenuList>
