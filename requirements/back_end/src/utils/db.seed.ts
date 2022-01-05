@@ -182,6 +182,16 @@ export const dbSeed = async () => {
     },
     ['id'],
   );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'RE',
+      id: 'RE6',
+      label_korean: '남',
+      label_english: 'no_relation',
+    },
+    ['id'],
+  );
 
   // ** 경기 결과 record.result
   entityManager.upsert<Code>(
