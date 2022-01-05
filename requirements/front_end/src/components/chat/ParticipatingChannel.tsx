@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {MenuList} from '../common/MenuList';
 import Channel from '../channel/Channel';
 import {useDispatch} from 'react-redux';
@@ -31,16 +31,11 @@ interface ChatChannel {
   }[];
 }
 
-interface ParticipatingChannelProps {
-  userId: number;
-}
-
-export default function ParticipatingChannel({
-  userId,
-}: ParticipatingChannelProps): JSX.Element {
+export default function ParticipatingChannel(): JSX.Element {
+  const [meId] = useState(Number(localStorage.getItem('meId')));
   const {loading, data, error, refetch} = useQuery(GET_PARTICIPATING_CHANNEL, {
     variables: {
-      userId,
+      userId: meId,
     },
   });
   const dispatch = useDispatch();

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Channel from '../channel/Channel';
 import {MenuList} from '../common/MenuList';
 import {useDispatch} from 'react-redux';
@@ -31,16 +31,11 @@ interface ChatChannel {
   }[];
 }
 
-interface SearchChannelProps {
-  userId: number;
-}
-
-export default function SearchChannel({
-  userId,
-}: SearchChannelProps): JSX.Element {
+export default function SearchChannel(): JSX.Element {
+  const [meId] = useState(Number(localStorage.getItem('meId')));
   const {loading, data, error, refetch} = useQuery(GET_SEARCH_CHANNEL, {
     variables: {
-      userId,
+      userId: meId,
     },
   });
   const dispatch = useDispatch();

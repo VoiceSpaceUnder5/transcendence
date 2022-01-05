@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
 import Button from '../common/Button';
@@ -29,20 +29,15 @@ const CREATE_CHANNEL = gql`
   }
 `;
 
-interface CreateChannelProps {
-  userId: number;
-}
-
-export default function CreateChannel({
-  userId,
-}: CreateChannelProps): JSX.Element {
+export default function CreateChannel(): JSX.Element {
+  const [meId] = useState(Number(localStorage.getItem('meId')));
   const [{name, password}, onChange, reset] = useInput({
     name: '',
     password: '',
   });
   const [createChannel] = useMutation(CREATE_CHANNEL, {
     variables: {
-      userId,
+      userId: meId,
       createChannelInput: {
         name,
         typeId: password === '' ? 'CT2' : 'CT1',

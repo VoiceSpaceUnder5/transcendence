@@ -106,6 +106,9 @@ function Navbar(): JSX.Element {
             bg="dark"
             onHover={onHover}
             onClick={() => {
+              localStorage.removeItem('meId');
+              localStorage.removeItem('meName');
+              localStorage.clear();
               dispatch(logOut());
               navigate('/');
             }}

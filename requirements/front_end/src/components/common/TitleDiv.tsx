@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TitleDivStyle = styled.div`
+const TitleDivStyle = styled.div<{color?: string}>`
   position: static;
   width: 91.53px;
   height: 24px;
@@ -14,7 +14,8 @@ const TitleDivStyle = styled.div`
   line-height: 24px;
   text-align: center;
 
-  color: #ffffff;
+  color: ${props =>
+    props.color === 'black' ? `${props.theme.lightButtonText};` : `#ffffff;`}
 
   /* Inside Auto Layout */
 
@@ -25,11 +26,12 @@ const TitleDivStyle = styled.div`
 `;
 
 interface TitleDivProps {
+  color?: string;
   children: React.ReactNode;
 }
 
-function TitleDiv({children}: TitleDivProps): JSX.Element {
-  return <TitleDivStyle>{children}</TitleDivStyle>;
+function TitleDiv({color, children}: TitleDivProps): JSX.Element {
+  return <TitleDivStyle color={color}>{children}</TitleDivStyle>;
 }
 
 export default TitleDiv;

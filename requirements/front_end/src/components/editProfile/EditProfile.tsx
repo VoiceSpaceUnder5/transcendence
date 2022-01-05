@@ -33,9 +33,6 @@ export default function EditProfile(): JSX.Element {
   });
 
   const onClick = () => setIsClick(!isClick);
-  useEffect(() => {
-    setImage(imagePath);
-  }, []);
   const [updateMe, {error}] = useMutation(UPDATE_MY_PROFILE, {
     variables: {
       user_id: id,
@@ -53,6 +50,10 @@ export default function EditProfile(): JSX.Element {
     // // 사진 올리자.
     navigate('/profile');
   };
+
+  useEffect(() => {
+    setImage(imagePath);
+  }, []);
   return (
     <BackBoard size="hug">
       <TitleDiv>프로필 편집</TitleDiv>

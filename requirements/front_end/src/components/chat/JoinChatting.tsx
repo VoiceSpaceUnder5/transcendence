@@ -1,4 +1,4 @@
-import React, {FormEvent, useEffect} from 'react';
+import React, {FormEvent, useEffect, useState} from 'react';
 import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
 import {useDispatch, useSelector} from 'react-redux';
@@ -20,12 +20,9 @@ const JOIN_CHATTING = gql`
   }
 `;
 
-interface JoinChattingProps {
-  userId: number;
-}
-
 // eslint-disable-next-line
-export default function JoinChatting({userId}: JoinChattingProps): JSX.Element {
+export default function JoinChatting(): JSX.Element {
+  const [meId] = useState(Number(localStorage.getItem('meId')));
   const {channelId, isPrivate} = useSelector((state: RootState) => ({
     channelId: state.chatting.channelId,
     isPrivate: state.chatting.isPrivate,
@@ -36,7 +33,7 @@ export default function JoinChatting({userId}: JoinChattingProps): JSX.Element {
     variables: {
       createChatChannelUserInput: {
         chatChannelId: channelId,
-        userId,
+        userId: meId,
         roleId: 'UR2',
         // 패스워드도 보내야할듯?
       },

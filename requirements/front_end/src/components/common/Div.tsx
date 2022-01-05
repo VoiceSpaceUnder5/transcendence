@@ -28,8 +28,16 @@ const DivStyle = styled.div<{
   line-height: 19px;
   white-space: normal;
 
-  background-color: ${props =>
-    props.bg === 'light' ? props.theme.lightButtonBg : 'none'};
+  background-color: ${props => {
+    switch (props.bg) {
+      case 'light':
+        return `${props.theme.lightButtonBg};`;
+      case 'grey':
+        return `${props.theme.greyButtonBg};`;
+      default:
+        return 'none';
+    }
+  }}
   border-radius: 4px;
   padding: 4px 0px;
 `;

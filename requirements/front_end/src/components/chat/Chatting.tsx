@@ -36,12 +36,9 @@ const CREATE_MESSAGE = gql`
   }
 `;
 
-interface ChattingProps {
-  userId: number;
-  name: string;
-}
-
-export default function Chatting({userId, name}: ChattingProps): JSX.Element {
+export default function Chatting(): JSX.Element {
+  const [meId] = useState(Number(localStorage.getItem('meId')));
+  const [meName] = useState(localStorage.getItem('meName'));
   const {channelId} = useSelector((state: RootState) => ({
     channelId: state.chatting.channelId,
   }));
@@ -62,7 +59,7 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
   const [sendMessage] = useMutation(CREATE_MESSAGE, {
     variables: {
       createMessageInput: {
-        userId,
+        userId: meId,
         chatChannelId: channelId,
         textMessage: message,
       },
@@ -94,12 +91,14 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
   );
 
   useEffect(() => {
-    socket.emit('joinRoom', {channelId, userId, name}, (msg: string) =>
-      console.log(msg),
+    socket.emit(
+      'joinRoom',
+      {channelId, userId: meId, name: meName},
+      (msg: string) => console.log(msg),
     );
     socket.on('notice', body => console.log(body.message));
     socket.on('sendToClient', body => {
-      if (body.userId === userId) {
+      if (body.userId === meId) {
         setMessages(messages =>
           messages.concat({
             userId: body.userId,
@@ -144,9 +143,9 @@ export default function Chatting({userId, name}: ChattingProps): JSX.Element {
       {/* <button>나가기</button> */}
       <ChattingHeadStyles>
         <Div>{data.getChannelById.name}</Div>
-        <ChannelUsers meId={userId} channelId={channelId as number} />
+        <ChannelUsers meId={meId} channelId={channelId as number} />
       </ChattingHeadStyles>
-      <MessageBox myId={userId} userIds={userIds} messages={messages} />
+      <MessageBox meId={meId} userIds={userIds} messages={messages} />
       <MessageForm
         message={message}
         onSubmit={onSubmit}

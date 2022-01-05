@@ -12,13 +12,13 @@ const GET_USERS_BY_IDS = gql`
 `;
 
 interface MessageBoxProps {
-  myId: number;
+  meId: number;
   userIds: number[];
   messages: {userId: number; username?: string; textMessage: string}[];
 }
 
 export default React.memo(function MessageBox({
-  myId,
+  meId,
   userIds,
   messages,
 }: MessageBoxProps): JSX.Element {
@@ -30,7 +30,7 @@ export default React.memo(function MessageBox({
   });
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  });
 
   const scrollToBottom = () => {
     if (divRef.current) {
@@ -51,11 +51,11 @@ export default React.memo(function MessageBox({
           messages.map((message, idx) => (
             <div key={idx}>
               {data.getUsersByIds.find(
-                (obj: {id: number; name: string}) => obj.id === myId,
+                (obj: {id: number; name: string}) => obj.id === meId,
               )
                 ? '나'
                 : data.getUsersByIds.find(
-                    (obj: {id: number; name: string}) => obj.id === myId,
+                    (obj: {id: number; name: string}) => obj.id === meId,
                   ).name}
               : {message.textMessage}
             </div>
