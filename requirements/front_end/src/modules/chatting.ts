@@ -16,6 +16,7 @@ type ActionReturnType = {
   channelId?: number;
   isPrivate?: boolean;
   isUpdated?: boolean;
+  role?: string;
 };
 
 // 채팅 인터페이스를 켜거나 끔
@@ -43,14 +44,17 @@ export const joinChannel = (
   channelId: number,
   isPrivate: boolean,
 ): ActionReturnType => {
-  const privateRoom = isPrivate ? '비공개방' : '공개방';
-  console.log(`channel ID:${channelId}(${privateRoom}) 입장 시도`);
+  // const privateRoom = isPrivate ? '비공개방' : '공개방';
+  // console.log(`channel ID:${channelId}(${privateRoom}) 입장 시도`);
   return {isOpen: true, type: JOIN_CHANNEL, menuIdx: 4, channelId, isPrivate};
 };
 
-export const afterJoin = (channelId: number): ActionReturnType => {
+export const afterJoin = (
+  channelId: number,
+  role: string,
+): ActionReturnType => {
   console.log(`channel ID:${channelId}에 입장 성공!`);
-  return {isOpen: true, type: AFTER_JOIN, menuIdx: 5, channelId};
+  return {isOpen: true, type: AFTER_JOIN, menuIdx: 5, channelId, role};
 };
 
 export const updateRelation = (): ActionReturnType => ({
@@ -72,6 +76,7 @@ interface StateTypes {
   channelId?: number;
   isPrivate?: boolean;
   isUpdated?: boolean;
+  role?: string;
 }
 
 const initialState: StateTypes = {
@@ -90,6 +95,7 @@ export default function chatting(
       return {
         isOpen: action.isOpen,
         menuIdx: action.menuIdx,
+        role: undefined,
       };
     case SELECT_MENU:
       return {
@@ -97,6 +103,7 @@ export default function chatting(
         menuIdx: action.menuIdx,
         channelId: undefined,
         isPrivate: undefined,
+        role: undefined,
       };
     case CREATE_CHANNEL:
       return {
@@ -116,6 +123,7 @@ export default function chatting(
         menuIdx: action.menuIdx,
         channelId: action.channelId,
         isPrivate: undefined,
+        role: action.role,
       };
     case UPDATE_RELATION:
       return {

@@ -28,6 +28,7 @@ interface ChannelProps {
   name: string;
   number: number;
   isPrivate: boolean;
+  role?: string;
   onClick: () => void;
 }
 
@@ -35,6 +36,7 @@ export default function Channel({
   name,
   number,
   isPrivate,
+  // role,
   onClick,
 }: ChannelProps): JSX.Element {
   return (

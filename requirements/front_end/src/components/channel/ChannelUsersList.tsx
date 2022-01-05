@@ -13,20 +13,22 @@ const GET_USERS_BY_IDS = gql`
   }
 `;
 
-interface ChannelUsersListProps {
-  meId: number;
-  userIds: number[];
-}
-
 interface UserInfo {
   id: number;
   name: string;
   profile_image: string;
 }
 
+interface ChannelUsersListProps {
+  meId: number;
+  userIds: number[];
+  role: string;
+}
+
 export default function ChannelUsersList({
   meId,
   userIds,
+  role,
 }: ChannelUsersListProps): JSX.Element {
   const {loading, error, data} = useQuery(GET_USERS_BY_IDS, {
     variables: {
@@ -35,19 +37,30 @@ export default function ChannelUsersList({
   });
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  console.log(data.getUsersByIds);
+  // console.log(data.getUsersByIds);
   const users: UserInfo[] = data.getUsersByIds;
   return (
     <ChannelUsersListStyles>
-      {users.map(user => (
-        <ChannelUser
-          meId={meId}
-          key={user.id}
-          name={user.name}
-          userId={user.id}
-          imagePath=""
-        />
-      ))}
+      <ChannelUser
+        role={role}
+        meId={meId}
+        userId={meId}
+        name="나"
+        imagePath=""
+      />
+      {users.map(user => {
+        if (user.id !== meId)
+          return (
+            <ChannelUser
+              role={role}
+              meId={meId}
+              key={user.id}
+              name={user.name}
+              userId={user.id}
+              imagePath=""
+            />
+          );
+      })}
     </ChannelUsersListStyles>
   );
 }
