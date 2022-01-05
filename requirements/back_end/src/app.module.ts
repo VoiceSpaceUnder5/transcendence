@@ -20,6 +20,7 @@ import { Code } from './code/code.entity';
 import { Message } from './message/message.entity';
 import { ChatModule } from './chat/chat.module';
 import { RelationModule } from './relation/relation.module';
+import { ImageModule } from './image/image.module';
 
 // TypeOrmModule.forRootAsync({
 //   useFactory: async () =>
@@ -42,7 +43,7 @@ import { RelationModule } from './relation/relation.module';
       entities: [User, ChatChannel, ChatChannelUser, Code, Message],
       autoLoadEntities: true,
       synchronize: true,
-      logging: true,
+      // logging: true,
     }), //
     GraphQLModule.forRoot({
       autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
@@ -59,6 +60,7 @@ import { RelationModule } from './relation/relation.module';
     AuthModule,
     ChatModule,
     RelationModule,
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [AppService, CodeService],

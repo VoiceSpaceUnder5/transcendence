@@ -26,6 +26,14 @@ export class User extends DefaultEntity {
   profile_image?: string;
 
   @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  profile_image_thumb?: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  profile_image_medium?: string;
+
+  @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', length: 100, nullable: true })
   description?: string;
 

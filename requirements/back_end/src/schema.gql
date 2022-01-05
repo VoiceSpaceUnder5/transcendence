@@ -66,6 +66,8 @@ type User {
   name: String!
   email: String
   profile_image: String
+  profile_image_thumb: String
+  profile_image_medium: String
   description: String
   authority: Code!
   authorityId: String!
@@ -127,7 +129,7 @@ input CreateUserInput {
 }
 
 input UpdateUserInput {
-  profile_image: String
+  profile_image_binary: String
   description: String
 }
 

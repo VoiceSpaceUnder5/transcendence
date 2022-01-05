@@ -69,7 +69,7 @@ export class UsersResolver {
     @Args('user_id', { type: () => Int }) id: number,
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
-    return this.usersService.updateUser(id, updateUserInput);
+    return this.usersService.update(id, updateUserInput);
   }
 
   @ResolveField(() => Code)
