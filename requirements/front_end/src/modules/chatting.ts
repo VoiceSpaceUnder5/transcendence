@@ -4,6 +4,7 @@ const SELECT_MENU = 'chatting/SELECT_MENU' as const;
 const CREATE_CHANNEL = 'chatting/CREATE_CHANNEL' as const;
 const JOIN_CHANNEL = 'chatting/JOIN_CHANNEL' as const;
 const AFTER_JOIN = 'chatting/AFTER_JOIN' as const;
+const UPDATE_RELATION = 'chatting/RELATION_UPDATE' as const;
 const EXIT = 'chatting/EXIT' as const;
 
 // action 생성 함수
@@ -14,6 +15,7 @@ type ActionReturnType = {
   menuIdx: number;
   channelId?: number;
   isPrivate?: boolean;
+  isUpdated?: boolean;
 };
 
 // 채팅 인터페이스를 켜거나 끔
@@ -51,6 +53,13 @@ export const afterJoin = (channelId: number): ActionReturnType => {
   return {isOpen: true, type: AFTER_JOIN, menuIdx: 5, channelId};
 };
 
+export const updateRelation = (): ActionReturnType => ({
+  isOpen: true,
+  type: UPDATE_RELATION,
+  menuIdx: 0,
+  isUpdated: true,
+});
+
 export const exit = (): ActionReturnType => ({
   isOpen: true,
   type: EXIT,
@@ -62,6 +71,7 @@ interface StateTypes {
   menuIdx: number;
   channelId?: number;
   isPrivate?: boolean;
+  isUpdated?: boolean;
 }
 
 const initialState: StateTypes = {
@@ -106,6 +116,11 @@ export default function chatting(
         menuIdx: action.menuIdx,
         channelId: action.channelId,
         isPrivate: undefined,
+      };
+    case UPDATE_RELATION:
+      return {
+        ...state,
+        isUpdated: true,
       };
     default:
       return state;

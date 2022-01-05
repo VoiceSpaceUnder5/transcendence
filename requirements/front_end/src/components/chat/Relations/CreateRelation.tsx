@@ -28,9 +28,7 @@ export default function CreateRelation({
     },
   });
   const onClick = useCallback(() => {
-    createRelation()
-      .then(console.log)
-      .catch(e => console.dir(e));
+    createRelation().catch(e => console.dir(e));
   }, []);
   return <OptionButton onClick={onClick}>친구 신청</OptionButton>;
 }

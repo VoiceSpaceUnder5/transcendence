@@ -45,6 +45,7 @@ export default function RelationUserList({
       <Div align="center">{type}</Div>
       {!data.getRelationsByUserIdTreatAsFirst.length && '-'}
       <UserList
+        typeId={typeId}
         userIds={data.getRelationsByUserIdTreatAsFirst.map(
           (relation: Relation) => relation.user_second_id,
         )}

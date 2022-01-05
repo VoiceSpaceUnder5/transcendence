@@ -11,18 +11,21 @@ const GET_USERS_BY_IDS = gql`
     }
   }
 `;
-
-interface UserListProps {
-  userIds: number[];
-}
-
 interface User {
   id: number;
   name: string;
   description: string;
 }
 
-export default function UserList({userIds}: UserListProps): JSX.Element {
+interface UserListProps {
+  typeId: string;
+  userIds: number[];
+}
+
+export default function UserList({
+  userIds,
+  typeId,
+}: UserListProps): JSX.Element {
   const {loading, error, data} = useQuery(GET_USERS_BY_IDS, {
     variables: {
       userIds,
@@ -34,6 +37,7 @@ export default function UserList({userIds}: UserListProps): JSX.Element {
     <>
       {data.getUsersByIds.map((user: User) => (
         <Friend
+          typeId={typeId}
           key={user.id}
           username={user.name}
           userId={user.id}

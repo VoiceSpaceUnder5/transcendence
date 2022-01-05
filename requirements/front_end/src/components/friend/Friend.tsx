@@ -6,6 +6,7 @@ import UserProfile from './UserProfile';
 // import DirectMessages from '../chat/DirectMessage';
 
 interface FriendProps {
+  typeId?: string;
   userId?: number;
   imagePath?: string;
   username: string;
@@ -15,6 +16,7 @@ interface FriendProps {
 }
 
 export default function Friend({
+  typeId,
   userId,
   username,
   imagePath,
@@ -27,21 +29,27 @@ export default function Friend({
   const onDivClick = () => !visible && setVisible(true);
   const changeVisible = () => setVisible(false);
   const onBackClick = () => setProfileVisible(!profileVisible);
+  const onProfileClick = () => {
+    setProfileVisible(!profileVisible);
+  };
   return (
     <FriendStyle onClick={onDivClick}>
-      <ProfileImageStyle src={imagePath} isOnline={isOnline} />
-      <MenuInfoList>
-        {username && <MenuInfo>{username}</MenuInfo>}
-        {description && <MenuInfo>{description}</MenuInfo>}
-        {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
-      </MenuInfoList>
+      {!visible && (
+        <>
+          <ProfileImageStyle src={imagePath} isOnline={isOnline} />
+          <MenuInfoList>
+            {username && <MenuInfo>{username}</MenuInfo>}
+            {description && <MenuInfo>{description}</MenuInfo>}
+            {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
+          </MenuInfoList>
+        </>
+      )}
       <FriendOptions visible={visible}>
-        <OptionButton onClick={() => setProfileVisible(!profileVisible)}>
-          프로필 보기
-        </OptionButton>
+        <OptionButton onClick={onProfileClick}>프로필 보기</OptionButton>
         {profileVisible && (
           <UserProfile
             userId={userId as number}
+            typeId={typeId as string}
             onBackClick={onBackClick}
           ></UserProfile>
         )}
@@ -82,13 +90,12 @@ const ProfileImageStyle = styled.img<{isOnline?: boolean}>`
 
 const FriendOptions = styled.div<{visible: boolean}>`
   display: flex;
-  width: 80%;
+  width: 100%;
   max-width: 300px;
-  height: 72px;
+  height: 60px;
   padding: 0px 8px;
   justify-content: space-around;
   align-items: center;
-  // position: absolute;
   display: ${props => !props.visible && 'none'};
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12.5px;
