@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CodeService } from 'src/code/code.service';
 import { ImageService } from 'src/image/image.service';
@@ -57,14 +62,21 @@ export class UsersService {
 
   async updateProfileImage(id: number, imageBinary: string) {
     const uploadResponse = await this.imageService.uploadImage(imageBinary);
-    if (!uploadResponse)
+    if (!uploadResponse) {
       console.error(
         "Can't upload image to Image Server : Maybe imageBinary is broken Or Image Server is not working",
       );
+      return;
+      // throw new NotAcceptableException(
+      //   "Can't upload image to Image Server : Maybe imageBinary is broken Or Image Server is not working",
+      // );
+    }
     const profile_link = {
       profile_image: uploadResponse.data.image.url,
-      profile_image_thumb: uploadResponse.data.thumb.url,
-      profile_image_medium: uploadResponse.data.medium.url,
+      profile_image_thumb:
+        uploadResponse.data.thumb?.url || uploadResponse.data.image.url,
+      profile_image_medium:
+        uploadResponse.data.medium?.url || uploadResponse.data.image.url,
     };
     await this.userRepository.update(id, profile_link);
   }
