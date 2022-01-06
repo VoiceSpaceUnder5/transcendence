@@ -12,7 +12,7 @@ export class ImageService {
     private readonly configService: ConfigService,
   ) {}
 
-  async uploadImage(imageBinary: string) {
+  async uploadImage(imageBinary: string): Promise<any> {
     const formData = new FormData();
     formData.append('image', imageBinary);
     const imgbbApiKey = this.configService.get<string>('IMGBB_API_KEY');
