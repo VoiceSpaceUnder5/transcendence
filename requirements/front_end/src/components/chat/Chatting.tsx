@@ -3,20 +3,23 @@ import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectMenu} from '../../modules/chatting';
-import Div from '../common/Div';
 import ChannelUsers from '../channel/ChannelUsers';
 import MessageBox from './MessageBox';
 import MessageForm from './MessageForm';
 import {RootState} from '../../modules';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {io, Socket} from 'socket.io-client';
+import ChannelNameAndExit from './ChannelNameAndExit';
 
 const GET_CHANNEL_DATA = gql`
   query getChannelData($channelId: Int!) {
     getChannelById(channelId: $channelId) {
       name
       messages {
-        userId
+        user {
+          id
+          name
+        }
         textMessage
       }
       chatChannelUsers {
@@ -30,7 +33,10 @@ const CREATE_MESSAGE = gql`
   mutation createMessage($createMessageInput: CreateMessageInput!) {
     createMessage(createMessageInput: $createMessageInput) {
       chatChannelId
-      userId
+      user {
+        id
+        name
+      }
       textMessage
     }
   }
@@ -44,9 +50,8 @@ export default function Chatting(): JSX.Element {
     role: state.chatting.role,
   }));
   const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
-  const [userIds, setUserIds] = useState<number[]>([]);
   const [messages, setMessages] = useState<
-    {userId: number; username?: string; textMessage: string}[]
+    {user: {id: number; name: string}; textMessage: string}[]
   >([]);
   const [{message}, onChange, reset] = useInput({message: ''});
   const dispatch = useDispatch();
@@ -75,8 +80,8 @@ export default function Chatting(): JSX.Element {
           const sendedMessage = data.data.createMessage;
           socket.emit('sendToServer', {
             channelId: sendedMessage.chatChannelId,
-            userId: sendedMessage.userId,
-            name,
+            userId: sendedMessage.user.id,
+            name: sendedMessage.user.name,
             message: sendedMessage.textMessage,
           });
           reset();
@@ -99,19 +104,24 @@ export default function Chatting(): JSX.Element {
     );
     socket.on('notice', body => console.log(body.message));
     socket.on('sendToClient', body => {
+      // 차단한 애들 메시지는 어떻게 막지?
       if (body.userId === meId) {
         setMessages(messages =>
           messages.concat({
-            userId: body.userId,
-            username: '나',
+            user: {
+              id: body.userId,
+              name: '나',
+            },
             textMessage: body.message,
           }),
         );
       } else {
         setMessages(messages =>
           messages.concat({
-            userId: body.userId,
-            username: body.username,
+            user: {
+              id: body.userId,
+              name: body.username,
+            },
             textMessage: body.message,
           }),
         );
@@ -124,13 +134,6 @@ export default function Chatting(): JSX.Element {
 
   useEffect(() => {
     refetch().then(data => {
-      const userIds = data.data.getChannelById.messages.map(
-        (message: {userId: number}) => message.userId,
-      );
-      const uniqueArr = userIds.filter(
-        (id: number, idx: number, self: number[]) => self.indexOf(id) === idx,
-      );
-      setUserIds(uniqueArr);
       setMessages(data.data.getChannelById.messages);
     });
   }, []);
@@ -141,16 +144,20 @@ export default function Chatting(): JSX.Element {
   return (
     <>
       {/* 나가는 버튼도 추가해야 함 */}
-      {/* <button>나가기</button> */}
       <ChattingHeadStyles>
-        <Div>{data.getChannelById.name}</Div>
+        <ChannelNameAndExit
+          channelName={data.getChannelById.name}
+          channelId={channelId as number}
+          meId={meId as number}
+          role={role as string}
+        />
         <ChannelUsers
           meId={meId}
           channelId={channelId as number}
           role={role as string}
         />
       </ChattingHeadStyles>
-      <MessageBox meId={meId} userIds={userIds} messages={messages} />
+      <MessageBox meId={meId} messages={messages} />
       <MessageForm
         message={message}
         onSubmit={onSubmit}

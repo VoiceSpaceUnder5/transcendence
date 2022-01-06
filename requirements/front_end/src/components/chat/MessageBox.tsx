@@ -2,32 +2,30 @@ import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import {gql, useQuery} from '@apollo/client';
 
-const GET_USERS_BY_IDS = gql`
-  query getUsersByIds($userIds: [Int!]!) {
-    getUsersByIds(userIds: $userIds) {
-      id
-      name
+const GET_RELATIONS = gql`
+  query getRelations($userId: Float!) {
+    getRelationsByUserIdTreatAsFirst(userId: $userId) {
+      user_second_id
+      typeId
     }
   }
 `;
 
 interface MessageBoxProps {
   meId: number;
-  userIds: number[];
-  messages: {userId: number; username?: string; textMessage: string}[];
+  messages: {user: {id: number; name: string}; textMessage: string}[];
 }
 
 export default React.memo(function MessageBox({
   meId,
-  userIds,
   messages,
 }: MessageBoxProps): JSX.Element {
-  const divRef = useRef<HTMLDivElement>(null);
-  const {loading, error, data} = useQuery(GET_USERS_BY_IDS, {
+  const {loading, error, data} = useQuery(GET_RELATIONS, {
     variables: {
-      userIds,
+      userId: meId,
     },
   });
+  const divRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     scrollToBottom();
   });
@@ -42,24 +40,28 @@ export default React.memo(function MessageBox({
     }
   };
 
-  if (loading) return <>로딩 중</>;
-  if (error) return <>에러</>;
+  if (loading) return <>로딩 중..</>;
+  if (error) return <>에러..</>;
   return (
     <>
       <MessageBoxStyles ref={divRef}>
-        {data &&
-          messages.map((message, idx) => (
-            <div key={idx}>
-              {data.getUsersByIds.find(
-                (obj: {id: number; name: string}) => obj.id === meId,
-              )
-                ? '나'
-                : data.getUsersByIds.find(
-                    (obj: {id: number; name: string}) => obj.id === meId,
-                  ).name}
-              : {message.textMessage}
-            </div>
-          ))}
+        {messages.map((message, idx) => {
+          const relations = data.getRelationsByUserIdTreatAsFirst;
+          const typeId = relations.find(
+            (relation: {user_second_id: number; typeId: string}) =>
+              relation.user_second_id === message.user.id,
+          )?.typeId;
+          if (typeId === 'RE3' || typeId === 'RE4' || typeId === 'RE5') {
+            return null;
+          } else {
+            return (
+              <div key={idx}>
+                {message.user.id === meId ? '나' : message.user.name} :
+                {message.textMessage}
+              </div>
+            );
+          }
+        })}
       </MessageBoxStyles>
     </>
   );

@@ -90,9 +90,20 @@ export default function UserProfile({
                 )}
               </OptionBox>
               <OptionBox>
-                {/* <CreateRelation userId={userId} /> */}
-                <OptionButton>대화하기</OptionButton>
-                <OptionButton>게임하기</OptionButton>
+                {/* 대화방 없으면 만들고 입장 & 있으면 거기에 입장 */}
+                {/* 차단 중이면 대화하기, 게임하기 비활성화 */}
+                <>
+                  <OptionButton
+                    disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
+                  >
+                    대화하기
+                  </OptionButton>
+                  <OptionButton
+                    disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
+                  >
+                    게임하기
+                  </OptionButton>
+                </>
                 <OptionButton onClick={onBackClick}>닫기</OptionButton>
               </OptionBox>
             </OptionBoxLayout>

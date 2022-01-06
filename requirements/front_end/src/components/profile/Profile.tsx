@@ -58,7 +58,7 @@ export default function Profile({
       <WholeLayout>
         <InnerLayout>
           <Div>프로필 사진</Div>
-          <ProfileImgStyle src={imagePath}></ProfileImgStyle>
+          <ProfileImgStyle src={imagePath} />
         </InnerLayout>
         <InnerLayout>
           <Div>이름</Div>
