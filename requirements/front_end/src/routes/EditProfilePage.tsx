@@ -13,7 +13,7 @@ function EditProfilePage(): JSX.Element {
         <Navbar />
         <BackboardBoxLayout>
           <BackboardBoxInnerLayout>
-            <EditProfile></EditProfile>
+            <EditProfile />
           </BackboardBoxInnerLayout>
         </BackboardBoxLayout>
         <Chat />
