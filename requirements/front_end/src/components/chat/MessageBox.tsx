@@ -1,6 +1,15 @@
 import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
-import MessageList from './MessageList';
+import {gql, useQuery} from '@apollo/client';
+
+const GET_RELATIONS = gql`
+  query getRelations($userId: Float!) {
+    getRelationsByUserIdTreatAsFirst(userId: $userId) {
+      user_second_id
+      typeId
+    }
+  }
+`;
 
 interface MessageBoxProps {
   meId: number;
@@ -11,6 +20,11 @@ export default React.memo(function MessageBox({
   meId,
   messages,
 }: MessageBoxProps): JSX.Element {
+  const {loading, error, data} = useQuery(GET_RELATIONS, {
+    variables: {
+      userId: meId,
+    },
+  });
   const divRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     scrollToBottom();
@@ -26,16 +40,28 @@ export default React.memo(function MessageBox({
     }
   };
 
+  if (loading) return <>로딩 중..</>;
+  if (error) return <>에러..</>;
   return (
     <>
       <MessageBoxStyles ref={divRef}>
-        {messages.map((message, idx) => (
-          <div key={idx}>
-            {message.user.id === meId ? '나' : message.user.name} :{' '}
-            {message.textMessage}
-          </div>
-        ))}
-        <MessageList meId={meId} />
+        {messages.map((message, idx) => {
+          const relations = data.getRelationsByUserIdTreatAsFirst;
+          const typeId = relations.find(
+            (relation: {user_second_id: number; typeId: string}) =>
+              relation.user_second_id === message.user.id,
+          )?.typeId;
+          if (typeId === 'RE3' || typeId === 'RE4' || typeId === 'RE5') {
+            return null;
+          } else {
+            return (
+              <div key={idx}>
+                {message.user.id === meId ? '나' : message.user.name} :
+                {message.textMessage}
+              </div>
+            );
+          }
+        })}
       </MessageBoxStyles>
     </>
   );
