@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import styled from 'styled-components';
 import TitleDiv from '../common/TitleDiv';
 import Div from '../common/Div';
@@ -23,61 +23,66 @@ const UPDATE_MY_PROFILE = gql`
 export default function EditProfile(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isClick, setIsClick] = useState(false);
-  const [image, setImage] = useState('');
-
-  const {imagePath, id, name, email, description} = location.state;
-
+  const [image, setImage] = useState(location.state.image);
   const [inputs, onChange] = useInput({
-    description,
+    description: location.state.description,
   });
-
-  const onClick = () => setIsClick(!isClick);
-  const [updateMe, {error}] = useMutation(UPDATE_MY_PROFILE, {
-    variables: {
-      user_id: id,
-      updateUserInput: {
-        description: inputs.description,
-      },
-    },
-  });
-  if (error) {
-    console.error(error);
-  }
+  const isImgUpdated = useRef(false);
+  const [updateMe, {error}] = useMutation(UPDATE_MY_PROFILE);
 
   const onClickConfirm = () => {
-    updateMe();
+    // console.log(image.substr(image.indexOf('base64') + 7));
+    if (isImgUpdated.current === true) {
+      updateMe({
+        variables: {
+          user_id: location.state.id,
+          updateUserInput: {
+            description: inputs.description,
+            profile_image_binary: image.substr(image.indexOf('base64') + 7),
+          },
+        },
+      }).then(() => {
+        isImgUpdated.current = false;
+      });
+    } else {
+      updateMe({
+        variables: {
+          user_id: location.state.id,
+          updateUserInput: {
+            description: inputs.description,
+          },
+        },
+      });
+    }
     // // 사진 올리자.
     navigate('/profile');
   };
 
-  useEffect(() => {
-    setImage(imagePath);
-  }, []);
+  const onImgChange = (img: string) => {
+    isImgUpdated.current = true;
+    setImage(img);
+  };
+  if (error) return <>에러..</>;
   return (
     <BackBoard size="hug">
       <TitleDiv>프로필 편집</TitleDiv>
       <WholeLayout>
         <InnerLayout>
           <Div>프로필 사진</Div>
-          {!isClick ? (
-            <ProfileImgStyle src={image} onClick={onClick}></ProfileImgStyle>
-          ) : (
-            <ImageUpload onClick={onClick} defaultImage={image} />
-          )}
+          <ImageUpload image={image} onImgChange={onImgChange} />
         </InnerLayout>
         <InnerLayout>
           <Div>
             이름<span style={{fontSize: '10px'}}>(수정 불가)</span>
           </Div>
           <Div bg="light" width="large" align="center">
-            {name}
+            {location.state.name}
           </Div>
           <Div>
             email<span style={{fontSize: '10px'}}>(수정 불가)</span>
           </Div>
           <Div bg="light" width="large" align="center">
-            {email}
+            {location.state.email}
           </Div>
           <Div>자기소개</Div>
           <Textarea
@@ -100,13 +105,6 @@ export default function EditProfile(): JSX.Element {
     </BackBoard>
   );
 }
-
-const ProfileImgStyle = styled.img`
-  width: 288px;
-  height: 288px;
-  border-radius: 25px;
-  border: 1px solid #000000;
-`;
 
 const WholeLayout = styled.div`
   display: flex;

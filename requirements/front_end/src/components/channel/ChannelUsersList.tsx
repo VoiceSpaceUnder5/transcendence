@@ -8,7 +8,15 @@ const GET_USERS_BY_IDS = gql`
     getUsersByIds(userIds: $userIds) {
       id
       name
-      profile_image
+      profile_image_thumb
+    }
+  }
+`;
+
+const GET_ME = gql`
+  query getMe {
+    getMe {
+      profile_image_thumb
     }
   }
 `;
@@ -30,15 +38,15 @@ export default function ChannelUsersList({
   userIds,
   role,
 }: ChannelUsersListProps): JSX.Element {
-  const {loading, error, data} = useQuery(GET_USERS_BY_IDS, {
+  const usersData = useQuery(GET_USERS_BY_IDS, {
     variables: {
       userIds,
     },
   });
-  if (loading) return <>로딩 중</>;
-  if (error) return <>에러</>;
-  // console.log(data.getUsersByIds);
-  const users: UserInfo[] = data.getUsersByIds;
+  const meData = useQuery(GET_ME);
+  if (usersData.loading || meData.loading) return <>로딩 중</>;
+  if (usersData.error || meData.error) return <>에러</>;
+  const users: UserInfo[] = usersData.data.getUsersByIds;
   return (
     <ChannelUsersListStyles>
       <ChannelUser
@@ -46,7 +54,7 @@ export default function ChannelUsersList({
         meId={meId}
         userId={meId}
         name="나"
-        imagePath=""
+        imagePath={meData.data.getMe.profile_image_thumb}
       />
       {users.map(user => {
         if (user.id !== meId)
@@ -57,7 +65,7 @@ export default function ChannelUsersList({
               key={user.id}
               name={user.name}
               userId={user.id}
-              imagePath=""
+              imagePath={user.profile_image}
             />
           );
       })}

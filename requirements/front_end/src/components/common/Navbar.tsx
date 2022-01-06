@@ -8,9 +8,66 @@ import {HiCube, HiMenu} from 'react-icons/hi';
 import Button from './Button';
 import GameStart from './GameStart';
 
-import {useDispatch} from 'react-redux';
-import {logOut} from '../../modules/auth';
+import {gql, useQuery} from '@apollo/client';
+import LogOut from './LogOut';
 
+const GET_ME = gql`
+  query getMe {
+    getMe {
+      profile_image_thumb
+      name
+    }
+  }
+`;
+
+function Navbar(): JSX.Element {
+  const [isToggle, setIsToggle] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const onToggle = () => setIsToggle(!isToggle);
+  const {loading, error, data} = useQuery(GET_ME);
+  const [isClick, setIsClick] = useState(false);
+
+  const onClick = () => setIsClick(!isClick);
+  if (loading) return <>로딩 중..</>;
+  if (error) return <>에러..</>;
+  return (
+    <NavbarBackground>
+      <Nav align="start">
+        <Button bg="dark" brand icon>
+          <HiCube />
+        </Button>
+        <NavCollapse isToggle={isToggle} align="start">
+          <Button bg="dark" onClick={() => navigate('/home')}>
+            Home
+          </Button>
+          <Button bg="dark" onClick={() => navigate('/profile')}>
+            Profile
+          </Button>
+        </NavCollapse>
+      </Nav>
+      <Nav align="end">
+        <NavToggle onClick={onToggle}>
+          <Button bg="dark" icon>
+            <HiMenu />
+          </Button>
+        </NavToggle>
+        <NavCollapse isToggle={isToggle} direction="reverse" align="end">
+          <Button bg="dark" onClick={onClick}>
+            <span style={{paddingRight: '8px'}}>{data.getMe.name}</span>
+            <img
+              style={{width: '32px', borderRadius: '50%'}}
+              src={data.getMe.profile_image_thumb}
+            ></img>
+          </Button>
+          {isClick && <LogOut />}
+        </NavCollapse>
+      </Nav>
+      <GameStart />
+    </NavbarBackground>
+  );
+}
+
+export default React.memo(Navbar);
 const NavbarBackground = styled.div`
   /* Layout */
   display: flex;
@@ -72,57 +129,3 @@ const NavToggle = styled.div`
     display: block;
   }
 `;
-
-function Navbar(): JSX.Element {
-  const [isToggle, setIsToggle] = useState<boolean>(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const onToggle = () => setIsToggle(!isToggle);
-  const [isHover, setIsHover] = useState(false);
-  const onHover = () => setIsHover(!isHover);
-  return (
-    <NavbarBackground>
-      <Nav align="start">
-        <Button bg="dark" brand icon>
-          <HiCube />
-        </Button>
-        <NavCollapse isToggle={isToggle} align="start">
-          <Button bg="dark" onClick={() => navigate('/home')}>
-            Home
-          </Button>
-          <Button bg="dark" onClick={() => navigate('/profile')}>
-            Profile
-          </Button>
-        </NavCollapse>
-      </Nav>
-      <Nav align="end">
-        <NavToggle onClick={onToggle}>
-          <Button bg="dark" icon>
-            <HiMenu />
-          </Button>
-        </NavToggle>
-        <NavCollapse isToggle={isToggle} direction="reverse" align="end">
-          <Button
-            bg="dark"
-            onHover={onHover}
-            onClick={() => {
-              localStorage.removeItem('meId');
-              localStorage.removeItem('meName');
-              localStorage.clear();
-              dispatch(logOut());
-              navigate('/');
-            }}
-          >
-            {!isHover ? '이름' : 'logout'}
-          </Button>
-          <Button bg="dark" onClick={() => navigate('/profile')}>
-            사진(예정)
-          </Button>
-        </NavCollapse>
-      </Nav>
-      <GameStart />
-    </NavbarBackground>
-  );
-}
-
-export default React.memo(Navbar);
