@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { IsEmail } from 'class-validator';
 import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
 import { Code } from 'src/code/code.entity';
 import { DefaultEntity } from 'src/default.entity';
@@ -17,6 +18,7 @@ export class User extends DefaultEntity {
   @Column({ type: 'varchar', length: 20, unique: true })
   name: string;
 
+  @IsEmail()
   @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', length: 50, nullable: true })
   email?: string;
@@ -33,7 +35,7 @@ export class User extends DefaultEntity {
   @Column({ nullable: true })
   profile_image_medium?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, defaultValue: '자신을 소개해보세요' })
   @Column({ type: 'varchar', length: 100, nullable: true })
   description?: string;
 

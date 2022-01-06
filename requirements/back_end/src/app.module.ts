@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Connection, getConnectionOptions } from 'typeorm';
+import { Connection } from 'typeorm';
 import * as path from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -22,13 +22,6 @@ import { ChatModule } from './chat/chat.module';
 import { RelationModule } from './relation/relation.module';
 import { ImageModule } from './image/image.module';
 
-// TypeOrmModule.forRootAsync({
-//   useFactory: async () =>
-//     Object.assign(await getConnectionOptions(), {
-//       autoLoadEntities: true, // true 이면 엔티티가 자동으로 로드됩니다. (기본 false)
-//     }),
-// });
-
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.dev.env' }),
@@ -39,11 +32,10 @@ import { ImageModule } from './image/image.module';
       username: 'kilee',
       password: 'kilee',
       database: 'test',
-      // entities: ['dist/**/*.entity.js'],
       entities: [User, ChatChannel, ChatChannelUser, Code, Message],
       autoLoadEntities: true,
       synchronize: true,
-      // logging: true,
+      // logging: true, // 타입 Orm 이 콘솔에 로그를 찍습니다.
     }), //
     GraphQLModule.forRoot({
       autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
