@@ -16,7 +16,10 @@ const GET_CHANNEL_DATA = gql`
     getChannelById(channelId: $channelId) {
       name
       messages {
-        userId
+        user {
+          id
+          name
+        }
         textMessage
       }
       chatChannelUsers {
@@ -30,7 +33,10 @@ const CREATE_MESSAGE = gql`
   mutation createMessage($createMessageInput: CreateMessageInput!) {
     createMessage(createMessageInput: $createMessageInput) {
       chatChannelId
-      userId
+      user {
+        id
+        name
+      }
       textMessage
     }
   }
@@ -44,9 +50,8 @@ export default function Chatting(): JSX.Element {
     role: state.chatting.role,
   }));
   const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
-  const [userIds, setUserIds] = useState<number[]>([]);
   const [messages, setMessages] = useState<
-    {userId: number; username?: string; textMessage: string}[]
+    {user: {id: number; name: string}; textMessage: string}[]
   >([]);
   const [{message}, onChange, reset] = useInput({message: ''});
   const dispatch = useDispatch();
@@ -75,8 +80,8 @@ export default function Chatting(): JSX.Element {
           const sendedMessage = data.data.createMessage;
           socket.emit('sendToServer', {
             channelId: sendedMessage.chatChannelId,
-            userId: sendedMessage.userId,
-            name,
+            userId: sendedMessage.user.id,
+            name: sendedMessage.user.name,
             message: sendedMessage.textMessage,
           });
           reset();
@@ -103,16 +108,20 @@ export default function Chatting(): JSX.Element {
       if (body.userId === meId) {
         setMessages(messages =>
           messages.concat({
-            userId: body.userId,
-            username: '나',
+            user: {
+              id: body.userId,
+              name: '나',
+            },
             textMessage: body.message,
           }),
         );
       } else {
         setMessages(messages =>
           messages.concat({
-            userId: body.userId,
-            username: body.username,
+            user: {
+              id: body.userId,
+              name: body.username,
+            },
             textMessage: body.message,
           }),
         );
@@ -125,13 +134,6 @@ export default function Chatting(): JSX.Element {
 
   useEffect(() => {
     refetch().then(data => {
-      const userIds = data.data.getChannelById.messages.map(
-        (message: {userId: number}) => message.userId,
-      );
-      const uniqueArr = userIds.filter(
-        (id: number, idx: number, self: number[]) => self.indexOf(id) === idx,
-      );
-      setUserIds(uniqueArr);
       setMessages(data.data.getChannelById.messages);
     });
   }, []);
@@ -155,7 +157,7 @@ export default function Chatting(): JSX.Element {
           role={role as string}
         />
       </ChattingHeadStyles>
-      <MessageBox meId={meId} userIds={userIds} messages={messages} />
+      <MessageBox meId={meId} messages={messages} />
       <MessageForm
         message={message}
         onSubmit={onSubmit}

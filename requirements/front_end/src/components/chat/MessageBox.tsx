@@ -1,34 +1,17 @@
 import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
-import {gql, useQuery} from '@apollo/client';
 import MessageList from './MessageList';
-
-const GET_USERS_BY_IDS = gql`
-  query getUsersByIds($userIds: [Int!]!) {
-    getUsersByIds(userIds: $userIds) {
-      id
-      name
-    }
-  }
-`;
 
 interface MessageBoxProps {
   meId: number;
-  userIds: number[];
-  messages: {userId: number; username?: string; textMessage: string}[];
+  messages: {user: {id: number; name: string}; textMessage: string}[];
 }
 
 export default React.memo(function MessageBox({
   meId,
-  userIds,
   messages,
 }: MessageBoxProps): JSX.Element {
   const divRef = useRef<HTMLDivElement>(null);
-  const data = useQuery(GET_USERS_BY_IDS, {
-    variables: {
-      userIds,
-    },
-  });
   useEffect(() => {
     scrollToBottom();
   });
@@ -43,21 +26,13 @@ export default React.memo(function MessageBox({
     }
   };
 
-  if (data.loading) return <>로딩 중</>;
-  if (data.error) return <>에러</>;
   return (
     <>
       <MessageBoxStyles ref={divRef}>
         {messages.map((message, idx) => (
           <div key={idx}>
-            {data.data.getUsersByIds.find(
-              (obj: {id: number; name: string}) => obj.id === meId,
-            )
-              ? '나'
-              : data.data.getUsersByIds.find(
-                  (obj: {id: number; name: string}) => obj.id === meId,
-                ).name}
-            : {message.textMessage}
+            {message.user.id === meId ? '나' : message.user.name} :{' '}
+            {message.textMessage}
           </div>
         ))}
         <MessageList meId={meId} />
