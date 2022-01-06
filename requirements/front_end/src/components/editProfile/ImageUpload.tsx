@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Label from '../common/Label';
-// import testImg from './test.png';
 import imageCompression from 'browser-image-compression';
 
 interface ImageUploadProps {
@@ -17,15 +16,16 @@ export default function ImageUpload({
     e.preventDefault();
   };
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.files);
     if (e.target.files) {
+      if (e.target.files[0].type.indexOf('image/') === -1) {
+        alert('파일 형식이 잘못되었습니다.');
+        return;
+      }
       imageCompressAndSend(e.target.files[0]);
     }
   };
 
-  const imageCompressAndSend = async (fileSrc: any) => {
-    console.log('이미지 압축');
-
+  const imageCompressAndSend = async (fileSrc: File) => {
     const options = {
       maxSizeMB: 0.2,
       maxWidthOrHeight: 288,

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Body from '../components/common/Body';
 import Navbar from '../components/common/Navbar';
 import Chat from '../components/chat/Chat';
@@ -25,7 +25,6 @@ function ProfilePage(): JSX.Element {
   if (loading)
     return <Loader type="TailSpin" color="#343a40" width={160} height={160} />;
   if (error) console.error(error);
-  console.log(data);
   return (
     <>
       <Body>

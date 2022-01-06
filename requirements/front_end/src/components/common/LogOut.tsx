@@ -1,11 +1,17 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
+import styled from 'styled-components';
 import {logOut} from '../../modules/auth';
 import Button from './Button';
 
+const LogoutStyles = styled.div`
+  position: absolute;
+  top: 50px;
+  right: 20px;
+`;
+
 export default function LogOut(): JSX.Element {
-  // 로그인 동작
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const onClick = () => {
@@ -16,8 +22,10 @@ export default function LogOut(): JSX.Element {
     navigate('/');
   };
   return (
-    <Button bg="dark" onClick={onClick}>
-      LogOut
-    </Button>
+    <LogoutStyles>
+      <Button bg="dark" onClick={onClick}>
+        LogOut
+      </Button>
+    </LogoutStyles>
   );
 }
