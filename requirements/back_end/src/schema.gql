@@ -20,8 +20,9 @@ type Message {
   created_at: DateTime!
   updated_at: DateTime!
   id: Int!
-  userId: Float!
-  chatChannelId: Float!
+  user: User!
+  userId: Int!
+  chatChannelId: Int!
   textMessage: String!
 }
 
