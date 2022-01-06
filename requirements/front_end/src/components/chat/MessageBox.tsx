@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import {gql, useQuery} from '@apollo/client';
+import MessageList from './MessageList';
 
 const GET_USERS_BY_IDS = gql`
   query getUsersByIds($userIds: [Int!]!) {
@@ -23,7 +24,7 @@ export default React.memo(function MessageBox({
   messages,
 }: MessageBoxProps): JSX.Element {
   const divRef = useRef<HTMLDivElement>(null);
-  const {loading, error, data} = useQuery(GET_USERS_BY_IDS, {
+  const data = useQuery(GET_USERS_BY_IDS, {
     variables: {
       userIds,
     },
@@ -42,24 +43,24 @@ export default React.memo(function MessageBox({
     }
   };
 
-  if (loading) return <>로딩 중</>;
-  if (error) return <>에러</>;
+  if (data.loading) return <>로딩 중</>;
+  if (data.error) return <>에러</>;
   return (
     <>
       <MessageBoxStyles ref={divRef}>
-        {data &&
-          messages.map((message, idx) => (
-            <div key={idx}>
-              {data.getUsersByIds.find(
-                (obj: {id: number; name: string}) => obj.id === meId,
-              )
-                ? '나'
-                : data.getUsersByIds.find(
-                    (obj: {id: number; name: string}) => obj.id === meId,
-                  ).name}
-              : {message.textMessage}
-            </div>
-          ))}
+        {messages.map((message, idx) => (
+          <div key={idx}>
+            {data.data.getUsersByIds.find(
+              (obj: {id: number; name: string}) => obj.id === meId,
+            )
+              ? '나'
+              : data.data.getUsersByIds.find(
+                  (obj: {id: number; name: string}) => obj.id === meId,
+                ).name}
+            : {message.textMessage}
+          </div>
+        ))}
+        <MessageList meId={meId} />
       </MessageBoxStyles>
     </>
   );

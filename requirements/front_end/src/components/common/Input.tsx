@@ -5,7 +5,8 @@ const InputStyle = styled.input.attrs(props => ({
   type: props.type && props.type,
 }))`
   display: flex;
-  align-self: stretch;
+  align-self: center;
+  justfiy-content: center;
   // 매직넘버 어케 하징..
   ${props => props.height === 'full' && `height: 182px; overflow-y: auto;`}
 

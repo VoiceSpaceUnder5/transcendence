@@ -70,6 +70,7 @@ export default function CreateChannel(): JSX.Element {
         <input
           type="password"
           name="password"
+          autoComplete="off"
           onChange={onChange}
           value={password}
           placeholder="비밀번호(비공개 채널)"
