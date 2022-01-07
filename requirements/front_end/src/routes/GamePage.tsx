@@ -17,13 +17,9 @@ function GamePage(): JSX.Element {
   console.log(location.state);
 
   return (
-    <>
-      <div style={{position: 'absolute', top: '100px', left: '100px'}}>
-        <Game />
-      </div>
-      <Navbar isStart={location.state.isStart} />
-      <Chat />
-    </>
+    <div style={{position: 'absolute', top: '20px', left: '315px'}}>
+      <Game />
+    </div>
   );
 }
 
