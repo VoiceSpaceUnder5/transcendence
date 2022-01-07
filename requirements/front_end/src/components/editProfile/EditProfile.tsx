@@ -31,7 +31,6 @@ export default function EditProfile(): JSX.Element {
   const [updateMe, {error}] = useMutation(UPDATE_MY_PROFILE);
 
   const onClickConfirm = () => {
-    // console.log(image.substr(image.indexOf('base64') + 7));
     if (isImgUpdated.current === true) {
       updateMe({
         variables: {
@@ -54,7 +53,6 @@ export default function EditProfile(): JSX.Element {
         },
       });
     }
-    // // 사진 올리자.
     navigate('/profile');
   };
 
