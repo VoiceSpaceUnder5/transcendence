@@ -1,7 +1,9 @@
-import React, {FormEvent, useState} from 'react';
+import React, {FormEvent, useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Button from './Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
+import {RootState} from '../../modules';
+import {useNavigate} from 'react-router-dom';
 
 const GameStartStyles = styled.div`
   /* Auto Layout */
@@ -42,36 +44,58 @@ const GameOption = styled.div`
   justify-content: flex-end;
 `;
 
-function GameStart(): JSX.Element {
+interface GameStartProps {
+  isStart?: boolean;
+}
+
+function GameStart({isStart}: GameStartProps): JSX.Element {
   const [toggle, setToggle] = useState(false);
+  const [isHard, setIsHard] = useState(false);
+  const navigate = useNavigate();
   const onToggle = () => {
     setToggle(!toggle);
+    console.log(toggle);
   };
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
   };
+  const onClickStart = () => {
+    navigate('/game', {state: {isStart: true}});
+  };
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsHard(!isHard);
+  };
   return (
     <GameStartStyles>
-      <Button icon right bg="grey" onClick={onToggle}>
-        {toggle ? <HiChevronUp /> : <HiChevronDown />}
-      </Button>
-      <form onSubmit={onSubmit}>
-        <Button left large>
-          <span style={{paddingLeft: '24px'}}>게임 시작</span>
-        </Button>
-        {toggle && (
-          <GameOptions>
-            <GameOption>
-              <label htmlFor="game1">GAME 1</label>
-              <input type="checkbox" id="game 1" name="game 1"></input>
-            </GameOption>
-            <GameOption>
-              <label htmlFor="game2">GAME 2</label>
-              <input type="checkbox" id="game 2" name="game 2"></input>
-            </GameOption>
-          </GameOptions>
-        )}
-      </form>
+      {!isStart ? (
+        <>
+          <Button icon right bg="grey" onClick={onToggle}>
+            {toggle ? <HiChevronUp /> : <HiChevronDown />}
+          </Button>
+          <form onSubmit={onSubmit}>
+            <Button left large onClick={onClickStart}>
+              <span style={{paddingLeft: '24px'}}>게임 시작</span>
+            </Button>
+            {toggle && (
+              <GameOptions>
+                Game Mode
+                <GameOption>
+                  <label htmlFor="game2">Hard</label>
+                  <input
+                    type="checkbox"
+                    id="game 2"
+                    name="game 2"
+                    checked={isHard}
+                    onChange={onChange}
+                  ></input>
+                </GameOption>
+              </GameOptions>
+            )}
+          </form>
+        </>
+      ) : (
+        <button>취소</button>
+      )}
     </GameStartStyles>
   );
 }
