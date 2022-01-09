@@ -13,9 +13,9 @@ import {useMutation, gql} from '@apollo/client';
 const UPDATE_MY_PROFILE = gql`
   mutation UpdateUser($user_id: Int!, $updateUserInput: UpdateUserInput!) {
     updateUser(user_id: $user_id, updateUserInput: $updateUserInput) {
-      id
-      name
       description
+      profile_image
+      profile_image_thumb
     }
   }
 `;
@@ -39,6 +39,12 @@ export default function EditProfile(): JSX.Element {
             description: inputs.description,
             profile_image_binary: image.substr(image.indexOf('base64') + 7),
           },
+        },
+        refetchQueries: ['getProfileImage'],
+        update(cache) {
+          cache.modify({
+            fields: {},
+          });
         },
       }).then(() => {
         isImgUpdated.current = false;

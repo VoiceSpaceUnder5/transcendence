@@ -8,28 +8,18 @@ import {HiCube, HiMenu} from 'react-icons/hi';
 import Button from './Button';
 import GameStart from './GameStart';
 
-import {gql, useQuery} from '@apollo/client';
 import LogOut from './LogOut';
-
-const GET_ME = gql`
-  query getMe {
-    getMe {
-      profile_image_thumb
-      name
-    }
-  }
-`;
+import Img from './Img';
 
 function Navbar(): JSX.Element {
+  const [meId] = useState(Number(localStorage.getItem('meId')));
+  const [meName] = useState(localStorage.getItem('meName'));
   const [isToggle, setIsToggle] = useState<boolean>(false);
   const navigate = useNavigate();
   const onToggle = () => setIsToggle(!isToggle);
-  const {loading, error, data} = useQuery(GET_ME);
   const [isClick, setIsClick] = useState(false);
 
   const onClick = () => setIsClick(!isClick);
-  if (loading) return <>로딩 중..</>;
-  if (error) return <>에러..</>;
   return (
     <NavbarBackground>
       <Nav align="start">
@@ -53,11 +43,8 @@ function Navbar(): JSX.Element {
         </NavToggle>
         <NavCollapse isToggle={isToggle} direction="reverse" align="end">
           <Button bg="dark" onClick={onClick}>
-            <span style={{paddingRight: '8px'}}>{data.getMe.name}</span>
-            <img
-              style={{width: '32px', borderRadius: '50%'}}
-              src={data.getMe.profile_image_thumb}
-            ></img>
+            <span style={{paddingRight: '8px'}}>{meName}</span>
+            <Img userId={meId} size="navbar" />
           </Button>
           {isClick && <LogOut />}
         </NavCollapse>

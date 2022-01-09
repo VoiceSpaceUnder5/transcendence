@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import Button from '../common/Button';
+import Img from '../common/Img';
 import ChannelUserProfile from './ChannelUserProfile';
 
 interface ChannelUserProps {
@@ -14,7 +15,6 @@ interface ChannelUserProps {
 export default function ChannelUser({
   meId,
   userId,
-  imagePath,
   name,
 }: // role,
 ChannelUserProps): JSX.Element {
@@ -28,7 +28,7 @@ ChannelUserProps): JSX.Element {
     <ChannelUserStyles onClick={onDivClick} isClicked={isClicked}>
       {!isClicked ? (
         <>
-          <PersonImg src={imagePath} />
+          <Img userId={userId} size="channel" />
           <PersonName>{name}</PersonName>
         </>
       ) : (
@@ -55,14 +55,6 @@ const ChannelUserStyles = styled.li<{isClicked: boolean}>`
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-`;
-
-const PersonImg = styled.img`
-  width: 20px;
-  height: 20px;
-
-  border-radius: 40%;
-  margin-right: 4px;
 `;
 
 const PersonName = styled.div`
