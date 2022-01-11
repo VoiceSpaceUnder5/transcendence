@@ -17,7 +17,6 @@ interface ImgProps {
 }
 
 export default function Img({userId, size}: ImgProps): JSX.Element {
-  // console.log(location.state.updateUser);
   const {loading, error, data} = useQuery(GET_PROFILE_IMAGE, {
     variables: {
       userId: userId,
@@ -25,10 +24,6 @@ export default function Img({userId, size}: ImgProps): JSX.Element {
   });
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  if (data) {
-    console.log(data.getUserById.profile_image);
-    console.log(data.getUserById.profile_image_thumb);
-  }
   const src =
     size === 'navbar' || size === 'channel'
       ? data.getUserById.profile_image_thumb
