@@ -11,7 +11,7 @@ import {gql, useMutation, useQuery} from '@apollo/client';
 import {io, Socket} from 'socket.io-client';
 import Div from '../common/Div';
 
-const GET_CHANNEL_DATA = gql`
+export const GET_CHANNEL_DATA = gql`
   query getChannelData($channelId: Int!) {
     getChannelById(channelId: $channelId) {
       name

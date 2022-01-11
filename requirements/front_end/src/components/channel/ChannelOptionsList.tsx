@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import styled from 'styled-components';
 import Button from '../common/Button';
 import ChannelUser from './ChannelUser';
 import {useDispatch} from 'react-redux';
 import {selectMenu} from '../../modules/chatting';
+import ChannelSetting from './ChannelSetting';
 
 const GET_USERS_BY_IDS = gql`
   query getUsersByIds($userIds: [Int!]!) {
@@ -50,6 +51,7 @@ export default function ChannelOptionsList({
   role,
 }: ChannelOptionsListProps): JSX.Element {
   const dispatch = useDispatch();
+  const [isClick, setIsClick] = useState(false);
   const usersData = useQuery(GET_USERS_BY_IDS, {
     variables: {
       userIds,
@@ -57,7 +59,7 @@ export default function ChannelOptionsList({
   });
   const meData = useQuery(GET_ME);
   const [exitChannel] = useMutation(EXIT_CHANNEL);
-  const onClick = () => {
+  const onExit = () => {
     exitChannel({
       variables: {
         input: {
@@ -69,42 +71,51 @@ export default function ChannelOptionsList({
       dispatch(selectMenu(1));
     });
   };
+  const onSetting = () => {
+    setIsClick(!isClick);
+  };
   if (usersData.loading || meData.loading) return <>로딩 중</>;
   if (usersData.error || meData.error) return <>에러</>;
   const users: UserInfo[] = usersData.data.getUsersByIds;
   return (
     <>
       <ChannelOptionsListStyles top={80}>
-        <ChannelUser
-          role={role}
-          meId={meId}
-          userId={meId}
-          name="나"
-          imagePath={meData.data.getMe.profile_image_thumb}
-        />
-        {users.map(user => {
-          if (user.id !== meId)
-            return (
-              <ChannelUser
-                role={role}
-                meId={meId}
-                key={user.id}
-                name={user.name}
-                userId={user.id}
-                imagePath={user.profile_image}
-              />
-            );
-        })}
-        <div style={{display: 'flex', justifyContent: 'center'}}>
-          {(role === 'UR0' || role === 'UR1') && (
-            <Button bg="grey" ani={false}>
-              설정
-            </Button>
-          )}
-          <Button bg="grey" ani={false} onClick={onClick}>
-            나가기
-          </Button>
-        </div>
+        {!isClick ? (
+          <>
+            <ChannelUser
+              role={role}
+              meId={meId}
+              userId={meId}
+              name="나"
+              imagePath={meData.data.getMe.profile_image_thumb}
+            />
+            {users.map(user => {
+              if (user.id !== meId)
+                return (
+                  <ChannelUser
+                    role={role}
+                    meId={meId}
+                    key={user.id}
+                    name={user.name}
+                    userId={user.id}
+                    imagePath={user.profile_image}
+                  />
+                );
+            })}
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+              {(role === 'UR0' || role === 'UR1') && (
+                <Button bg="grey" ani={false} onClick={onSetting}>
+                  설정
+                </Button>
+              )}
+              <Button bg="grey" ani={false} onClick={onExit}>
+                나가기
+              </Button>
+            </div>
+          </>
+        ) : (
+          <ChannelSetting channelId={channelId} onBack={onSetting} />
+        )}
       </ChannelOptionsListStyles>
     </>
   );
