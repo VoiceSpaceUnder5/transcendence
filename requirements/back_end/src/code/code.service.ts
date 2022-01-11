@@ -15,9 +15,14 @@ export class CodeService {
     return this.codeRepository.find();
   }
 
-  findCodebyId(code: string): Promise<Code> {
-    return this.codeRepository.findOneOrFail(code);
+  findCodebyId(id: string): Promise<Code> {
+    return this.codeRepository.findOneOrFail(id);
   }
+
+  findCodesByIds(codeIds: string[]): Promise<Code[]> {
+    return this.codeRepository.findByIds(codeIds);
+  }
+
   async create(createCodeInput: CreateCodeInput): Promise<Code> {
     return await this.codeRepository.save(createCodeInput);
   }

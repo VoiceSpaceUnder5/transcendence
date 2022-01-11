@@ -11,6 +11,10 @@ export class MessageService {
     private readonly messageRepository: Repository<Message>,
   ) {}
 
+  findAll(): Promise<Message[]> {
+    return this.messageRepository.find();
+  }
+
   create(createMessageInput: CreateMessageInput): Promise<Message> {
     return this.messageRepository.save(createMessageInput);
   }
