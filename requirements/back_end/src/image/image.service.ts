@@ -32,6 +32,7 @@ export class ImageService {
     } catch (error) {
       console.error(error);
     }
+    // console.log('IMGBB Result: ', result);
     return result;
   }
 }
