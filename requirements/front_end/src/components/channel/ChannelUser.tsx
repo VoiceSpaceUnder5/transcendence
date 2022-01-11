@@ -16,6 +16,7 @@ export default function ChannelUser({
   meId,
   userId,
   name,
+  role,
 }: // role,
 ChannelUserProps): JSX.Element {
   const [isClicked, setIsClicked] = useState(false);
@@ -33,10 +34,17 @@ ChannelUserProps): JSX.Element {
         </>
       ) : (
         <>
-          <ChannelUserProfile meId={meId} userId={userId} />
-          <Button bg="grey" onClick={onBtnClick}>
-            뒤로
-          </Button>
+          <div style={{marginRight: '4px'}}>
+            <Button bg="grey" onClick={onBtnClick}>
+              {'<'}
+            </Button>
+          </div>
+          <div style={{marginRight: '4px'}}>
+            <ChannelUserProfile meId={meId} userId={userId} />
+          </div>
+          {(role === 'UR0' || role === 'UR1') && (
+            <Button bg="grey">강퇴</Button>
+          )}
         </>
       )}
     </ChannelUserStyles>
@@ -45,8 +53,7 @@ ChannelUserProps): JSX.Element {
 
 const ChannelUserStyles = styled.li<{isClicked: boolean}>`
   display: flex;
-  ${props => props.isClicked && 'justify-content: space-around;'}
-  // justify-content: space-around;
+  ${props => props.isClicked && 'justify-content: flex-start;'}
   align-items: center;
 
   height: 32px;

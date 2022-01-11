@@ -3,15 +3,15 @@ import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectMenu} from '../../modules/chatting';
-import ChannelUsers from '../channel/ChannelUsers';
+import ChannelOption from '../channel/ChannelOption';
 import MessageBox from './MessageBox';
 import MessageForm from './MessageForm';
 import {RootState} from '../../modules';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {io, Socket} from 'socket.io-client';
-import ChannelNameAndExit from './ChannelNameAndExit';
+import Div from '../common/Div';
 
-const GET_CHANNEL_DATA = gql`
+export const GET_CHANNEL_DATA = gql`
   query getChannelData($channelId: Int!) {
     getChannelById(channelId: $channelId) {
       name
@@ -145,13 +145,8 @@ export default function Chatting(): JSX.Element {
     <>
       {/* 나가는 버튼도 추가해야 함 */}
       <ChattingHeadStyles>
-        <ChannelNameAndExit
-          channelName={data.getChannelById.name}
-          channelId={channelId as number}
-          meId={meId as number}
-          role={role as string}
-        />
-        <ChannelUsers
+        <Div>{data.getChannelById.name}</Div>
+        <ChannelOption
           meId={meId}
           channelId={channelId as number}
           role={role as string}
