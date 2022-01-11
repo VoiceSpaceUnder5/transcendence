@@ -21,7 +21,7 @@ interface ChannelUsersProps {
   role: string;
 }
 
-export default React.memo(function ChannelUsers({
+export default React.memo(function ChannelOptions({
   meId,
   channelId,
   role,
@@ -43,7 +43,7 @@ export default React.memo(function ChannelUsers({
   return (
     <>
       <Button bg="dark" onClick={onClick} ani={false}>
-        {!visible ? `${users.length} 명` : '닫기'}
+        {!visible ? '옵션' : '닫기'}
       </Button>
       {visible && (
         <ChannelUsersList
