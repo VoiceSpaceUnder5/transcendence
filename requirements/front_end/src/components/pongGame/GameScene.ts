@@ -58,7 +58,7 @@ export class GameScene extends Phaser.Scene {
     // 소켓 연결 부분
     // this.socket = io('http://api.ts.io:30000');
     this.socket = GameData.socket;
-    this.socket.emit('startGame', GameData.id);
+    this.socket.emit('startGame', {isHard: GameData.isHard});
 
     // 모두 멈춰라!
     const everyBodyStop = () => {

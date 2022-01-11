@@ -25,6 +25,7 @@ interface Room {
   leftUser: UserInfo | null;
   rightUser: UserInfo | null;
   roomId: string;
+  isHard: boolean;
 }
 
 enum GameStatus {
@@ -56,13 +57,13 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   handleDisconnect(client: any) {
     if (client) console.log('연결해제...', client.id);
     else throw new Error('Method not implemented.');
-    this.server.emit('forceQuit');
     // rooms, users update
     rooms.forEach((room, i) => {
       if (
         room.leftUser.clientId === client.id ||
         room.rightUser.clientId === client.id
       ) {
+        this.server.to(room.roomId).emit('forceQuit');
         rooms.splice(i, 1);
         return;
       }
@@ -78,20 +79,20 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   server: Server;
 
   @SubscribeMessage('startGame') // 기다리는 부분.
-  gameStart(client: any, payload: any): any {
+  gameStart(client: any, { isHard }: { isHard: boolean }): any {
     // roomId가 있는지 확인하고 있으면 그 roomId로 같이 조인한다.
-    let isEmptyRoom = false;
+    let isEmptyRoom = true;
     let roomArrIndex = -1;
     // 빈 방 확인
     rooms.forEach((room, i) => {
-      if (!room.rightUser) {
+      if (!room.rightUser && room.isHard === isHard) {
         console.log('유저가 있는 방 찾음.');
-        isEmptyRoom = true;
+        isEmptyRoom = false;
         roomArrIndex = i;
         return;
       }
     });
-    if (!isEmptyRoom) {
+    if (isEmptyRoom) {
       const roomId = `${Math.random()}`;
       // UserInfo임.
       // 유저 정보 업데이트
@@ -105,6 +106,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         leftUser: userInfo,
         rightUser: null,
         roomId: roomId,
+        isHard: isHard,
       };
       rooms.push(room);
       users.push(userInfo);
