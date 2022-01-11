@@ -1,4 +1,3 @@
-import {Socket} from 'net';
 import Phaser from 'phaser';
 import {GameScene} from './GameScene';
 

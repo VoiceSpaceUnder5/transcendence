@@ -1,8 +1,7 @@
-import React, {FormEvent, useEffect, useState} from 'react';
+import React, {FormEvent, useState} from 'react';
 import styled from 'styled-components';
 import Button from './Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
-import {RootState} from '../../modules';
 import {useNavigate} from 'react-router-dom';
 
 const GameStartStyles = styled.div`
@@ -63,6 +62,8 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     navigate('/game', {state: {isStart: true}});
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    void e;
+
     setIsHard(!isHard);
   };
   return (

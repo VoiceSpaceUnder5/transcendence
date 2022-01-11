@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import {Socket, io} from 'socket.io-client';
+import Game from './Game';
+import {GameData} from './GameData';
 
 const PADDLE_SPEED = 700;
 
@@ -35,16 +37,16 @@ export class GameScene extends Phaser.Scene {
   private downKey1: Phaser.Input.Keyboard.Key | null = null;
 
   private socket: Socket | null = null;
-  private isStart: boolean = false;
   private oldPos = {x: 0, y: 0};
-  private isLeft: boolean = true;
+  private isLeft: boolean | null = null;
+  private isStart: boolean | null = null;
   private roomId: number | null = null;
 
   constructor() {
     super({key: 'game', active: true});
   }
 
-  preload() {
+  preload(): void {
     this.load.image('me', '/paddle.png');
     this.load.image('enemy', '/paddle2.png');
     this.load.image('ball', '/ball.png');
@@ -52,18 +54,40 @@ export class GameScene extends Phaser.Scene {
     this.load.image('enemyWall', '/wall2.png');
   }
 
-  create() {
+  create(): void {
     // 소켓 연결 부분
-    this.socket = io('http://localhost:30000');
-    this.socket.emit('startGame');
+    // this.socket = io('http://api.ts.io:30000');
+    this.socket = GameData.socket;
+    this.socket.emit('startGame', GameData.id);
+
+    // 모두 멈춰라!
+    const everyBodyStop = () => {
+      this.myPaddle?.disableBody();
+      this.enemyPaddle?.disableBody();
+      this.ball?.disableBody();
+      this.enemyWall?.disableBody();
+      this.myWall?.disableBody();
+    };
+
+    // // 시작 세팅
+    // const reStart = (ballVel: {x: number; y: number}) => {
+    //   if (this.isLeft) {
+    //     this.myPaddle?.enableBody(true, 100, 400, true, true);
+    //     this.enemyPaddle?.enableBody(true, 700, 400, true, true);
+    //     this.myWall?.enableBody(true, 20, 300, true, true);
+    //     this.enemyWall?.enableBody(true, 780, 300, true, true);
+    //   } else {
+    //     this.myPaddle?.enableBody(true, 700, 400, true, true);
+    //     this.enemyPaddle?.enableBody(true, 100, 400, true, true);
+    //     this.myWall?.enableBody(true, 780, 300, true, true);
+    //     this.enemyWall?.enableBody(true, 20, 300, true, true);
+    //   }
+    // };
 
     this.socket.on('waitingGame', payload => {
       this.isLeft = payload.isLeft;
       this.roomId = payload.roomId;
-    });
-    this.socket.on('exitedGame', payload => {
-      console.log('상대방이 나갔습니다.');
-      this.sys.game.destroy(true);
+      GameData.setRoomId(payload.roomId);
     });
     this.socket.on('movedOtherPaddle', (payload: PaddleInfo) => {
       if (this.isLeft !== payload.isLeft)
@@ -75,6 +99,24 @@ export class GameScene extends Phaser.Scene {
       this.ball?.setVelocityX(payload.velocity.x);
       this.ball?.setVelocityY(payload.velocity.y);
     });
+    this.socket.on('win', ({isWinnerLeft}) => {
+      everyBodyStop();
+
+      if (isWinnerLeft) console.log('왼쪽이 이겼지렁~~~!');
+      else console.log('오른쪽이 이겼지렁~~~!');
+      this.socket?.emit('win', {id: GameData.id});
+    });
+    this.socket.on('forceQuit', () => {
+      this.add.text(315, 80, '상대방이 게임을 종료하였습니다.');
+      everyBodyStop();
+      this.socket?.disconnect();
+    });
+    // this.socket.on('exitedGame', () => {
+    //   this.socket?.emit('exit', {roomId: this.roomId});
+    //   this.add.text(315, 80, '상대방이 종료하였습니다.');
+    //   everyBodyStop();
+    //   this.socket?.disconnect();
+    // });
     // 여기가 진짜 시작하는 부분. 처음 세팅이라고 생각하자.
     this.socket.on('matchGame', () => {
       // 내 paddle이 왼쪽인지 오른쪽인지 판단하고 오브젝트를 세팅하는 부분.
@@ -135,7 +177,13 @@ export class GameScene extends Phaser.Scene {
         if (!this.ball) return;
         // 여기에서 점수 조작하면 된다. gql을 쓰던 socket을 쓰던
         // 내 골대에 공이 들어 가면 실행된다.
-        console.log('짐 ㅋ');
+        everyBodyStop();
+        console.log('내 골대에 닿음.');
+        this.socket?.emit('lose', {
+          id: GameData.id,
+          roomId: GameData.roomId,
+          isLeft: this.isLeft,
+        });
       };
 
       // 충돌시 콜백 부르기.
@@ -155,14 +203,19 @@ export class GameScene extends Phaser.Scene {
 
     // destroy 이벤트 잡기.
     this.sys.scene.events.on('destroy', () => {
-      console.log('Scene 객체가 파괴되었다...');
       this.socket?.emit('exitGame', {roomId: this.roomId});
       this.socket?.disconnect();
-      this.sys.game.destroy(true);
     });
+
+    // // 브라우저가 종료되거나 새로고침 되었을 때
+    // window.addEventListener('beforeunload', e => {
+    //   this.socket!.emit('exitGame', {roomId: this.roomId});
+    //   this.socket?.disconnect();
+    //   this.game.destroy(true);
+    // });
   }
   // 루프
-  update(time: number, delta: number): void {
+  update(): void {
     // 시작을 해야 동작함.
     if (this.isStart && this.myPaddle) {
       if (this.downKey1?.isDown) this.myPaddle.setVelocityY(PADDLE_SPEED);
