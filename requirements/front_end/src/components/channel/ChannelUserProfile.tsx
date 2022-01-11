@@ -1,15 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {gql, useQuery} from '@apollo/client';
+import React, {useState} from 'react';
 import UserProfile from '../friend/UserProfile';
 import Button from '../common/Button';
-
-const GET_RELATIONS = gql`
-  query getRelation($meId: Int!, $userId: Int!) {
-    getRelation(user_first_id: $meId, user_second_id: $userId) {
-      typeId
-    }
-  }
-`;
+import useRelation from '../../hooks/useRelation';
 
 interface ChannelUserProfileProps {
   meId: number;
@@ -21,43 +13,9 @@ export default function ChannelUserProfile({
   userId,
 }: ChannelUserProfileProps): JSX.Element {
   const [visible, setVisible] = useState(false);
-  const [typeId, setTypeId] = useState<string | undefined>(undefined);
-  const {loading, error, data} = useQuery(GET_RELATIONS, {
-    variables: {
-      meId: meId,
-      userId: userId,
-    },
-  });
-
-  useEffect(() => {
-    if (data) {
-      if (userId < meId) {
-        switch (data.getRelation.typeId) {
-          case 'RE0':
-            setTypeId('RE1');
-            break;
-          case 'RE1':
-            setTypeId('RE0');
-            break;
-          case 'RE3':
-            setTypeId('RE4');
-            break;
-          case 'RE4':
-            setTypeId('RE3');
-            break;
-        }
-      } else {
-        setTypeId(
-          data.getRelation.typeId === undefined
-            ? 'RE6'
-            : data.getRelation.typeId,
-        );
-      }
-    }
-  }, [data]);
+  const typeId = useRelation(meId, userId);
   const onClick = () => setVisible(!visible);
-  if (loading) return <>로딩...</>;
-  if (error) return <>에러...</>;
+  if (!typeId) return <>로딩...</>;
   return (
     <>
       <Button bg="grey" onClick={onClick}>
@@ -65,7 +23,8 @@ export default function ChannelUserProfile({
       </Button>
       {visible && (
         <UserProfile
-          typeId={typeId as string}
+          typeId={typeId}
+          meId={meId}
           userId={userId}
           onBackClick={onClick}
         />

@@ -46,9 +46,9 @@ export class UsersService {
 
   async update(id: number, updateUserInput: UpdateUserInput): Promise<User> {
     if (updateUserInput.profile_image_binary)
-      this.updateProfileImage(id, updateUserInput.profile_image_binary);
+      await this.updateProfileImage(id, updateUserInput.profile_image_binary);
     if (updateUserInput.description)
-      this.updateDescription(id, updateUserInput.description);
+      await this.updateDescription(id, updateUserInput.description);
     return await this.userRepository.findOneOrFail(id);
   }
 
@@ -61,6 +61,7 @@ export class UsersService {
   }
 
   async updateProfileImage(id: number, imageBinary: string) {
+    if (!imageBinary) return;
     const uploadResponse = await this.imageService.uploadImage(imageBinary);
     if (!uploadResponse) {
       console.error(

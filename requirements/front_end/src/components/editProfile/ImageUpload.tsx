@@ -21,7 +21,7 @@ export default function ImageUpload({
         alert('파일 형식이 잘못되었습니다.');
         return;
       }
-      imageCompressAndSend(e.target.files[0]);
+      await imageCompressAndSend(e.target.files[0]);
     }
   };
 

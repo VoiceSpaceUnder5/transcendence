@@ -24,6 +24,7 @@ export default function Friend({
   matchRecord,
   description,
 }: FriendProps): JSX.Element {
+  const [meId] = useState(Number(localStorage.getItem('meId')));
   const [visible, setVisible] = useState(false);
   const [profileVisible, setProfileVisible] = useState(false);
   const onDivClick = () => !visible && setVisible(true);
@@ -48,6 +49,7 @@ export default function Friend({
         <OptionButton onClick={onProfileClick}>프로필 보기</OptionButton>
         {profileVisible && (
           <UserProfile
+            meId={meId}
             userId={userId as number}
             typeId={typeId as string}
             onBackClick={onBackClick}

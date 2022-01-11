@@ -9,13 +9,14 @@ import ImageUpload from './ImageUpload';
 import {useLocation, useNavigate} from 'react-router-dom';
 import useInput from '../../hooks/useInput';
 import {useMutation, gql} from '@apollo/client';
+import {GET_PROFILE_IMAGE} from '../common/Img';
 
 const UPDATE_MY_PROFILE = gql`
-  mutation UpdateUser($user_id: Int!, $updateUserInput: UpdateUserInput!) {
+  mutation updateUser($user_id: Int!, $updateUserInput: UpdateUserInput!) {
     updateUser(user_id: $user_id, updateUserInput: $updateUserInput) {
-      id
-      name
       description
+      profile_image
+      profile_image_thumb
     }
   }
 `;
@@ -28,10 +29,11 @@ export default function EditProfile(): JSX.Element {
     description: location.state.description,
   });
   const isImgUpdated = useRef(false);
-  const [updateMe, {error}] = useMutation(UPDATE_MY_PROFILE);
+  const [updateMe, {error}] = useMutation(UPDATE_MY_PROFILE, {
+    refetchQueries: [GET_PROFILE_IMAGE, 'getProfileImage'],
+  });
 
   const onClickConfirm = () => {
-    // console.log(image.substr(image.indexOf('base64') + 7));
     if (isImgUpdated.current === true) {
       updateMe({
         variables: {
@@ -43,6 +45,7 @@ export default function EditProfile(): JSX.Element {
         },
       }).then(() => {
         isImgUpdated.current = false;
+        navigate('/profile');
       });
     } else {
       updateMe({
@@ -52,12 +55,13 @@ export default function EditProfile(): JSX.Element {
             description: inputs.description,
           },
         },
-      });
+      }).then(() => navigate('/profile'));
     }
-    // // 사진 올리자.
-    navigate('/profile');
   };
 
+  // useEffect(() => {
+  //   console.log(image);
+  // }, [image]);
   const onImgChange = (img: string) => {
     isImgUpdated.current = true;
     setImage(img);

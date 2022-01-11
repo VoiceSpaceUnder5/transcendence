@@ -35,7 +35,13 @@ export default function RelationUserList({
   useEffect(() => {
     refetch();
   }, []);
-  if (loading) return <>로딩 중</>;
+  if (loading)
+    return (
+      <div>
+        <div>로딩 중</div>
+        <div>-</div>
+      </div>
+    );
   if (error) {
     console.error(error);
     return <>에러</>;

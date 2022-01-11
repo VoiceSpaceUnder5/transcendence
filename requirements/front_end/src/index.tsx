@@ -23,13 +23,25 @@ const httpLink = createHttpLink({
   // },
 });
 
+// const cache = new InMemoryCache({
+//   typePolicies: {
+//     Agenda: {
+//       fields: {
+//         tasks: {
+//           // eslint-disable-next-line
+//           merge(existing = [], incoming: any[]) {
+//             return [...existing, ...incoming];
+//           },
+//         },
+//       },
+//     },
+//   },
+// });
+
 const client = new ApolloClient({
   link: httpLink,
+  // cache: cache,
   cache: new InMemoryCache(),
-});
-
-client.refetchQueries({
-  include: 'all',
 });
 
 const store = createStore(rootReducer, composeWithDevTools());

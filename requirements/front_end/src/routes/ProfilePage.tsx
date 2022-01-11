@@ -8,20 +8,21 @@ import {BackboardBoxLayout} from '../components/common/Body';
 import {gql, useQuery} from '@apollo/client';
 import Loader from 'react-loader-spinner';
 
-const USERS_QUERY = gql`
-  query getMe {
+const GET_DESC = gql`
+  query getDesc {
     getMe {
-      id
-      name
+      profile_image
       email
       description
-      profile_image
     }
   }
 `;
 
 function ProfilePage(): JSX.Element {
-  const {loading, data, error} = useQuery(USERS_QUERY);
+  const {loading, data, error} = useQuery(GET_DESC, {
+    fetchPolicy: 'no-cache',
+    nextFetchPolicy: 'no-cache',
+  });
   if (loading)
     return <Loader type="TailSpin" color="#343a40" width={160} height={160} />;
   if (error) console.error(error);
@@ -32,10 +33,8 @@ function ProfilePage(): JSX.Element {
         <BackboardBoxLayout>
           <BackboardBoxInnerLayout>
             <Profile
-              id={data.getMe.id}
-              name={data.getMe.name}
-              email={data.getMe.email}
               image={data.getMe.profile_image}
+              email={data.getMe.email}
               description={data.getMe.description}
             />
           </BackboardBoxInnerLayout>

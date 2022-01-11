@@ -6,6 +6,7 @@ import TitleDiv from '../common/TitleDiv';
 import {OptionButton} from '../common/Button';
 import CreateRelation from '../chat/Relations/CreateRelation';
 import UpdateRelation from '../chat/Relations/UpdateRelation';
+import useRelation from '../../hooks/useRelation';
 
 const GET_USER_BY_ID = gql`
   query getUserById($user_id: Int!) {
@@ -20,14 +21,17 @@ const GET_USER_BY_ID = gql`
 interface UserProfileProps {
   typeId: string;
   userId: number;
+  meId: number;
   onBackClick: () => void;
 }
 
 export default function UserProfile({
-  typeId,
+  // typeId,
   userId,
+  meId,
   onBackClick,
 }: UserProfileProps): JSX.Element {
+  const typeId = useRelation(meId, userId);
   const {loading, error, data} = useQuery(GET_USER_BY_ID, {
     variables: {
       user_id: userId,
@@ -51,8 +55,6 @@ export default function UserProfile({
             {/* 친구 상태에 따라 신청할지 차단할지? */}
             <OptionBoxLayout>
               <OptionBox>
-                {!typeId ||
-                  (typeId === 'RE6' && <CreateRelation userId={userId} />)}
                 {typeId === 'RE1' && (
                   <UpdateRelation
                     userId={userId}
@@ -74,6 +76,14 @@ export default function UserProfile({
                     actionTypeId="RE6"
                   />
                 )}
+                {typeId === 'RE6' && (
+                  <UpdateRelation
+                    userId={userId}
+                    actionType="친구 신청"
+                    actionTypeId="RE1"
+                  />
+                )}
+                {typeId === undefined && <CreateRelation userId={userId} />}
                 {typeId !== 'RE3' && (
                   <UpdateRelation
                     userId={userId}
