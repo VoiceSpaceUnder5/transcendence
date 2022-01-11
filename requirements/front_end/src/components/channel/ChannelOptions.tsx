@@ -43,14 +43,16 @@ export default React.memo(function ChannelOptions({
   return (
     <>
       <Button bg="dark" onClick={onClick} ani={false}>
-        {!visible ? '옵션' : '닫기'}
+        {!visible ? '···' : 'x'}
       </Button>
       {visible && (
-        <ChannelUsersList
-          meId={meId}
-          userIds={users.map(user => user.userId)}
-          role={role}
-        ></ChannelUsersList>
+        <>
+          <ChannelUsersList
+            meId={meId}
+            userIds={users.map(user => user.userId)}
+            role={role}
+          ></ChannelUsersList>
+        </>
       )}
     </>
   );
