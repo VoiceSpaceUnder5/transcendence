@@ -1,7 +1,7 @@
 import {gql, useQuery} from '@apollo/client';
 import React, {useEffect, useState} from 'react';
 import Button from '../common/Button';
-import ChannelUsersList from './ChannelUsersList';
+import ChannelOptionsList from './ChannelOptionsList';
 
 const GET_CHANNEL_USERS = gql`
   query getChannelUsersByChannelId($channelId: Int!) {
@@ -21,7 +21,7 @@ interface ChannelUsersProps {
   role: string;
 }
 
-export default React.memo(function ChannelOptions({
+export default React.memo(function ChannelOption({
   meId,
   channelId,
   role,
@@ -47,11 +47,12 @@ export default React.memo(function ChannelOptions({
       </Button>
       {visible && (
         <>
-          <ChannelUsersList
+          <ChannelOptionsList
             meId={meId}
             userIds={users.map(user => user.userId)}
+            channelId={channelId}
             role={role}
-          ></ChannelUsersList>
+          ></ChannelOptionsList>
         </>
       )}
     </>

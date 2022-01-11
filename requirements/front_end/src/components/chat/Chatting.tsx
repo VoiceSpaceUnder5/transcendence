@@ -3,7 +3,7 @@ import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectMenu} from '../../modules/chatting';
-import ChannelOptions from '../channel/ChannelOptions';
+import ChannelOption from '../channel/ChannelOption';
 import MessageBox from './MessageBox';
 import MessageForm from './MessageForm';
 import {RootState} from '../../modules';
@@ -146,7 +146,7 @@ export default function Chatting(): JSX.Element {
       {/* 나가는 버튼도 추가해야 함 */}
       <ChattingHeadStyles>
         <Div>{data.getChannelById.name}</Div>
-        <ChannelOptions
+        <ChannelOption
           meId={meId}
           channelId={channelId as number}
           role={role as string}

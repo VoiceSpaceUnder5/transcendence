@@ -1,8 +1,10 @@
-import {gql, useQuery} from '@apollo/client';
 import React from 'react';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import styled from 'styled-components';
 import Button from '../common/Button';
 import ChannelUser from './ChannelUser';
+import {useDispatch} from 'react-redux';
+import {selectMenu} from '../../modules/chatting';
 
 const GET_USERS_BY_IDS = gql`
   query getUsersByIds($userIds: [Int!]!) {
@@ -22,35 +24,57 @@ const GET_ME = gql`
   }
 `;
 
+const EXIT_CHANNEL = gql`
+  mutation exitChannel($input: DeleteChatChannelUserInput!) {
+    deleteChatChannelUser(deleteChatChannelUserInput: $input)
+  }
+`;
+
 interface UserInfo {
   id: number;
   name: string;
   profile_image: string;
 }
 
-interface ChannelUsersListProps {
+interface ChannelOptionsListProps {
   meId: number;
   userIds: number[];
+  channelId: number;
   role: string;
 }
 
-export default function ChannelUsersList({
+export default function ChannelOptionsList({
   meId,
   userIds,
+  channelId,
   role,
-}: ChannelUsersListProps): JSX.Element {
+}: ChannelOptionsListProps): JSX.Element {
+  const dispatch = useDispatch();
   const usersData = useQuery(GET_USERS_BY_IDS, {
     variables: {
       userIds,
     },
   });
   const meData = useQuery(GET_ME);
+  const [exitChannel] = useMutation(EXIT_CHANNEL);
+  const onClick = () => {
+    exitChannel({
+      variables: {
+        input: {
+          userId: meId,
+          chatChannelId: channelId,
+        },
+      },
+    }).then(() => {
+      dispatch(selectMenu(1));
+    });
+  };
   if (usersData.loading || meData.loading) return <>로딩 중</>;
   if (usersData.error || meData.error) return <>에러</>;
   const users: UserInfo[] = usersData.data.getUsersByIds;
   return (
     <>
-      <ChannelUsersListStyles top={80}>
+      <ChannelOptionsListStyles top={80}>
         <ChannelUser
           role={role}
           meId={meId}
@@ -77,16 +101,16 @@ export default function ChannelUsersList({
               설정
             </Button>
           )}
-          <Button bg="grey" ani={false}>
+          <Button bg="grey" ani={false} onClick={onClick}>
             나가기
           </Button>
         </div>
-      </ChannelUsersListStyles>
+      </ChannelOptionsListStyles>
     </>
   );
 }
 
-const ChannelUsersListStyles = styled.ul<{top?: number}>`
+const ChannelOptionsListStyles = styled.ul<{top?: number}>`
   position: absolute;
   top: ${props => props.top}px;
   left: 45%;

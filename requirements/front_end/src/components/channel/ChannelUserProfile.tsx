@@ -19,7 +19,7 @@ export default function ChannelUserProfile({
   return (
     <>
       <Button bg="grey" onClick={onClick}>
-        프로필 보기
+        프로필
       </Button>
       {visible && (
         <UserProfile
