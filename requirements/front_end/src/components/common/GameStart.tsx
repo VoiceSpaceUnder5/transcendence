@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Button from './Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
 import {useNavigate} from 'react-router-dom';
+import {GameData} from '../pongGame/GameData';
 
 const GameStartStyles = styled.div`
   /* Auto Layout */
@@ -65,6 +66,7 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     void e;
 
     setIsHard(!isHard);
+    GameData.setIsHard(!isHard);
   };
   return (
     <GameStartStyles>

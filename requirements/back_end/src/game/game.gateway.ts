@@ -80,6 +80,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
 
   @SubscribeMessage('startGame') // 기다리는 부분.
   gameStart(client: any, { isHard }: { isHard: boolean }): any {
+    if (isHard) {
+      console.log('하드모드');
+    } else {
+      console.log('노말모드');
+    }
     // roomId가 있는지 확인하고 있으면 그 roomId로 같이 조인한다.
     let isEmptyRoom = true;
     let roomArrIndex = -1;

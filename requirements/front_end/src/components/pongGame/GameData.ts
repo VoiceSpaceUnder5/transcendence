@@ -14,4 +14,7 @@ export class GameData {
   public static setRoomId(roomId: string) {
     GameData.roomId = roomId;
   }
+  public static setIsHard(isHard: boolean) {
+    GameData.isHard = isHard;
+  }
 }
