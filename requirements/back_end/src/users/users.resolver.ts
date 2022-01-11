@@ -36,19 +36,17 @@ export class UsersResolver {
   }
 
   @Query(() => [User], { name: 'getUsers', nullable: 'items' })
-  async users() {
+  async getUsers() {
     return this.usersService.findUsers();
   }
 
   @Query(() => User)
-  async getUserById(@Args('user_id', { type: () => Int }) id: number) {
+  async getUserById(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.findUserById(id);
   }
 
   @Query(() => [User])
-  async getUsersByIds(
-    @Args('userIds', { type: () => [Int] }) userIds: number[],
-  ) {
+  async getUsersByIds(@Args('ids', { type: () => [Int] }) userIds: number[]) {
     return this.usersService.findUsersByIds(userIds);
   }
 
@@ -70,6 +68,15 @@ export class UsersResolver {
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ) {
     return this.usersService.update(id, updateUserInput);
+  }
+
+  //🔴 여기 관리자 권한 유저 가드 붙여야함.
+  @Mutation(() => User, { name: 'updateUserAuthority' })
+  async updateUserAuthority(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('authorityId') authorityId: string,
+  ) {
+    return this.usersService.updateUserAuthority(id, authorityId);
   }
 
   @ResolveField(() => Code)

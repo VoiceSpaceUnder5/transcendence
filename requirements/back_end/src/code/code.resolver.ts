@@ -12,9 +12,16 @@ export class CodeResolver {
     return this.codeService.findCodes();
   }
 
-  @Query(() => Code)
-  async getCodeByCode(@Args('code', { type: () => String }) code: string) {
-    return await this.codeService.findCodebyId(code);
+  @Query(() => Code, { name: 'getCodeById' })
+  async getCodeById(@Args('id', { type: () => String }) id: string) {
+    return await this.codeService.findCodebyId(id);
+  }
+
+  @Query(() => [Code])
+  async getCodesByIds(
+    @Args('ids', { type: () => [String] }) codeIds: string[],
+  ) {
+    return this.codeService.findCodesByIds(codeIds);
   }
 
   @Mutation(() => Code)

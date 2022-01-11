@@ -2,6 +2,7 @@ import {
   Args,
   Mutation,
   Parent,
+  Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
@@ -20,6 +21,10 @@ export class MessageResolver {
     private readonly chatChannelsService: ChatChannelsService,
   ) {}
 
+  @Query(() => [Message], { name: 'getMessages', nullable: 'items' })
+  async messages() {
+    return await this.messageService.findAll();
+  }
   @Mutation(() => Message, { name: 'createMessage' })
   async createMessage(
     @Args('createMessageInput') createMessageInput: CreateMessageInput,

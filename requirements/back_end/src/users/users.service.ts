@@ -81,4 +81,9 @@ export class UsersService {
     };
     await this.userRepository.update(id, profile_link);
   }
+
+  async updateUserAuthority(id: number, authorityId: string) {
+    await this.userRepository.update(id, { authorityId });
+    return this.userRepository.findOneOrFail(id);
+  }
 }
