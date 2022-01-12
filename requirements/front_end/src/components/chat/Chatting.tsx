@@ -15,6 +15,7 @@ export const GET_CHANNEL_DATA = gql`
   query getChannelData($channelId: Int!) {
     getChannelById(channelId: $channelId) {
       name
+      password
       messages {
         user {
           id
@@ -140,16 +141,16 @@ export default function Chatting(): JSX.Element {
 
   if (loading) return <>로딩 중..</>;
   if (error) return <>에러!</>;
-
   return (
     <>
-      {/* 나가는 버튼도 추가해야 함 */}
       <ChattingHeadStyles>
         <Div>{data.getChannelById.name}</Div>
         <ChannelOption
           meId={meId}
           channelId={channelId as number}
-          role={role as string}
+          channelName={data.getChannelById.name as string}
+          channelPasswd={data.getChannelById.password as string}
+          meRole={role as string}
         />
       </ChattingHeadStyles>
       <MessageBox meId={meId} messages={messages} />

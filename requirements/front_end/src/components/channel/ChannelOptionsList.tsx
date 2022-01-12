@@ -17,14 +17,6 @@ const GET_USERS_BY_IDS = gql`
   }
 `;
 
-const GET_ME = gql`
-  query getMe {
-    getMe {
-      profile_image_thumb
-    }
-  }
-`;
-
 const EXIT_CHANNEL = gql`
   mutation exitChannel($input: DeleteChatChannelUserInput!) {
     deleteChatChannelUser(deleteChatChannelUserInput: $input)
@@ -40,15 +32,21 @@ interface UserInfo {
 interface ChannelOptionsListProps {
   meId: number;
   userIds: number[];
+  userRoles: string[];
   channelId: number;
-  role: string;
+  channelName: string;
+  channelPasswd: string;
+  meRole: string;
 }
 
 export default function ChannelOptionsList({
   meId,
   userIds,
+  userRoles,
   channelId,
-  role,
+  channelName,
+  channelPasswd,
+  meRole,
 }: ChannelOptionsListProps): JSX.Element {
   const dispatch = useDispatch();
   const [isClick, setIsClick] = useState(false);
@@ -57,7 +55,6 @@ export default function ChannelOptionsList({
       userIds,
     },
   });
-  const meData = useQuery(GET_ME);
   const [exitChannel] = useMutation(EXIT_CHANNEL);
   const onExit = () => {
     exitChannel({
@@ -74,8 +71,9 @@ export default function ChannelOptionsList({
   const onSetting = () => {
     setIsClick(!isClick);
   };
-  if (usersData.loading || meData.loading) return <>로딩 중</>;
-  if (usersData.error || meData.error) return <>에러</>;
+  if (usersData.loading) return <>로딩 중</>;
+  if (usersData.error) return <>에러</>;
+
   const users: UserInfo[] = usersData.data.getUsersByIds;
   return (
     <>
@@ -83,27 +81,27 @@ export default function ChannelOptionsList({
         {!isClick ? (
           <>
             <ChannelUser
-              role={role}
+              meRole={meRole}
               meId={meId}
               userId={meId}
+              userRole={meRole}
               name="나"
-              imagePath={meData.data.getMe.profile_image_thumb}
             />
-            {users.map(user => {
+            {users.map((user, idx) => {
               if (user.id !== meId)
                 return (
                   <ChannelUser
-                    role={role}
+                    meRole={meRole}
                     meId={meId}
                     key={user.id}
                     name={user.name}
                     userId={user.id}
-                    imagePath={user.profile_image}
+                    userRole={userRoles[idx]}
                   />
                 );
             })}
             <div style={{display: 'flex', justifyContent: 'center'}}>
-              {(role === 'UR0' || role === 'UR1') && (
+              {meRole === 'UR0' && (
                 <Button bg="grey" ani={false} onClick={onSetting}>
                   설정
                 </Button>
@@ -114,7 +112,12 @@ export default function ChannelOptionsList({
             </div>
           </>
         ) : (
-          <ChannelSetting channelId={channelId} onBack={onSetting} />
+          <ChannelSetting
+            channelId={channelId}
+            onBack={onSetting}
+            channelName={channelName}
+            channelPasswd={channelPasswd}
+          />
         )}
       </ChannelOptionsListStyles>
     </>

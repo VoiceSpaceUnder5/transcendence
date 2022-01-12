@@ -7,24 +7,30 @@ const GET_CHANNEL_USERS = gql`
   query getChannelUsersByChannelId($channelId: Int!) {
     getChatChannelUsersByChannelId(channelId: $channelId) {
       userId
+      roleId
     }
   }
 `;
 
 interface User {
   userId: number;
+  roleId: string;
 }
 
 interface ChannelUsersProps {
   meId: number;
   channelId: number;
-  role: string;
+  channelName: string;
+  channelPasswd: string;
+  meRole: string;
 }
 
 export default React.memo(function ChannelOption({
   meId,
   channelId,
-  role,
+  channelName,
+  channelPasswd,
+  meRole,
 }: ChannelUsersProps): JSX.Element {
   const {loading, data, error, refetch} = useQuery(GET_CHANNEL_USERS, {
     variables: {
@@ -50,8 +56,11 @@ export default React.memo(function ChannelOption({
           <ChannelOptionsList
             meId={meId}
             userIds={users.map(user => user.userId)}
+            userRoles={users.map(user => user.roleId)}
             channelId={channelId}
-            role={role}
+            channelName={channelName}
+            channelPasswd={channelPasswd}
+            meRole={meRole}
           ></ChannelOptionsList>
         </>
       )}

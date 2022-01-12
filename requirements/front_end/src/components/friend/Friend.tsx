@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {MenuInfoList, MenuInfo} from '../common/MenuList';
 import {OptionButton} from '../common/Button';
 import UserProfile from './UserProfile';
+// import Img from '../common/Img';
 // import DirectMessages from '../chat/DirectMessage';
 
 interface FriendProps {
@@ -67,7 +68,7 @@ const FriendStyle = styled.div`
   align-items: center;
   padding: 6px 15px;
   margin-bottom: 8px;
-  width: inherit;
+  width: 85%;
 
   background-color: ${props => props.theme.lightButtonBg};
   border-radius: 12.5px;
