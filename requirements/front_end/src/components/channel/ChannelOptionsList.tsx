@@ -9,7 +9,7 @@ import ChannelSetting from './ChannelSetting';
 
 const GET_USERS_BY_IDS = gql`
   query getUsersByIds($userIds: [Int!]!) {
-    getUsersByIds(userIds: $userIds) {
+    getUsersByIds(ids: $userIds) {
       id
       name
       profile_image_thumb

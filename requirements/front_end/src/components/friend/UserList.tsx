@@ -4,7 +4,7 @@ import Friend from './Friend';
 
 const GET_USERS_BY_IDS = gql`
   query ($userIds: [Int!]!) {
-    getUsersByIds(userIds: $userIds) {
+    getUsersByIds(ids: $userIds) {
       id
       name
       description

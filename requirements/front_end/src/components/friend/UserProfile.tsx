@@ -9,8 +9,8 @@ import UpdateRelation from '../chat/Relations/UpdateRelation';
 import useRelation from '../../hooks/useRelation';
 
 const GET_USER_BY_ID = gql`
-  query getUserById($user_id: Int!) {
-    getUserById(user_id: $user_id) {
+  query getUserById($userId: Int!) {
+    getUserById(id: $userId) {
       name
       email
       description
@@ -34,7 +34,7 @@ export default function UserProfile({
   const typeId = useRelation(meId, userId);
   const {loading, error, data} = useQuery(GET_USER_BY_ID, {
     variables: {
-      user_id: userId,
+      userId: userId,
     },
   });
   if (loading) return <></>;

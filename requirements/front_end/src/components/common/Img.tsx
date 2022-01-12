@@ -4,7 +4,7 @@ import styled, {css} from 'styled-components';
 
 export const GET_PROFILE_IMAGE = gql`
   query getProfileImage($userId: Int!) {
-    getUserById(user_id: $userId) {
+    getUserById(id: $userId) {
       profile_image
       profile_image_thumb
     }
@@ -19,7 +19,7 @@ interface ImgProps {
 export default function Img({userId, size}: ImgProps): JSX.Element {
   const {loading, error, data} = useQuery(GET_PROFILE_IMAGE, {
     variables: {
-      userId: userId,
+      userId,
     },
   });
   if (loading) return <>로딩 중</>;
