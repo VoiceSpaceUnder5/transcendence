@@ -49,6 +49,22 @@ type ChatChannelUser {
   role: Code!
 }
 
+type Record {
+  created_at: DateTime!
+  updated_at: DateTime!
+  id: Int!
+  leftUserId: Int!
+  rightUserId: Int!
+  leftUserScore: Int!
+  rightUserScore: Int!
+  result: Code!
+  resultId: String!
+  type: Code!
+  typeId: String!
+  mode: Code!
+  modeId: String!
+}
+
 """Relation data"""
 type Relation {
   created_at: DateTime!
@@ -75,6 +91,7 @@ type User {
   chatChannelUsers: [ChatChannelUser!]!
   messages: [Message!]!
   relations(typeId: String!): [Relation]!
+  records: [Record]!
 }
 
 type Query {
@@ -96,6 +113,7 @@ type Query {
   getRelations: [Relation!]!
   getRelationsByUserIdTreatAsFirst(typeId: String, userId: Float!): [Relation!]!
   getRelation(user_first_id: Int!, user_second_id: Int!, typeId: Int): Relation!
+  getRecords: [Record]!
 }
 
 type Mutation {
@@ -110,6 +128,7 @@ type Mutation {
   createMessage(createMessageInput: CreateMessageInput!): Message!
   createRelation(createRelationInput: CreateRelationInput!): Relation!
   updateRelation(updateRelationInput: CreateRelationInput!): Relation!
+  createRecord(createRecordInput: CreateRecordInput!): Record!
 }
 
 input CreateChatChannelUserInput {
@@ -160,4 +179,14 @@ input CreateRelationInput {
   user_first_id: Int!
   user_second_id: Int!
   typeId: String!
+}
+
+input CreateRecordInput {
+  leftUserId: Int!
+  rightUserId: Int!
+  leftUserScore: Int!
+  rightUserScore: Int!
+  resultId: String!
+  typeId: String!
+  modeId: String!
 }

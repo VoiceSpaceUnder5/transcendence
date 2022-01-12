@@ -256,4 +256,24 @@ export const dbSeed = async () => {
     },
     ['id'],
   );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'BM',
+      id: 'BM0',
+      label_korean: '보통',
+      label_english: 'normal',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'BM',
+      id: 'BM1',
+      label_korean: '어려움',
+      label_english: 'hard',
+    },
+    ['id'],
+  );
 };

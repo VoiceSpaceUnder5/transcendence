@@ -11,6 +11,8 @@ import {
 import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
 import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
 import { ChatChannelUserService } from 'src/chat-channel-user/chat-channel-user.service';
+import { Record } from 'src/record/record.entity';
+import { RecordService } from 'src/record/record.service';
 import { Relation } from 'src/relation/relation.entity';
 import { RelationService } from 'src/relation/relation.service';
 import { Code } from '../code/code.entity';
@@ -26,6 +28,7 @@ export class UsersResolver {
     private readonly usersService: UsersService,
     private readonly chatChannelUserService: ChatChannelUserService,
     private readonly relationService: RelationService,
+    private readonly recordService: RecordService,
   ) {}
 
   //@GetUser 가드를 통과해서 내려온 컨텍스트에서 user 추출
@@ -99,4 +102,9 @@ export class UsersResolver {
       typeId,
     );
   }
+
+  // @ResolveField(() => [Record])
+  // async records(@Parent() user: User) {
+  //   return this.recordService.getRecords();
+  // }
 }
