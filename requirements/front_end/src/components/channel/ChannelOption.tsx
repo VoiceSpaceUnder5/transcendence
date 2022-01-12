@@ -18,12 +18,16 @@ interface User {
 interface ChannelUsersProps {
   meId: number;
   channelId: number;
+  channelName: string;
+  channelPasswd: string;
   role: string;
 }
 
 export default React.memo(function ChannelOption({
   meId,
   channelId,
+  channelName,
+  channelPasswd,
   role,
 }: ChannelUsersProps): JSX.Element {
   const {loading, data, error, refetch} = useQuery(GET_CHANNEL_USERS, {
@@ -51,6 +55,8 @@ export default React.memo(function ChannelOption({
             meId={meId}
             userIds={users.map(user => user.userId)}
             channelId={channelId}
+            channelName={channelName}
+            channelPasswd={channelPasswd}
             role={role}
           ></ChannelOptionsList>
         </>

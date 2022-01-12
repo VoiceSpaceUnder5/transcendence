@@ -15,6 +15,7 @@ export const GET_CHANNEL_DATA = gql`
   query getChannelData($channelId: Int!) {
     getChannelById(channelId: $channelId) {
       name
+      password
       messages {
         user {
           id
@@ -149,6 +150,8 @@ export default function Chatting(): JSX.Element {
         <ChannelOption
           meId={meId}
           channelId={channelId as number}
+          channelName={data.data.getChannelById}
+          channelPasswd={data.data.password}
           role={role as string}
         />
       </ChattingHeadStyles>

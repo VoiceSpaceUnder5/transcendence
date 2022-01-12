@@ -41,6 +41,8 @@ interface ChannelOptionsListProps {
   meId: number;
   userIds: number[];
   channelId: number;
+  channelName: string;
+  channelPasswd: string;
   role: string;
 }
 
@@ -48,6 +50,8 @@ export default function ChannelOptionsList({
   meId,
   userIds,
   channelId,
+  channelName,
+  channelPasswd,
   role,
 }: ChannelOptionsListProps): JSX.Element {
   const dispatch = useDispatch();
@@ -103,7 +107,7 @@ export default function ChannelOptionsList({
                 );
             })}
             <div style={{display: 'flex', justifyContent: 'center'}}>
-              {(role === 'UR0' || role === 'UR1') && (
+              {role === 'UR0' && (
                 <Button bg="grey" ani={false} onClick={onSetting}>
                   설정
                 </Button>
@@ -114,7 +118,12 @@ export default function ChannelOptionsList({
             </div>
           </>
         ) : (
-          <ChannelSetting channelId={channelId} onBack={onSetting} />
+          <ChannelSetting
+            channelId={channelId}
+            onBack={onSetting}
+            channelName={channelName}
+            channelPasswd={channelPasswd}
+          />
         )}
       </ChannelOptionsListStyles>
     </>

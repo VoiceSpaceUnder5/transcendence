@@ -15,15 +15,19 @@ const UPDATE_CHANNEL = gql`
 interface ChannelSettingProps {
   onBack: () => void;
   channelId: number;
+  channelName: string;
+  channelPasswd: string;
 }
 
 export default function ChannelSetting({
   onBack,
   channelId,
+  channelName,
+  channelPasswd,
 }: ChannelSettingProps): JSX.Element {
   const [inputs, onChange, reset] = useInput({
-    name: '',
-    password: '',
+    name: channelName,
+    password: channelPasswd,
   });
   const [updateChannel] = useMutation(UPDATE_CHANNEL);
   const onSubmit = (e: React.FormEvent) => {
