@@ -1,4 +1,4 @@
-import React, {FormEvent, useState} from 'react';
+import React, {FormEvent, useState, useEffect} from 'react';
 import styled from 'styled-components';
 import Button from './Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
@@ -52,6 +52,7 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   const [toggle, setToggle] = useState(false);
   const [isHard, setIsHard] = useState(false);
   const navigate = useNavigate();
+
   const onToggle = () => {
     setToggle(!toggle);
     console.log(toggle);
@@ -60,13 +61,12 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     e.preventDefault();
   };
   const onClickStart = () => {
+    GameData.setIsHard(isHard);
     navigate('/game', {state: {isStart: true}});
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     void e;
-
     setIsHard(!isHard);
-    GameData.setIsHard(!isHard);
   };
   return (
     <GameStartStyles>
