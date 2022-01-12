@@ -36,6 +36,7 @@ export default function UserProfile({
     variables: {
       userId: userId,
     },
+    fetchPolicy: 'no-cache',
   });
   if (loading) return <></>;
   if (error) return <>에러 ..</>;
