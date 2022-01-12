@@ -7,6 +7,7 @@ import {useNavigate} from 'react-router-dom';
 import {HiCube, HiMenu} from 'react-icons/hi';
 import Button from './Button';
 import GameStart from './GameStart';
+import {logOut} from '../../modules/auth';
 
 import LogOut from './LogOut';
 import Img from './Img';
