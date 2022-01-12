@@ -7,54 +7,55 @@ import {useNavigate} from 'react-router-dom';
 import {HiCube, HiMenu} from 'react-icons/hi';
 import Button from './Button';
 import GameStart from './GameStart';
+import {logOut} from '../../modules/auth';
 
 import LogOut from './LogOut';
 import Img from './Img';
+import {useDispatch} from 'react-redux';
 
-function Navbar(): JSX.Element {
-  const [meId] = useState(Number(localStorage.getItem('meId')));
-  const [meName] = useState(localStorage.getItem('meName'));
-  const [isToggle, setIsToggle] = useState<boolean>(false);
-  const navigate = useNavigate();
-  const onToggle = () => setIsToggle(!isToggle);
-  const [isClick, setIsClick] = useState(false);
+// function Navbar(): JSX.Element {
+//   const [meId] = useState(Number(localStorage.getItem('meId')));
+//   const [meName] = useState(localStorage.getItem('meName'));
+//   const [isToggle, setIsToggle] = useState<boolean>(false);
+//   const navigate = useNavigate();
+//   const onToggle = () => setIsToggle(!isToggle);
+//   const [isClick, setIsClick] = useState(false);
 
-  const onClick = () => setIsClick(!isClick);
-  return (
-    <NavbarBackground>
-      <Nav align="start">
-        <Button bg="dark" brand icon>
-          <HiCube />
-        </Button>
-        <NavCollapse isToggle={isToggle} align="start">
-          <Button bg="dark" onClick={() => navigate('/home')}>
-            Home
-          </Button>
-          <Button bg="dark" onClick={() => navigate('/profile')}>
-            Profile
-          </Button>
-        </NavCollapse>
-      </Nav>
-      <Nav align="end">
-        <NavToggle onClick={onToggle}>
-          <Button bg="dark" icon>
-            <HiMenu />
-          </Button>
-        </NavToggle>
-        <NavCollapse isToggle={isToggle} direction="reverse" align="end">
-          <Button bg="dark" onClick={onClick}>
-            <span style={{paddingRight: '8px'}}>{meName}</span>
-            <Img userId={meId} size="navbar" />
-          </Button>
-          {isClick && <LogOut />}
-        </NavCollapse>
-      </Nav>
-      <GameStart />
-    </NavbarBackground>
-  );
-}
+//   const onClick = () => setIsClick(!isClick);
+//   return (
+//     <NavbarBackground>
+//       <Nav align="start">
+//         <Button bg="dark" brand icon>
+//           <HiCube />
+//         </Button>
+//         <NavCollapse isToggle={isToggle} align="start">
+//           <Button bg="dark" onClick={() => navigate('/home')}>
+//             Home
+//           </Button>
+//           <Button bg="dark" onClick={() => navigate('/profile')}>
+//             Profile
+//           </Button>
+//         </NavCollapse>
+//       </Nav>
+//       <Nav align="end">
+//         <NavToggle onClick={onToggle}>
+//           <Button bg="dark" icon>
+//             <HiMenu />
+//           </Button>
+//         </NavToggle>
+//         <NavCollapse isToggle={isToggle} direction="reverse" align="end">
+//           <Button bg="dark" onClick={onClick}>
+//             <span style={{paddingRight: '8px'}}>{meName}</span>
+//             <Img userId={meId} size="navbar" />
+//           </Button>
+//           {isClick && <LogOut />}
+//         </NavCollapse>
+//       </Nav>
+//       <GameStart />
+//     </NavbarBackground>
+//   );
+// }
 
-export default React.memo(Navbar);
 const NavbarBackground = styled.div`
   /* Layout */
   display: flex;
@@ -116,3 +117,60 @@ const NavToggle = styled.div`
     display: block;
   }
 `;
+
+interface NavbarProps {
+  isStart?: boolean;
+}
+function Navbar({isStart}: NavbarProps): JSX.Element {
+  const [isToggle, setIsToggle] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const onToggle = () => setIsToggle(!isToggle);
+  const [isHover, setIsHover] = useState(false);
+  const onHover = () => setIsHover(!isHover);
+  return (
+    <NavbarBackground>
+      <Nav align="start">
+        <Button bg="dark" brand icon>
+          <HiCube />
+        </Button>
+        <NavCollapse isToggle={isToggle} align="start">
+          <Button bg="dark" onClick={() => navigate('/home')}>
+            Home
+          </Button>
+          <Button bg="dark" onClick={() => navigate('/profile')}>
+            Profile
+          </Button>
+        </NavCollapse>
+      </Nav>
+      <Nav align="end">
+        <NavToggle onClick={onToggle}>
+          <Button bg="dark" icon>
+            <HiMenu />
+          </Button>
+        </NavToggle>
+        <NavCollapse isToggle={isToggle} direction="reverse" align="end">
+          <Button
+            bg="dark"
+            onHover={onHover}
+            onClick={() => {
+              localStorage.removeItem('meId');
+              localStorage.removeItem('meName');
+              localStorage.clear();
+              dispatch(logOut());
+              navigate('/');
+            }}
+          >
+            {!isHover ? '이름' : 'logout'}
+          </Button>
+          <Button bg="dark" onClick={() => navigate('/profile')}>
+            사진(예정)
+          </Button>
+        </NavCollapse>
+      </Nav>
+      <GameStart isStart={isStart} />
+    </NavbarBackground>
+  );
+}
+
+export default React.memo(Navbar);

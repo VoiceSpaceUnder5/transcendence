@@ -21,6 +21,7 @@ import { Message } from './message/message.entity';
 import { ChatModule } from './chat/chat.module';
 import { RelationModule } from './relation/relation.module';
 import { ImageModule } from './image/image.module';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { ImageModule } from './image/image.module';
     ChatModule,
     RelationModule,
     ImageModule,
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService, CodeService],
