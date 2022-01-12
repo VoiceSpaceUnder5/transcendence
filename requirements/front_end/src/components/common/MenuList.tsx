@@ -1,28 +1,38 @@
 import React, {ReactNode} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
-const MenuListStyles = styled.div`
+const MenuListStyles = styled.div<{height?: string}>`
   display: flex;
   flex-direction: column;
   align-items: center;
 
   height: 440px;
   width: 89%;
+  ${props =>
+    props.height === 'fit' &&
+    css`
+      height: 123px;
+      width: 100%;
+      overflow-x: hidden;
+    `}
+  overflow-y: auto;
 `;
 
 interface MenuListProps {
   children: ReactNode;
+  height?: string;
 }
 
-export function MenuList({children}: MenuListProps): JSX.Element {
-  return <MenuListStyles>{children}</MenuListStyles>;
+export function MenuList({children, height}: MenuListProps): JSX.Element {
+  return <MenuListStyles height={height}>{children}</MenuListStyles>;
 }
 
 const MenuInfoListStyle = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 80%;
+  width: inherit;
+  margin-left: 8px;
 `;
 
 interface MenuInfoListProps {
@@ -41,6 +51,7 @@ const MenuInfoStyle = styled.div`
   height: 22px;
   font-size: 90%;
   white-space: nowrap;
+  width: inherit;
 
   background: ${props => props.theme.greyDivBg};
   overflow: hidden;

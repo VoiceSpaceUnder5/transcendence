@@ -59,7 +59,7 @@ export default function Profile({
   );
 }
 
-const WholeLayout = styled.div`
+export const WholeLayout = styled.div`
   display: flex;
   justify-content: center;
   algin-items: center;
@@ -71,7 +71,7 @@ const WholeLayout = styled.div`
   }
 `;
 
-const InnerLayout = styled.div`
+export const InnerLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: start;

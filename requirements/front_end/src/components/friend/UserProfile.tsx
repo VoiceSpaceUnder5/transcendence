@@ -7,6 +7,9 @@ import {OptionButton} from '../common/Button';
 import CreateRelation from '../chat/Relations/CreateRelation';
 import UpdateRelation from '../chat/Relations/UpdateRelation';
 import useRelation from '../../hooks/useRelation';
+import Img from '../common/Img';
+import {MenuList} from '../common/MenuList';
+import Friend from './Friend';
 
 const GET_USER_BY_ID = gql`
   query getUserById($userId: Int!) {
@@ -47,12 +50,58 @@ export default function UserProfile({
         <UserProfileStyles>
           <UserProfileBackboard>
             <TitleDiv color="black">친구 프로필</TitleDiv>
-            <Div align="center">기본 정보</Div>
-            <div>{data.getUserById.name}</div>
-            <div style={{display: 'flex', width: '70%'}}>
-              <Div align="center">대전 기록</Div>
-              <Div align="center">업적</Div>
-            </div>
+            <WholeLayout>
+              <InnerLayout>
+                <Div>프로필 사진</Div>
+                <Img userId={userId} size="userProfile" />
+              </InnerLayout>
+              <InnerLayout>
+                <Div>이름</Div>
+                <UserProfileDiv>{data.getUserById.name}</UserProfileDiv>
+                <Div>email</Div>
+                <UserProfileDiv>test@test.com</UserProfileDiv>
+                {/* <UserProfileDiv>{data.getUserById.email}</UserProfileDiv> */}
+                <Div>자기소개</Div>
+                <UserProfileDiv style={{height: '140px'}}>
+                  {data.getUserById.description}
+                </UserProfileDiv>
+              </InnerLayout>
+            </WholeLayout>
+            <WholeLayout>
+              <InnerLayout>
+                <Div>대전 기록</Div>
+                <MenuList height="fit">
+                  <Friend
+                    imagePath="#"
+                    username="hi"
+                    isOnline={false}
+                    matchRecord="패"
+                  />
+                  <Friend
+                    imagePath="#"
+                    username="hi"
+                    isOnline={false}
+                    matchRecord="패"
+                  />
+                  <Friend
+                    imagePath="#"
+                    username="hi"
+                    isOnline={false}
+                    matchRecord="패"
+                  />
+                </MenuList>
+              </InnerLayout>
+              <InnerLayout>
+                <Div>업적</Div>
+                <UserAchivementList>
+                  <UserAchivementDiv isSuccess={true}>
+                    첫 접속
+                  </UserAchivementDiv>
+                  <UserAchivementDiv isSuccess={false}>첫 승</UserAchivementDiv>
+                  <UserAchivementDiv isSuccess={false}>5승</UserAchivementDiv>
+                </UserAchivementList>
+              </InnerLayout>
+            </WholeLayout>
             {/* 친구 상태에 따라 신청할지 차단할지? */}
             <OptionBoxLayout>
               <OptionBox>
@@ -141,7 +190,7 @@ const UserProfileStyles = styled.div`
 const UserProfileBackboard = styled.div`
   width: 50%;
   min-width: 320px;
-  height: 70%;
+  // height: 70%;
 
   display: flex;
   flex-direction: column;
@@ -149,7 +198,7 @@ const UserProfileBackboard = styled.div`
   align-items: center;
 
   border-radius: 16px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(225, 225, 225, 0.9);
 
   @keyframes smoothAppear {
     from {
@@ -182,4 +231,62 @@ const OptionBox = styled.div`
   max-width: 400px;
 
   justify-content: center;
+`;
+
+const WholeLayout = styled.div`
+  display: flex;
+  justify-content: center;
+  algin-items: center;
+
+  margin-bottom: 16px;
+
+  ${props => props.theme.padSize} {
+    flex-direction: column;
+  }
+`;
+
+const InnerLayout = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  width: 240px;
+
+  margin: 0px 24px;
+`;
+
+const UserProfileDiv = styled.div`
+  width: 100%;
+  background-color: white;
+
+  border-radius: 6px;
+  padding: 2px;
+`;
+
+const UserAchivementList = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  width: 100%;
+
+  overflow-x: auto;
+`;
+
+const UserAchivementDiv = styled.div<{isSuccess: boolean}>`
+  position: static;
+  width: 103px;
+  height: 103px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  margin: 10px 14px;
+  margin-left: 0px;
+  background: ${props => (props.isSuccess ? '#FFEF98' : '#89969F')};
+  border-radius: 10px;
 `;

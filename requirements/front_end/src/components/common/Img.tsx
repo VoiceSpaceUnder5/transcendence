@@ -54,6 +54,13 @@ const ImgStyles = styled.img<{size: string}>`
           border-radius: 25px;
           border: 1px solid #000000;
         `;
+      case 'userProfile':
+        return css`
+          width: 240px;
+          height: 240px;
+          border-radius: 25px;
+          border: 1px solid #000000;
+        `;
     }
   }}
 `;
