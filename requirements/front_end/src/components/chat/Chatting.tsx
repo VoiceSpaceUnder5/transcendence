@@ -141,10 +141,8 @@ export default function Chatting(): JSX.Element {
 
   if (loading) return <>로딩 중..</>;
   if (error) return <>에러!</>;
-  console.log(data);
   return (
     <>
-      {/* 나가는 버튼도 추가해야 함 */}
       <ChattingHeadStyles>
         <Div>{data.getChannelById.name}</Div>
         <ChannelOption
@@ -152,7 +150,7 @@ export default function Chatting(): JSX.Element {
           channelId={channelId as number}
           channelName={data.getChannelById.name as string}
           channelPasswd={data.getChannelById.password as string}
-          role={role as string}
+          meRole={role as string}
         />
       </ChattingHeadStyles>
       <MessageBox meId={meId} messages={messages} />

@@ -6,17 +6,18 @@ import ChannelUserProfile from './ChannelUserProfile';
 
 interface ChannelUserProps {
   meId: number;
+  meRole: string;
   userId: number;
-  imagePath?: string;
+  userRole: string;
   name: string;
-  role: string;
 }
 
 export default function ChannelUser({
   meId,
+  meRole,
   userId,
+  userRole,
   name,
-  role,
 }: // role,
 ChannelUserProps): JSX.Element {
   const [isClicked, setIsClicked] = useState(false);
@@ -42,8 +43,15 @@ ChannelUserProps): JSX.Element {
           <div style={{marginRight: '4px'}}>
             <ChannelUserProfile meId={meId} userId={userId} />
           </div>
-          {(role === 'UR0' || role === 'UR1') && (
-            <Button bg="grey">강퇴</Button>
+          {(meRole === 'UR0' || meRole === 'UR1') && userRole === 'UR2' && (
+            <Button
+              bg="grey"
+              onClick={() => {
+                console.log('차단 버튼 클릭');
+              }}
+            >
+              차단
+            </Button>
           )}
         </>
       )}
