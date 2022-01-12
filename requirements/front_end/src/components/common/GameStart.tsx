@@ -1,48 +1,9 @@
-import React, {FormEvent, useState, useEffect} from 'react';
+import React, {FormEvent, useState} from 'react';
 import styled from 'styled-components';
 import Button from './Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
 import {useNavigate} from 'react-router-dom';
 import {GameData} from '../pongGame/GameData';
-
-const GameStartStyles = styled.div`
-  /* Auto Layout */
-
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: flex-start;
-  padding: 0px;
-
-  position: absolute;
-  top: 8px;
-  height: 20px;
-  left: calc(50% - 12px - 85px);
-`;
-
-const GameOptions = styled.div`
-  /* Auto Layout */
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 40px;
-  left: calc(50% - 97px);
-
-  /* size */
-  width: 194px;
-  background-color: ${props => props.theme.lightButtonBg};
-  border-radius: 4px;
-`;
-
-const GameOption = styled.div`
-  /* Auto Layout */
-
-  display: flex;
-  align-self: stretch;
-  justify-content: flex-end;
-`;
 
 interface GameStartProps {
   isStart?: boolean;
@@ -104,3 +65,41 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
 }
 
 export default GameStart;
+const GameStartStyles = styled.div`
+  /* Auto Layout */
+
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  padding: 0px;
+
+  position: absolute;
+  top: 8px;
+  height: 20px;
+  left: calc(50% - 12px - 85px);
+`;
+
+const GameOptions = styled.div`
+  /* Auto Layout */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 40px;
+  left: calc(50% - 97px);
+
+  /* size */
+  width: 194px;
+  background-color: ${props => props.theme.lightButtonBg};
+  border-radius: 4px;
+`;
+
+const GameOption = styled.div`
+  /* Auto Layout */
+
+  display: flex;
+  align-self: stretch;
+  justify-content: flex-end;
+`;

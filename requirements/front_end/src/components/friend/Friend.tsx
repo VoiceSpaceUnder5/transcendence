@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {MenuInfoList, MenuInfo} from '../common/MenuList';
 import {OptionButton} from '../common/Button';
 import UserProfile from './UserProfile';
-import Img from '../common/Img';
+// import Img from '../common/Img';
 // import DirectMessages from '../chat/DirectMessage';
 
 interface FriendProps {
@@ -38,7 +38,6 @@ export default function Friend({
     <FriendStyle onClick={onDivClick}>
       {!visible && (
         <>
-          {/* <Img userId={userId as number} size="thumb" /> */}
           <ProfileImageStyle src={imagePath} isOnline={isOnline} />
           <MenuInfoList>
             {username && <MenuInfo>{username}</MenuInfo>}

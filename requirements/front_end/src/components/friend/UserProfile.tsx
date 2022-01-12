@@ -185,6 +185,15 @@ const UserProfileStyles = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  ${props => props.theme.padSize} {
+    top: 48px;
+    padding-top: 8px;
+    flex-direction: column;
+    height: 100%;
+    justify-content: start;
+    overflow-y: auto;
+  }
 `;
 
 const UserProfileBackboard = styled.div`
