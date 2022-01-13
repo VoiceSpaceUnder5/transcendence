@@ -6,7 +6,7 @@ export async function transformPwToHash(password: string): Promise<string> {
   return hash;
 }
 
-export async function isMatchPassword(
+export async function isValidPassword(
   password: string,
   hash: string,
 ): Promise<boolean> {

@@ -124,6 +124,7 @@ type Mutation {
   updateUserAuthority(authorityId: String!, id: Int!): User!
   createChannel(createChannelInput: CreateChannelInput!, userId: Int!): ChatChannel!
   updateChannel(updateChannelInput: CreateChannelInput!, channelId: Int!): ChatChannel!
+  joinChannel(joinChannelInput: JoinChannelInput!): Boolean!
   createCode(createCodeInput: CreateCodeInput!): Code!
   createMessage(createMessageInput: CreateMessageInput!): Message!
   createRelation(createRelationInput: CreateRelationInput!): Relation!
@@ -160,6 +161,12 @@ input CreateChannelInput {
   name: String!
   typeId: String!
   password: String
+}
+
+input JoinChannelInput {
+  userId: Int!
+  channelId: Int!
+  password: String!
 }
 
 input CreateCodeInput {
