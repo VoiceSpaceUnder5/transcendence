@@ -23,7 +23,7 @@ export class ChatChannel extends DefaultEntity {
   name: string;
 
   @Field((type) => String, { nullable: true })
-  @Column({ type: 'varchar', length: 25, nullable: true })
+  @Column({ type: 'varchar', length: 200, nullable: true })
   password?: string;
 
   @Field((type) => Code)
