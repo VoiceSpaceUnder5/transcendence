@@ -23,9 +23,6 @@ export const GET_CHANNEL_DATA = gql`
         }
         textMessage
       }
-      chatChannelUsers {
-        id
-      }
     }
   }
 `;

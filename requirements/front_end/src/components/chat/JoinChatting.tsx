@@ -8,6 +8,7 @@ import Button from '../common/Button';
 import {RootState} from '../../modules';
 import {gql, useMutation} from '@apollo/client';
 
+// 추후에 백엔드에서 joinChatting mutation을 제공하면 그것으로 변경할 예장
 const JOIN_CHATTING = gql`
   mutation createChatChannelUser(
     $createChatChannelUserInput: CreateChatChannelUserInput!
@@ -54,10 +55,9 @@ export default function JoinChatting(): JSX.Element {
   }, []);
 
   const goToChatting = () => {
+    // joinChatting 쿼리가 생기면 true를 반환했을 때와 false를 반환했을 때 분리할 예정
     joinChatting().then(data => {
       const {createChatChannelUser} = data.data;
-      // console.log(createChatChannelUser);
-      // 여기서 패스워드랑 비교해서 다르면 fail같은 거 리턴 받아서 조건분기 해야할듯?
       dispatch(afterJoin(createChatChannelUser.chatChannelId, 'UR2'));
     });
   };
