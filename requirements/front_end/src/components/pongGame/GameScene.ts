@@ -142,9 +142,17 @@ export class GameScene extends Phaser.Scene {
       this.socket?.disconnect();
     });
     this.socket.on('restartGame', () => {
-      console.log('restart');
-      this.myPaddle?.setPosition(this.myPaddle.body.position.x, 300);
-      this.enemyPaddle?.setPosition(this.enemyPaddle.body.position.x, 300);
+      if (this.isLeft) {
+        this.myPaddle?.setPosition(100, 300);
+        this.enemyPaddle?.setPosition(700, 300);
+        this.ball?.setPosition(200, 150);
+        this.ball?.setVelocity(500, 500);
+      } else {
+        this.myPaddle?.setPosition(700, 300);
+        this.enemyPaddle?.setPosition(100, 300);
+        this.ball?.setPosition(200, 150);
+        this.ball?.setVelocity(500, 500);
+      }
       this.ball?.setPosition(200, 150);
       this.ball?.setVelocity(500, 500);
     });
