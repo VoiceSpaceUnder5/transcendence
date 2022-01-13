@@ -15,6 +15,7 @@ import { MessageService } from 'src/message/message.service';
 import { ChatChannel } from './chat-channel.entity';
 import { ChatChannelsService } from './chat-channels.service';
 import { CreateChannelInput } from './inputs/create-channel.input';
+import { JoinChannelInput } from './inputs/join-channel.input';
 
 @Resolver((type) => ChatChannel)
 export class ChatChannelsResolver {
@@ -98,7 +99,7 @@ export class ChatChannelsResolver {
     return newChannel;
   }
 
-  //여기는 권한 가드 만들어야할듯
+  //여기는 권한 가드 만들어야할듯 (해당 방을 업데이트할 수 있는 권한이 있는지)
   @Mutation(() => ChatChannel, { name: 'updateChannel' })
   async updateChannel(
     @Args('channelId', { type: () => Int }) channelId: number,
@@ -108,6 +109,15 @@ export class ChatChannelsResolver {
       channelId,
       updateChannelInput,
     );
+  }
+
+  //채팅방에 들어가는 뮤테이션, 들어가려고 하는 유저 id, 채팅방 id, 비밀번호 있으면 비밀번호 확인
+  @Mutation(() => Boolean, { name: 'joinChannel' })
+  async joinChannel(
+    @Args('joinChannelInput')
+    joinChannelInput: JoinChannelInput,
+  ) {
+    return await this.chatChannelsService.joinChannel(joinChannelInput);
   }
 
   @ResolveField(() => Code) // 이렇게 하면 이렇게 쓸 수 있다.
