@@ -13,10 +13,10 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   const [toggle, setToggle] = useState(false);
   const [isHard, setIsHard] = useState(false);
   const history = useHistory();
+  const [isLadder, setIsLadder] = useState(false);
 
   const onToggle = () => {
     setToggle(!toggle);
-    console.log(toggle);
   };
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -24,10 +24,15 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   const onClickStart = () => {
     GameData.setIsHard(isHard);
     history.push({pathname: '/game', state: {isStart: true}});
+    GameData.setIsLadder(isLadder);
   };
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onHardModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     void e;
     setIsHard(!isHard);
+  };
+  const onLadderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    void e;
+    setIsLadder(!isLadder);
   };
   return (
     <GameStartStyles>
@@ -46,11 +51,22 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
                 <GameOption>
                   <label htmlFor="game2">Hard</label>
                   <input
+                    disabled={isLadder}
                     type="checkbox"
-                    id="game 2"
-                    name="game 2"
+                    id="hard"
+                    name="hard"
                     checked={isHard}
-                    onChange={onChange}
+                    onChange={onHardModeChange}
+                  ></input>
+                </GameOption>
+                <GameOption>
+                  <label htmlFor="game2">LadderGame</label>
+                  <input
+                    type="checkbox"
+                    id="ladder"
+                    name="ladder"
+                    checked={isLadder}
+                    onChange={onLadderChange}
                   ></input>
                 </GameOption>
               </GameOptions>

@@ -17,6 +17,11 @@ export default function Game(): JSX.Element {
     GameData.setId(Number(localStorage.getItem('meId')));
     setIsGameStart(true);
     setPhaser(new Phaser.Game(config));
+    return () => {
+      console.log('페이저 삭제...');
+      phaser?.destroy(true);
+      setPhaser(null);
+    };
   }, []);
   const onExit = () => {
     setIsGameStart(false);
@@ -25,9 +30,6 @@ export default function Game(): JSX.Element {
     setPhaser(null);
     history.push('/home');
   };
-  useEffect(() => {
-    // console.log(phaser);
-  }, [phaser]);
   return (
     <div>
       <GameExit onExitClick={onExit} />

@@ -40,6 +40,8 @@ export class GameScene extends Phaser.Scene {
   private isLeft: boolean | null = null;
   private isStart: boolean | null = null;
   private roomId: number | null = null;
+  private restartButton: Phaser.GameObjects.Image | null = null;
+  private startButton: Phaser.GameObjects.Image | null = null;
 
   constructor() {
     super({key: 'game', active: true});
@@ -51,21 +53,40 @@ export class GameScene extends Phaser.Scene {
     this.load.image('ball', '/ball.png');
     this.load.image('myWall', '/wall.png');
     this.load.image('enemyWall', '/wall2.png');
+    this.load.image('startButton', '/startButton.png');
+    this.load.image('reStartButton', '/restartButton.png');
   }
 
   create(): void {
     // 소켓 연결 부분
     // this.socket = io('http://api.ts.io:30000');
     this.socket = GameData.socket;
-    this.socket.emit('startGame', {isHard: GameData.isHard});
+    this.socket.emit('startGame', {
+      isHard: GameData.isHard,
+      isLadder: GameData.isLadder,
+    });
+
+    // 버튼 세팅
+    this.startButton = this.add.image(400, 300, 'startButton').setInteractive();
+    this.restartButton = this.add
+      .image(400, 300, 'reStartButton')
+      .setInteractive();
+    this.startButton.on('pointerdown', () => {
+      this.socket?.emit('ready', {roomId: this.roomId});
+      this.startButton?.setInteractive(false);
+      this.startButton?.setVisible(false);
+    });
+    this.restartButton.on('pointerdown', () => console.log('restart!!!'));
+    this.restartButton.disableInteractive();
+    this.restartButton.setVisible(false);
+    this.startButton.disableInteractive();
+    this.startButton.setVisible(false);
 
     // 모두 멈춰라!
     const everyBodyStop = () => {
-      this.myPaddle?.disableBody();
-      this.enemyPaddle?.disableBody();
-      this.ball?.disableBody();
-      this.enemyWall?.disableBody();
-      this.myWall?.disableBody();
+      this.myPaddle?.setVelocity(0, 0);
+      this.enemyPaddle?.setVelocity(0, 0);
+      this.ball?.setVelocity(0, 0);
     };
 
     // // 시작 세팅
@@ -83,13 +104,15 @@ export class GameScene extends Phaser.Scene {
     //   }
     // };
 
+    this.socket.on('allIn', () => {
+      this.startButton?.setVisible(true);
+      this.startButton?.setInteractive();
+    });
     this.socket.on('waitingGame', payload => {
       this.isLeft = payload.isLeft;
       this.roomId = payload.roomId;
       GameData.setRoomId(payload.roomId);
       GameData.setIsHard(payload.isHard);
-      if (payload.isHard) this.add.text(600, 80, 'Hard');
-      else this.add.text(600, 80, 'Normal');
     });
     this.socket.on('movedOtherPaddle', (payload: PaddleInfo) => {
       if (this.isLeft !== payload.isLeft)
@@ -106,7 +129,6 @@ export class GameScene extends Phaser.Scene {
 
       if (isWinnerLeft) console.log('왼쪽이 이겼지렁~~~!');
       else console.log('오른쪽이 이겼지렁~~~!');
-      this.socket?.emit('win', {id: GameData.id});
     });
     this.socket.on('forceQuit', () => {
       this.add.text(315, 80, '상대방이 게임을 종료하였습니다.');
@@ -123,16 +145,21 @@ export class GameScene extends Phaser.Scene {
     this.socket.on('matchGame', () => {
       // 내 paddle이 왼쪽인지 오른쪽인지 판단하고 오브젝트를 세팅하는 부분.
       if (this.isLeft) {
-        this.myPaddle = this.physics.add.image(100, 400, 'me');
-        this.enemyPaddle = this.physics.add.image(700, 400, 'enemy');
+        this.myPaddle = this.physics.add.image(100, 300, 'me');
+        this.enemyPaddle = this.physics.add.image(700, 300, 'enemy');
         this.myWall = this.physics.add.staticImage(20, 300, 'myWall');
         this.enemyWall = this.physics.add.staticImage(780, 300, 'enemyWall');
       } else {
-        this.myPaddle = this.physics.add.image(700, 400, 'me');
-        this.enemyPaddle = this.physics.add.image(100, 400, 'enemy');
+        this.myPaddle = this.physics.add.image(700, 300, 'me');
+        this.enemyPaddle = this.physics.add.image(100, 300, 'enemy');
         this.myWall = this.physics.add.staticImage(780, 300, 'myWall');
         this.enemyWall = this.physics.add.staticImage(20, 300, 'enemyWall');
       }
+      // 모드 세팅
+      if (GameData.isHard) this.add.text(600, 20, 'Hard');
+      else this.add.text(600, 80, 'Normal');
+      if (GameData.isLadder) this.add.text(600, 40, 'Ladder');
+
       // 시작
       this.isStart = true;
       // 초기 오브젝트 세팅
@@ -237,7 +264,6 @@ export class GameScene extends Phaser.Scene {
           isLeft: this.isLeft,
           roomId: this.roomId,
         };
-        console.log('종료 후 오나?');
         this.socket?.emit('paddleMoving', payload);
       }
     }
