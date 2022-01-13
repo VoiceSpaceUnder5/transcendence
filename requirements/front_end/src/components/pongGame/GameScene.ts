@@ -130,6 +130,7 @@ export class GameScene extends Phaser.Scene {
     });
     this.socket.on('win', ({isWinnerLeft}) => {
       everyBodyStop();
+      this.isStart = false;
 
       if (isWinnerLeft) console.log('왼쪽이 이겼지렁~~~!');
       else console.log('오른쪽이 이겼지렁~~~!');
@@ -153,6 +154,7 @@ export class GameScene extends Phaser.Scene {
         this.ball?.setPosition(200, 150);
         this.ball?.setVelocity(500, 500);
       }
+      this.isStart = true;
       this.ball?.setPosition(200, 150);
       this.ball?.setVelocity(500, 500);
     });
@@ -229,7 +231,6 @@ export class GameScene extends Phaser.Scene {
         // 내 골대에 공이 들어 가면 실행된다.
         everyBodyStop();
         console.log('내 골대에 닿음.');
-        this.isStart = false;
         this.socket?.emit('lose', {
           id: GameData.id,
           roomId: GameData.roomId,
