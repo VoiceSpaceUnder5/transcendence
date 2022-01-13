@@ -42,7 +42,6 @@ type ChatChannel {
 type ChatChannelUser {
   created_at: DateTime!
   updated_at: DateTime!
-  id: Int!
   userId: Int!
   chatChannelId: Int!
   roleId: String!
@@ -118,6 +117,7 @@ type Query {
 
 type Mutation {
   createChatChannelUser(createChatChannelUserInput: CreateChatChannelUserInput!): ChatChannelUser!
+  updateChatChannelUser(updateChatChannelUserInput: CreateChatChannelUserInput!): ChatChannelUser!
   deleteChatChannelUser(deleteChatChannelUserInput: DeleteChatChannelUserInput!): Boolean!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!

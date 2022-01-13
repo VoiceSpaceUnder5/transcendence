@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Args } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChatChannelUser } from './chat-channel-user.entity';
@@ -28,7 +27,13 @@ export class ChatChannelUserService {
   async create(
     createchatChannelUserInput: CreateChatChannelUserInput,
   ): Promise<ChatChannelUser> {
-    return this.chatChannelUserRepository.save(createchatChannelUserInput);
+    return this.update(createchatChannelUserInput);
+  }
+
+  async update(
+    updateChatChannelUserInput: CreateChatChannelUserInput,
+  ): Promise<ChatChannelUser> {
+    return this.chatChannelUserRepository.save(updateChatChannelUserInput);
   }
 
   async delete(deleteChatChannelUser: DeleteChatChannelUserInput) {
