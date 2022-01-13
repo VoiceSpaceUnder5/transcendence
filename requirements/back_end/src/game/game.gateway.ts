@@ -24,6 +24,8 @@ interface LosePayload {
 interface Room {
   leftUser: UserInfo | null;
   rightUser: UserInfo | null;
+  leftUserReady: boolean;
+  rightUserReady: boolean;
   roomId: string;
   isHard: boolean;
 }
@@ -64,6 +66,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         ) {
           this.server.to(room.roomId).emit('forceQuit');
           rooms.splice(i, 1);
+          users.forEach((user, i) => {
+            if (user.clientId === client.id) {
+              users.splice(i, 1);
+            }
+          });
           return;
         }
       });
@@ -78,8 +85,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('startGame') // 기다리는 부분.
-  gameStart(client: any, { isHard }: { isHard: boolean }): any {
+  @SubscribeMessage('startGame')
+  gameStart(
+    client: any,
+    { isHard, isLadder }: { isHard: boolean; isLadder: boolean },
+  ): any {
     // roomId가 있는지 확인하고 있으면 그 roomId로 같이 조인한다.
     let isEmptyRoom = true;
     let roomArrIndex = -1;
@@ -105,6 +115,8 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
       const room: Room = {
         leftUser: userInfo,
         rightUser: null,
+        leftUserReady: false,
+        rightUserReady: false,
         roomId: roomId,
         isHard: isHard,
       };
@@ -121,7 +133,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
       const userInfo: UserInfo = {
         roomId: rooms[roomArrIndex].roomId,
         clientId: client.id,
-        gameStatus: GameStatus.start,
+        gameStatus: GameStatus.waiting,
       };
       rooms[roomArrIndex].rightUser = userInfo;
       rooms[roomArrIndex].leftUser.gameStatus = GameStatus.start;
@@ -131,8 +143,50 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         roomId: userInfo.roomId,
         isHard: isHard,
       });
-      this.server.in(rooms[roomArrIndex].roomId).emit('matchGame');
+      this.server.in(rooms[roomArrIndex].roomId).emit('allIn');
     }
+  }
+  @SubscribeMessage('ready')
+  start(client: any, { roomId }: { roomId: string }): any {
+    // 시작버튼 누르기. matchGame을 양쪽에다 불러주면 된다.
+    rooms.forEach((room) => {
+      if (room.roomId === roomId) {
+        if (client.id === room.leftUser.clientId) {
+          room.leftUserReady = true;
+          room.leftUser.gameStatus = GameStatus.start;
+        } else if (client.id === room.rightUser.clientId) {
+          room.rightUserReady = true;
+          room.rightUser.gameStatus = GameStatus.start;
+        }
+        if (room.rightUserReady && room.leftUserReady) {
+          this.server.in(room.roomId).emit('matchGame');
+          room.rightUserReady = false;
+          room.leftUserReady = false;
+        }
+        return;
+      }
+    });
+  }
+
+  @SubscribeMessage('restart')
+  restart(client: any, { roomId }: { roomId: string }): any {
+    rooms.forEach((room) => {
+      if (room.roomId === roomId) {
+        if (client.id === room.leftUser.clientId) {
+          room.leftUserReady = true;
+          room.leftUser.gameStatus = GameStatus.start;
+        } else if (client.id === room.rightUser.clientId) {
+          room.rightUserReady = true;
+          room.rightUser.gameStatus = GameStatus.start;
+        }
+        if (room.rightUserReady && room.leftUserReady) {
+          this.server.in(room.roomId).emit('restartGame');
+          room.rightUserReady = false;
+          room.leftUserReady = false;
+        }
+        return;
+      }
+    });
   }
 
   @SubscribeMessage('hitBall')
@@ -158,6 +212,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
       if (room.roomId === payload.roomId) {
         rooms.splice(i, 1);
         return;
+      }
+    });
+    users.forEach((user, i) => {
+      if (user.clientId === client.id) {
+        users.splice(i, 1);
       }
     });
   }

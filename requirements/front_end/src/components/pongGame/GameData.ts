@@ -5,6 +5,7 @@ export class GameData {
   public static isHard: boolean;
   public static socket: Socket;
   public static roomId: string;
+  public static isLadder: boolean;
   public static setSocket(socket: Socket): void {
     GameData.socket = socket;
   }
@@ -16,5 +17,8 @@ export class GameData {
   }
   public static setIsHard(isHard: boolean): void {
     GameData.isHard = isHard;
+  }
+  public static setIsLadder(isLadder: boolean): void {
+    GameData.isLadder = isLadder;
   }
 }
