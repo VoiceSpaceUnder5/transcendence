@@ -2,7 +2,7 @@ import React, {FormEvent, useState} from 'react';
 import styled from 'styled-components';
 import Button from './Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
-import {useNavigate} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {GameData} from '../pongGame/GameData';
 
 interface GameStartProps {
@@ -12,7 +12,7 @@ interface GameStartProps {
 function GameStart({isStart}: GameStartProps): JSX.Element {
   const [toggle, setToggle] = useState(false);
   const [isHard, setIsHard] = useState(false);
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const onToggle = () => {
     setToggle(!toggle);
@@ -23,7 +23,7 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   };
   const onClickStart = () => {
     GameData.setIsHard(isHard);
-    navigate('/game', {state: {isStart: true}});
+    history.push({pathname: '/game', state: {isStart: true}});
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     void e;

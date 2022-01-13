@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '../common/Button';
 import TitleDiv from '../common/TitleDiv';
@@ -18,7 +18,7 @@ export default function Profile({
   email,
   description,
 }: ProfileProps): JSX.Element {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [meId] = useState(Number(localStorage.getItem('meId')));
   const [meName] = useState(localStorage.getItem('meName'));
   return (
@@ -27,7 +27,6 @@ export default function Profile({
       <WholeLayout>
         <InnerLayout>
           <Div>프로필 사진</Div>
-          {/* <ProfileImgStyle src={image} /> */}
           <Img userId={meId} size="profile" />
         </InnerLayout>
         <InnerLayout>
@@ -48,7 +47,8 @@ export default function Profile({
       <Button
         large
         onClick={() =>
-          navigate('/profile/edit', {
+          history.push({
+            pathname: '/profile/edit',
             state: {id: meId, name: meName, email, image, description},
           })
         }
