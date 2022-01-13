@@ -6,7 +6,7 @@ import BackBoard from '../common/BackBoard';
 import Textarea from '../common/Textarea';
 import Button from '../common/Button';
 import ImageUpload from './ImageUpload';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useLocation, useHistory} from 'react-router-dom';
 import useInput from '../../hooks/useInput';
 import {useMutation, gql} from '@apollo/client';
 import {GET_PROFILE_IMAGE} from '../common/Img';
@@ -21,12 +21,20 @@ const UPDATE_MY_PROFILE = gql`
   }
 `;
 
+interface StateType {
+  id: number;
+  name: string;
+  email: string;
+  description: string;
+  image: string;
+}
+
 export default function EditProfile(): JSX.Element {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [image, setImage] = useState(location.state.image);
+  const history = useHistory();
+  const state = useLocation().state as StateType;
+  const [image, setImage] = useState(state.image);
   const [inputs, onChange] = useInput({
-    description: location.state.description,
+    description: state.description,
   });
   const isImgUpdated = useRef(false);
   const [updateMe, {error}] = useMutation(UPDATE_MY_PROFILE, {
@@ -37,7 +45,7 @@ export default function EditProfile(): JSX.Element {
     if (isImgUpdated.current === true) {
       updateMe({
         variables: {
-          user_id: location.state.id,
+          user_id: state.id,
           updateUserInput: {
             description: inputs.description,
             profile_image_binary: image.substr(image.indexOf('base64') + 7),
@@ -45,23 +53,20 @@ export default function EditProfile(): JSX.Element {
         },
       }).then(() => {
         isImgUpdated.current = false;
-        navigate('/profile');
+        history.push('/profile');
       });
     } else {
       updateMe({
         variables: {
-          user_id: location.state.id,
+          user_id: state.id,
           updateUserInput: {
             description: inputs.description,
           },
         },
-      }).then(() => navigate('/profile'));
+      }).then(() => history.push('/profile'));
     }
   };
 
-  // useEffect(() => {
-  //   console.log(image);
-  // }, [image]);
   const onImgChange = (img: string) => {
     isImgUpdated.current = true;
     setImage(img);
@@ -80,13 +85,13 @@ export default function EditProfile(): JSX.Element {
             이름<span style={{fontSize: '10px'}}>(수정 불가)</span>
           </Div>
           <Div bg="light" width="large" align="center">
-            {location.state.name}
+            {state.name}
           </Div>
           <Div>
             email<span style={{fontSize: '10px'}}>(수정 불가)</span>
           </Div>
           <Div bg="light" width="large" align="center">
-            {location.state.email}
+            {state.email}
           </Div>
           <Div>자기소개</Div>
           <Textarea
@@ -104,7 +109,7 @@ export default function EditProfile(): JSX.Element {
         }}
       >
         <Button onClick={onClickConfirm}>확인</Button>
-        <Button onClick={() => navigate('/profile')}>취소</Button>
+        <Button onClick={() => history.push('/profile')}>취소</Button>
       </div>
     </BackBoard>
   );

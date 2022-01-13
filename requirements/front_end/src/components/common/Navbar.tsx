@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import {useNavigate} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import {HiCube, HiMenu} from 'react-icons/hi';
 import Button from './Button';
 import GameStart from './GameStart';
@@ -14,7 +14,7 @@ function Navbar({isStart}: NavbarProps): JSX.Element {
   const [meId] = useState(Number(localStorage.getItem('meId')));
   const [meName] = useState(localStorage.getItem('meName'));
   const [isToggle, setIsToggle] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const history = useHistory();
   const onToggle = () => setIsToggle(!isToggle);
   const [isClick, setIsClick] = useState(false);
   const onClick = () => setIsClick(!isClick);
@@ -25,10 +25,10 @@ function Navbar({isStart}: NavbarProps): JSX.Element {
           <HiCube />
         </Button>
         <NavCollapse isToggle={isToggle} align="start">
-          <Button bg="dark" onClick={() => navigate('/home')}>
+          <Button bg="dark" onClick={() => history.push('/home')}>
             Home
           </Button>
-          <Button bg="dark" onClick={() => navigate('/profile')}>
+          <Button bg="dark" onClick={() => history.push('/profile')}>
             Profile
           </Button>
         </NavCollapse>

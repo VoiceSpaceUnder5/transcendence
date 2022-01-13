@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Phaser from 'phaser';
 import {config} from './script';
-import {useNavigate} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import GameExit from './GameExit';
 import {GameData} from './GameData';
 import {io} from 'socket.io-client';
@@ -9,7 +9,7 @@ import {io} from 'socket.io-client';
 export default function Game(): JSX.Element {
   const [isGameStart, setIsGameStart] = useState(false);
   const [phaser, setPhaser] = useState<Phaser.Game | null>(null);
-  const navigate = useNavigate();
+  const history = useHistory();
   void isGameStart;
   useEffect(() => {
     // 게임 신청
@@ -23,7 +23,7 @@ export default function Game(): JSX.Element {
     // 닫자.
     phaser?.destroy(true);
     setPhaser(null);
-    navigate('/home');
+    history.push('/home');
   };
   useEffect(() => {
     // console.log(phaser);
