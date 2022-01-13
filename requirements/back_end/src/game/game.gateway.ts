@@ -180,7 +180,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
           room.rightUser.gameStatus = GameStatus.start;
         }
         if (room.rightUserReady && room.leftUserReady) {
-          this.server.in(room.roomId).emit('matchGame');
+          this.server.in(room.roomId).emit('restartGame');
           room.rightUserReady = false;
           room.leftUserReady = false;
         }
