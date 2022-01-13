@@ -31,7 +31,7 @@ export class GameScene extends Phaser.Scene {
   private myWall: Phaser.Types.Physics.Arcade.ImageWithStaticBody | null = null;
   private enemyWall: Phaser.Types.Physics.Arcade.ImageWithStaticBody | null =
     null;
-  // 방향키
+
   private upKey1: Phaser.Input.Keyboard.Key | null = null;
   private downKey1: Phaser.Input.Keyboard.Key | null = null;
 
@@ -54,7 +54,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('myWall', '/wall.png');
     this.load.image('enemyWall', '/wall2.png');
     this.load.image('startButton', '/startButton.png');
-    this.load.image('reStartButton', '/restartButton.png');
+    this.load.image('restartButton', '/restartButton.png');
   }
 
   create(): void {
@@ -69,14 +69,18 @@ export class GameScene extends Phaser.Scene {
     // 버튼 세팅
     this.startButton = this.add.image(400, 300, 'startButton').setInteractive();
     this.restartButton = this.add
-      .image(400, 300, 'reStartButton')
+      .image(400, 300, 'restartButton')
       .setInteractive();
     this.startButton.on('pointerdown', () => {
       this.socket?.emit('ready', {roomId: this.roomId});
-      this.startButton?.setInteractive(false);
+      this.startButton?.disableInteractive();
       this.startButton?.setVisible(false);
     });
-    this.restartButton.on('pointerdown', () => console.log('restart!!!'));
+    this.restartButton.on('pointerdown', () => {
+      this.socket?.emit('restart', {roomId: this.roomId});
+      this.restartButton?.disableInteractive();
+      this.restartButton?.setVisible(false);
+    });
     this.restartButton.disableInteractive();
     this.restartButton.setVisible(false);
     this.startButton.disableInteractive();
@@ -129,11 +133,20 @@ export class GameScene extends Phaser.Scene {
 
       if (isWinnerLeft) console.log('왼쪽이 이겼지렁~~~!');
       else console.log('오른쪽이 이겼지렁~~~!');
+      this.restartButton?.setVisible(true);
+      this.restartButton?.setInteractive();
     });
     this.socket.on('forceQuit', () => {
       this.add.text(315, 80, '상대방이 게임을 종료하였습니다.');
       everyBodyStop();
       this.socket?.disconnect();
+    });
+    this.socket.on('restartGame', () => {
+      console.log('restart');
+      this.myPaddle?.setPosition(this.myPaddle.body.position.x, 300);
+      this.enemyPaddle?.setPosition(this.enemyPaddle.body.position.x, 300);
+      this.ball?.setPosition(200, 150);
+      this.ball?.setVelocity(500, 500);
     });
     // this.socket.on('exitedGame', () => {
     //   this.socket?.emit('exit', {roomId: this.roomId});
@@ -208,11 +221,14 @@ export class GameScene extends Phaser.Scene {
         // 내 골대에 공이 들어 가면 실행된다.
         everyBodyStop();
         console.log('내 골대에 닿음.');
+        this.isStart = false;
         this.socket?.emit('lose', {
           id: GameData.id,
           roomId: GameData.roomId,
           isLeft: this.isLeft,
         });
+        this.restartButton?.setVisible(true);
+        this.restartButton?.setInteractive();
       };
 
       // 충돌시 콜백 부르기.
