@@ -18,8 +18,36 @@ export class ChannelService {
     private channelUserService: ChannelUserService,
   ) {}
 
-  findChannels(): Promise<Channel[]> {
+  findChannels(ids?: number[]): Promise<Channel[]> {
+    if (ids) return this.channelRepository.findByIds(ids);
     return this.channelRepository.find();
+  }
+
+  async findChannelsByUserId(
+    userId: number,
+    joined: boolean,
+  ): Promise<Channel[]> {
+    //joined
+    const channelUsers = await this.channelUserService.findByUserId(userId);
+    if (joined) {
+      const joinedChannelIds = channelUsers.map((channelUser) => {
+        if (channelUser.roleId !== 'UR3') return channelUser.channelId;
+      });
+      return this.findChannels(joinedChannelIds);
+    }
+    // notJoined
+    else {
+      const allChannels = await this.findChannels();
+      const notJoinedChannel = allChannels.filter((channel) => {
+        console.log(channel.id);
+        const notDirectMessage = channel.typeId !== 'CT0';
+        const notJoined = channelUsers.every(
+          (channelUser) => channelUser.channelId !== channel.id,
+        );
+        return notDirectMessage && notJoined;
+      });
+      return notJoinedChannel;
+    }
   }
 
   findChannelById(channelId: number): Promise<Channel> {

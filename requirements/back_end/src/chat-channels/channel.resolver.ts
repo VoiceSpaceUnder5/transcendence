@@ -32,6 +32,14 @@ export class ChannelResolver {
     return this.channelService.findChannels();
   }
 
+  @Query(() => [Channel], { name: 'getChannelsByUserId', nullable: 'items' })
+  async getChannelsByUserId(
+    @Args('userId', { type: () => Int }) userId: number,
+    @Args('joined', { type: () => Boolean }) joined: boolean,
+  ) {
+    return await this.channelService.findChannelsByUserId(userId, joined);
+  }
+
   @Query(() => Channel, { name: 'getChannelById' })
   async getChannelById(
     @Args('channelId', { type: () => Int }) channelId: number,
