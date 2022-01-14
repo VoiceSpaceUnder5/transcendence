@@ -125,6 +125,7 @@ type Mutation {
   createChannel(createChannelInput: CreateChannelInput!, userId: Int!): ChatChannel!
   updateChannel(updateChannelInput: CreateChannelInput!, channelId: Int!): ChatChannel!
   joinChannel(joinChannelInput: JoinChannelInput!): Boolean!
+  leaveChannel(leaveChannelInput: LeaveChannelInput!): Boolean!
   createCode(createCodeInput: CreateCodeInput!): Code!
   createMessage(createMessageInput: CreateMessageInput!): Message!
   createRelation(createRelationInput: CreateRelationInput!): Relation!
@@ -167,6 +168,11 @@ input JoinChannelInput {
   userId: Int!
   channelId: Int!
   password: String!
+}
+
+input LeaveChannelInput {
+  userId: Int!
+  chatChannelId: Int!
 }
 
 input CreateCodeInput {
