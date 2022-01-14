@@ -6,10 +6,11 @@ import {Admin, Resource} from 'react-admin';
 import {UserEdit, UserList} from './entity/users';
 import {CodeList} from './entity/code';
 import {MessageList} from './entity/messages';
+import authProvider from './login/authProvider';
+import MyLoginPage from './login/MyLoginPage';
 
-export default function AdminPage(): JSX.Element {
+export default function App(): JSX.Element {
   const [dataProvider, setDataProvider] = useState<null | DataProvider>(null);
-
   useEffect(() => {
     buildGraphQLProvider({
       buildQuery,
@@ -19,13 +20,17 @@ export default function AdminPage(): JSX.Element {
     }).then(dataProvider => setDataProvider(dataProvider));
   }, []);
 
-  return dataProvider ? (
-    <Admin dataProvider={dataProvider}>
-      <Resource name="User" list={UserList} edit={UserEdit} />
-      <Resource name="Code" list={CodeList} />
-      <Resource name="Message" list={MessageList} />
-    </Admin>
-  ) : (
-    <div>Loading</div>
-  );
+  if (dataProvider) {
+    return (
+      <Admin
+        loginPage={MyLoginPage}
+        dataProvider={dataProvider}
+        authProvider={authProvider}
+      >
+        <Resource name="User" list={UserList} edit={UserEdit} />
+        <Resource name="Code" list={CodeList} />
+        <Resource name="Message" list={MessageList} />
+      </Admin>
+    );
+  } else return <div>Loading</div>;
 }
