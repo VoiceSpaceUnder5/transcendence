@@ -5,7 +5,7 @@ import ChannelOptionsList from './ChannelOptionsList';
 
 const GET_CHANNEL_USERS = gql`
   query getChannelUsersByChannelId($channelId: Int!) {
-    getChatChannelUsersByChannelId(channelId: $channelId) {
+    getChannelUsersByChannelId(channelId: $channelId) {
       userId
       roleId
     }
@@ -45,7 +45,7 @@ export default React.memo(function ChannelOption({
   }, []);
   if (loading) return <>로딩</>;
   if (error) return <>에러</>;
-  const users: User[] = data.getChatChannelUsersByChannelId;
+  const users: User[] = data.getChannelUsersByChannelId;
   return (
     <>
       <Button bg="dark" onClick={onClick} ani={false}>

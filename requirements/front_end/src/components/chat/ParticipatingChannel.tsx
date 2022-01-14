@@ -13,7 +13,7 @@ const GET_PARTICIPATING_CHANNEL = gql`
       }
       id
       name
-      chatChannelUsers {
+      channelUsers {
         userId
         role {
           id
@@ -23,13 +23,13 @@ const GET_PARTICIPATING_CHANNEL = gql`
   }
 `;
 
-interface ChatChannel {
+interface Channel {
   id: number;
   name: string;
   type: {
     id: string;
   };
-  chatChannelUsers: {
+  channelUsers: {
     userId: number;
     role: {
       id: string;
@@ -52,23 +52,22 @@ export default function ParticipatingChannel(): JSX.Element {
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  // console.log(data);
-  const channelList = (data.getParticipatingChannel as ChatChannel[]).map(
-    chatChannel => {
+  const channelList = (data.getParticipatingChannel as Channel[]).map(
+    channel => {
       return {
-        id: chatChannel.id,
-        name: chatChannel.name,
-        number: chatChannel.chatChannelUsers.length,
-        role: chatChannel.chatChannelUsers.filter(
-          user => user.userId === meId,
-        )[0].role.id,
-        isPrivate: chatChannel.type.id === 'CT1' ? true : false,
+        id: channel.id,
+        name: channel.name,
+        number: channel.channelUsers.length,
+        role: channel.channelUsers.filter(user => user.userId === meId)[0].role
+          .id,
+        isPrivate: channel.type.id === 'CT1' ? true : false,
       };
     },
   );
   if (channelList.length === 0) return <>참여 중인 채널이 없습니다.</>;
-  const afterParticipatingChannel = (channelId: number, role: string) =>
-    dispatch(afterJoin(channelId, role));
+  const afterParticipatingChannel = (channelId: number) => {
+    dispatch(afterJoin(channelId));
+  };
   return (
     <MenuList>
       {channelList.map(channel => (
@@ -79,7 +78,7 @@ export default function ParticipatingChannel(): JSX.Element {
           number={channel.number}
           isPrivate={channel.isPrivate}
           role={channel.role}
-          onClick={() => afterParticipatingChannel(channel.id, channel.role)}
+          onClick={() => afterParticipatingChannel(channel.id)}
         ></Channel>
       ))}
     </MenuList>

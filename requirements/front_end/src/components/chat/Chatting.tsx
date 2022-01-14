@@ -30,7 +30,7 @@ export const GET_CHANNEL_DATA = gql`
 const CREATE_MESSAGE = gql`
   mutation createMessage($createMessageInput: CreateMessageInput!) {
     createMessage(createMessageInput: $createMessageInput) {
-      chatChannelId
+      channelId
       user {
         id
         name
@@ -64,7 +64,7 @@ export default function Chatting(): JSX.Element {
     variables: {
       createMessageInput: {
         userId: meId,
-        chatChannelId: channelId,
+        channelId: channelId,
         textMessage: message,
       },
     },
@@ -77,7 +77,7 @@ export default function Chatting(): JSX.Element {
         .then(data => {
           const sendedMessage = data.data.createMessage;
           socket.emit('sendToServer', {
-            channelId: sendedMessage.chatChannelId,
+            channelId: sendedMessage.channelId,
             userId: sendedMessage.user.id,
             name: sendedMessage.user.name,
             message: sendedMessage.textMessage,
