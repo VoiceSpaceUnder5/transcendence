@@ -102,6 +102,7 @@ type Query {
   getUsersByIds(ids: [Int!]!): [User!]!
   getUsersByName(user_name: String!): [User!]!
   getChannels: [Channel]!
+  getChannelsByUserId(joined: Boolean!, userId: Int!): [Channel]!
   getChannelById(channelId: Int!): Channel!
   getParticipatingChannel(userId: Int!): [Channel]!
   getNotParticipatingChannel(userId: Int!): [Channel!]!
