@@ -13,20 +13,20 @@ const GET_SEARCH_CHANNEL = gql`
       }
       id
       name
-      chatChannelUsers {
+      channelUsers {
         userId
       }
     }
   }
 `;
 
-interface ChatChannel {
+interface Channel {
   id: number;
   name: string;
   type: {
     id: string;
   };
-  chatChannelUsers: {
+  channelUsers: {
     userId: number;
   }[];
 }
@@ -48,13 +48,13 @@ export default function SearchChannel(): JSX.Element {
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  const channelList = (data.getNotParticipatingChannel as ChatChannel[]).map(
-    chatChannel => {
+  const channelList = (data.getNotParticipatingChannel as Channel[]).map(
+    channel => {
       return {
-        id: chatChannel.id,
-        name: chatChannel.name,
-        number: chatChannel.chatChannelUsers.length,
-        isPrivate: chatChannel.type.id === 'CT1' ? true : false,
+        id: channel.id,
+        name: channel.name,
+        number: channel.channelUsers.length,
+        isPrivate: channel.type.id === 'CT1' ? true : false,
       };
     },
   );

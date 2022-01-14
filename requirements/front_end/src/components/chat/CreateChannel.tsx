@@ -18,7 +18,7 @@ const Form = styled.form`
 `;
 
 const CREATE_CHANNEL = gql`
-  mutation CreateChatChannel(
+  mutation CreateChannel(
     $createChannelInput: CreateChannelInput!
     $userId: Int!
   ) {

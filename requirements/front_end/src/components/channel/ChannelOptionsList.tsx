@@ -64,7 +64,7 @@ export default function ChannelOptionsList({
       variables: {
         input: {
           userId: meId,
-          chatChannelId: channelId,
+          channelId: channelId,
         },
       },
     }).then(() => {
