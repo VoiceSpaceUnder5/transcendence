@@ -22,7 +22,6 @@ interface ChannelUsersProps {
   channelId: number;
   channelName: string;
   channelPasswd: string;
-  meRole: string;
 }
 
 export default React.memo(function ChannelOption({
@@ -30,7 +29,6 @@ export default React.memo(function ChannelOption({
   channelId,
   channelName,
   channelPasswd,
-  meRole,
 }: ChannelUsersProps): JSX.Element {
   const {loading, data, error, refetch} = useQuery(GET_CHANNEL_USERS, {
     variables: {
@@ -46,6 +44,9 @@ export default React.memo(function ChannelOption({
   if (loading) return <>로딩</>;
   if (error) return <>에러</>;
   const users: User[] = data.getChannelUsersByChannelId;
+  const userIds = users.map(user => user.userId);
+  const userRoles = users.map(user => user.roleId);
+  const meRole = userRoles[userIds.indexOf(meId)];
   return (
     <>
       <Button bg="dark" onClick={onClick} ani={false}>
@@ -55,8 +56,8 @@ export default React.memo(function ChannelOption({
         <>
           <ChannelOptionsList
             meId={meId}
-            userIds={users.map(user => user.userId)}
-            userRoles={users.map(user => user.roleId)}
+            userIds={userIds}
+            userRoles={userRoles}
             channelId={channelId}
             channelName={channelName}
             channelPasswd={channelPasswd}
