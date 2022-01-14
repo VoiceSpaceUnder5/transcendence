@@ -101,7 +101,7 @@ type Query {
   getUserById(id: Int!): User!
   getUsersByIds(ids: [Int!]!): [User!]!
   getUsersByName(user_name: String!): [User!]!
-  getchannels: [Channel]!
+  getChannels: [Channel]!
   getChannelById(channelId: Int!): Channel!
   getParticipatingChannel(userId: Int!): [Channel]!
   getNotParticipatingChannel(userId: Int!): [Channel!]!
@@ -116,7 +116,7 @@ type Query {
 }
 
 type Mutation {
-  updatechannelUser(updateChannelUserInput: CreateChannelUserInput!): ChannelUser!
+  updateChannelUser(updateChannelUserInput: CreateChannelUserInput!): ChannelUser!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!
   updateUserAuthority(authorityId: String!, id: Int!): User!

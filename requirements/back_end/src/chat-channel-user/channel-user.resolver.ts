@@ -37,7 +37,7 @@ export class ChannelUserResolver {
     return this.channelUserService.findByChannelId(channelId);
   }
 
-  // @Mutation(() => ChannelUser, { name: 'createchannelUser' })
+  // @Mutation(() => ChannelUser, { name: 'createChannelUser' })
   // async createChannelUser(
   //   @Args('createchannelUserInput')
   //   createchannelUserInput: CreatechannelUserInput,
@@ -47,7 +47,7 @@ export class ChannelUserResolver {
   //   return await this.channelUserService.create(createchannelUserInput);
   // }
 
-  @Mutation(() => ChannelUser, { name: 'updatechannelUser' })
+  @Mutation(() => ChannelUser, { name: 'updateChannelUser' })
   async updateChannelUser(
     @Args('updateChannelUserInput')
     updateChannelUserInput: CreateChannelUserInput,
@@ -60,7 +60,7 @@ export class ChannelUserResolver {
   //   @Args('deletechannelUserInput')
   //   deletechannelUser: DeletechannelUserInput,
   // ) {
-  //   return await this.channelUserService.delete(deletechannelUser);
+  //   return await this.channelUserService.delete(deleteChannelUser);
   // }
 
   @ResolveField(() => Code)

@@ -26,7 +26,7 @@ export class ChannelResolver {
     private readonly messageService: MessageService,
   ) {}
 
-  @Query(() => [Channel], { name: 'getchannels', nullable: 'items' })
+  @Query(() => [Channel], { name: 'getChannels', nullable: 'items' })
   async getChannels() {
     return this.channelService.findChannels();
   }
