@@ -64,6 +64,7 @@ export class GameScene extends Phaser.Scene {
     this.socket.emit('startGame', {
       isHard: GameData.isHard,
       isLadder: GameData.isLadder,
+      userId: GameData.id,
     });
 
     // 버튼 세팅
@@ -128,7 +129,7 @@ export class GameScene extends Phaser.Scene {
       this.ball?.setVelocityX(payload.velocity.x);
       this.ball?.setVelocityY(payload.velocity.y);
     });
-    this.socket.on('win', ({isWinnerLeft}) => {
+    this.socket.on('done', ({isWinnerLeft}: {isWinnerLeft: boolean}) => {
       everyBodyStop();
       this.isStart = false;
 
@@ -136,6 +137,14 @@ export class GameScene extends Phaser.Scene {
       else console.log('오른쪽이 이겼지렁~~~!');
       this.restartButton?.setVisible(true);
       this.restartButton?.setInteractive();
+    });
+    this.socket.on('startAgain', ({isWinnerLeft}: {isWinnerLeft: boolean}) => {
+      everyBodyStop();
+      this.isStart = false;
+
+      if (isWinnerLeft) console.log('왼쪽이 이겼지렁~~~!');
+      else console.log('오른쪽이 이겼지렁~~~!');
+      this.socket?.emit('restart', {roomId: this.roomId});
     });
     this.socket.on('forceQuit', () => {
       this.add.text(315, 80, '상대방이 게임을 종료하였습니다.');

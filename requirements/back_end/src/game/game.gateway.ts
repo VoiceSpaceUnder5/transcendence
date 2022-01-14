@@ -8,11 +8,14 @@ import {
   OnGatewayConnection,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { CreateRecordInput } from 'src/record/dto/create-record.input';
+import { RecordService } from 'src/record/record.service';
 
 interface UserInfo {
   clientId: number;
   gameStatus: GameStatus;
   roomId: string;
+  userId: number;
 }
 
 interface LosePayload {
@@ -24,10 +27,13 @@ interface LosePayload {
 interface Room {
   leftUser: UserInfo | null;
   rightUser: UserInfo | null;
+  leftUserScore: number;
+  rightUserScore: number;
   leftUserReady: boolean;
   rightUserReady: boolean;
   roomId: string;
   isHard: boolean;
+  isLadder: boolean;
 }
 
 enum GameStatus {
@@ -45,14 +51,10 @@ const users: UserInfo[] = [];
   },
 })
 export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
+  constructor(private readonly recordService: RecordService) {}
   // 유저 초기화
   handleConnection(client: any, ...args: any[]) {
     if (!client) throw new Error('Method not implemented.');
-    users.push({
-      clientId: client.id,
-      gameStatus: GameStatus.waiting,
-      roomId: '',
-    });
   }
   // 나가면 유저 지우기, 룸 지우기.
   handleDisconnect(client: any) {
@@ -88,7 +90,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   @SubscribeMessage('startGame')
   gameStart(
     client: any,
-    { isHard, isLadder }: { isHard: boolean; isLadder: boolean },
+    {
+      isHard,
+      isLadder,
+      userId,
+    }: { isHard: boolean; isLadder: boolean; userId: number },
   ): any {
     // roomId가 있는지 확인하고 있으면 그 roomId로 같이 조인한다.
     let isEmptyRoom = true;
@@ -110,6 +116,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         roomId: roomId,
         clientId: client.id,
         gameStatus: GameStatus.waiting,
+        userId: userId,
       };
       // rooms.push(userInfo);
       const room: Room = {
@@ -117,8 +124,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         rightUser: null,
         leftUserReady: false,
         rightUserReady: false,
+        leftUserScore: 0,
+        rightUserScore: 0,
         roomId: roomId,
         isHard: isHard,
+        isLadder: isLadder,
       };
       rooms.push(room);
       users.push(userInfo);
@@ -134,6 +144,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         roomId: rooms[roomArrIndex].roomId,
         clientId: client.id,
         gameStatus: GameStatus.waiting,
+        userId: userId,
       };
       rooms[roomArrIndex].rightUser = userInfo;
       rooms[roomArrIndex].leftUser.gameStatus = GameStatus.start;
@@ -198,7 +209,58 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   // 짐.
   @SubscribeMessage('lose')
   updateRecord(client: any, payload: LosePayload): any {
-    // 내 데이터 업데이트
+    // 내 데이터 업데이트하지 말고 점수만.
+    // 무조거언 5판.
+    let isWinnerLeft: boolean;
+    rooms.forEach((room) => {
+      if (room.roomId === payload.roomId) {
+        client.id === room.leftUser.clientId
+          ? room.rightUserScore++ || (isWinnerLeft = false)
+          : room.leftUserScore++ || (isWinnerLeft = true);
+        isWinnerLeft = client.id === room.rightUser.clientId;
+        console.log(`left: `, room.leftUserScore);
+        console.log('right: ', room.rightUserScore);
+        if (room.rightUserScore >= 5 || room.leftUserScore >= 5) {
+          // 데이터 업데이트 후 스코어 초기화
+
+          const record = new CreateRecordInput();
+          this.server
+            .to(room.roomId)
+            .emit('done', { isWinnerLeft: isWinnerLeft });
+          record.leftUserId = room.leftUser.userId;
+          record.rightUserId = room.rightUser.userId;
+          record.modeId = room.isHard ? 'BM1' : 'BM0';
+          record.typeId = room.isLadder ? 'BT1' : 'BT0';
+          record.resultId = client.id === isWinnerLeft ? 'BR1' : 'BR0';
+          room.leftUserScore = 0;
+          room.rightUserScore = 0;
+
+          // 3초 있다가 게임이 시작되게 하고 싶었는데 그건 settimeout을 어떻게 쓰는지 보고 추가하자.
+          // this.server.to(room.roomId).emit('wait3');
+
+          // @setTimeout('timeout', 1000)
+
+          // this.server.to(room.roomId).emit('wait2');
+
+          // @setTimeout('timeout', 2000)
+          // this.server.to(room.roomId).emit('wait1');
+
+          // @setTimeout('timeout', 3000)
+          // this.server.to(room.roomId).emit('restartGame');
+        } else {
+          // 게임 안끝남.
+          this.server
+            .to(room.roomId)
+            .emit('startAgain', { isWinnerLeft: isWinnerLeft });
+        }
+
+        return;
+      }
+    });
+
+    // room.recordInput.leftUserId = userId;
+    // room.recordInput.modeId = isHard ? 'BM1' : 'BM0';
+    // room.recordInput.typeId = isLadder ? 'BT1' : 'BT0';
     this.server
       .to(payload.roomId)
       .emit('win', { isWinnerLeft: !payload.isLeft });
