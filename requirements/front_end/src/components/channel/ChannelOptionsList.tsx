@@ -17,9 +17,9 @@ const GET_USERS_BY_IDS = gql`
   }
 `;
 
-const EXIT_CHANNEL = gql`
-  mutation exitChannel($input: DeleteChatChannelUserInput!) {
-    deleteChatChannelUser(deleteChatChannelUserInput: $input)
+const LEAVE_CHANNEL = gql`
+  mutation leaveChannel($input: LeaveChannelInput!) {
+    leaveChannel(leaveChannelInput: $input)
   }
 `;
 
@@ -55,9 +55,9 @@ export default function ChannelOptionsList({
       userIds,
     },
   });
-  const [exitChannel] = useMutation(EXIT_CHANNEL);
-  const onExit = () => {
-    exitChannel({
+  const [leaveChannel] = useMutation(LEAVE_CHANNEL);
+  const onLeave = () => {
+    leaveChannel({
       variables: {
         input: {
           userId: meId,
@@ -106,7 +106,7 @@ export default function ChannelOptionsList({
                   설정
                 </Button>
               )}
-              <Button bg="grey" ani={false} onClick={onExit}>
+              <Button bg="grey" ani={false} onClick={onLeave}>
                 나가기
               </Button>
             </div>

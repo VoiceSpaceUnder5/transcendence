@@ -52,7 +52,6 @@ export default function ParticipatingChannel(): JSX.Element {
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  // console.log(data);
   const channelList = (data.getParticipatingChannel as ChatChannel[]).map(
     chatChannel => {
       return {
