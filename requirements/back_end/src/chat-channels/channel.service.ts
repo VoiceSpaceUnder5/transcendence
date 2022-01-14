@@ -1,54 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ChatChannelUserService } from 'src/chat-channel-user/chat-channel-user.service';
+import { ChannelUserService } from 'src/chat-channel-user/channel-user.service';
 import { CodeService } from 'src/code/code.service';
 import { isValidPassword, transformPwToHash } from 'src/utils/hashing';
 import { Repository } from 'typeorm';
-import { ChatChannel } from './chat-channel.entity';
+import { Channel } from './channel.entity';
 import { CreateChannelInput } from './inputs/create-channel.input';
 import { JoinChannelInput } from './inputs/join-channel.input';
 
 @Injectable()
-export class ChatChannelsService {
+export class ChannelService {
   constructor(
-    @InjectRepository(ChatChannel)
-    private chatChannelRepository: Repository<ChatChannel>,
+    @InjectRepository(Channel)
+    private channelRepository: Repository<Channel>,
     private codeService: CodeService,
-    private chatChannelUserService: ChatChannelUserService,
+    private channelUserService: ChannelUserService,
   ) {}
 
-  findChannels(): Promise<ChatChannel[]> {
-    return this.chatChannelRepository.find();
+  findChannels(): Promise<Channel[]> {
+    return this.channelRepository.find();
   }
 
-  findChannelById(channelId: number): Promise<ChatChannel> {
-    return this.chatChannelRepository.findOneOrFail(channelId);
+  findChannelById(channelId: number): Promise<Channel> {
+    return this.channelRepository.findOneOrFail(channelId);
   }
 
-  findChannelsByIds(channelsId: number[]): Promise<ChatChannel[]> {
-    return this.chatChannelRepository.findByIds(channelsId);
+  findChannelsByIds(channelsId: number[]): Promise<Channel[]> {
+    return this.channelRepository.findByIds(channelsId);
   }
 
   async createChannel(
     createChannelInput: CreateChannelInput,
-  ): Promise<ChatChannel> {
+  ): Promise<Channel> {
     if (createChannelInput.password)
       createChannelInput.password = await transformPwToHash(
         createChannelInput.password,
       );
-    return await this.chatChannelRepository.save(createChannelInput);
+    return await this.channelRepository.save(createChannelInput);
   }
 
   async updateChannel(
     channelId: number,
     updateChannelInput: CreateChannelInput,
-  ): Promise<ChatChannel> {
+  ): Promise<Channel> {
     if (updateChannelInput.password)
       updateChannelInput.password = await transformPwToHash(
         updateChannelInput.password,
       );
-    await this.chatChannelRepository.update(channelId, updateChannelInput);
-    return await this.chatChannelRepository.findOneOrFail(channelId);
+    await this.channelRepository.update(channelId, updateChannelInput);
+    return await this.channelRepository.findOneOrFail(channelId);
   }
 
   async joinChannel(joinChannelInput: JoinChannelInput): Promise<boolean> {
@@ -61,12 +61,12 @@ export class ChatChannelsService {
     ) {
       return false;
     }
-    const newChatChannelUserInput = {
+    const newchannelUserInput = {
       userId: userId,
-      chatChannelId: channelId,
+      channelId: channelId,
       roleId: 'UR2',
     }; // 'UR2' = 참여자
-    await this.chatChannelUserService.create(newChatChannelUserInput);
+    await this.channelUserService.create(newchannelUserInput);
     return true;
   }
 

@@ -9,9 +9,8 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
-import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
-import { ChatChannelUserService } from 'src/chat-channel-user/chat-channel-user.service';
-import { Record } from 'src/record/record.entity';
+import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
+import { ChannelUserService } from 'src/chat-channel-user/channel-user.service';
 import { RecordService } from 'src/record/record.service';
 import { Relation } from 'src/relation/relation.entity';
 import { RelationService } from 'src/relation/relation.service';
@@ -19,14 +18,14 @@ import { Code } from '../code/code.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.update';
 import { User } from './user.entity';
-import { GetUser } from './users.decorator';
-import { UsersService } from './users.service';
+import { GetUser } from './user.decorator';
+import { UsersService } from './user.service';
 
 @Resolver(() => User)
-export class UsersResolver {
+export class UserResolver {
   constructor(
     private readonly usersService: UsersService,
-    private readonly chatChannelUserService: ChatChannelUserService,
+    private readonly channelUserService: ChannelUserService,
     private readonly relationService: RelationService,
     private readonly recordService: RecordService,
   ) {}
@@ -87,9 +86,9 @@ export class UsersResolver {
     return this.usersService.getAuthority(user.authorityId);
   }
 
-  @ResolveField(() => [ChatChannelUser])
-  chatChannelUsers(@Parent() user: User): Promise<ChatChannelUser[]> {
-    return this.chatChannelUserService.findByUserId(user.id);
+  @ResolveField(() => [ChannelUser])
+  channelUsers(@Parent() user: User): Promise<ChannelUser[]> {
+    return this.channelUserService.findByUserId(user.id);
   }
 
   @ResolveField(() => [Relation])

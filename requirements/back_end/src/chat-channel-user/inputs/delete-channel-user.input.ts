@@ -1,9 +1,9 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class DeleteChatChannelUserInput {
+export class DeleteChannelUserInput {
   @Field((type) => Int)
-  chatChannelId: number;
+  channelId: number;
 
   @Field((type) => Int)
   userId: number;
