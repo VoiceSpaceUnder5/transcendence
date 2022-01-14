@@ -59,11 +59,11 @@ export class GameScene extends Phaser.Scene {
 
   create(): void {
     // 소켓 연결 부분
-    // this.socket = io('http://api.ts.io:30000');
     this.socket = GameData.socket;
     this.socket.emit('startGame', {
       isHard: GameData.isHard,
       isLadder: GameData.isLadder,
+      userId: GameData.id,
     });
 
     // 버튼 세팅
@@ -93,21 +93,6 @@ export class GameScene extends Phaser.Scene {
       this.ball?.setVelocity(0, 0);
     };
 
-    // // 시작 세팅
-    // const reStart = (ballVel: {x: number; y: number}) => {
-    //   if (this.isLeft) {
-    //     this.myPaddle?.enableBody(true, 100, 400, true, true);
-    //     this.enemyPaddle?.enableBody(true, 700, 400, true, true);
-    //     this.myWall?.enableBody(true, 20, 300, true, true);
-    //     this.enemyWall?.enableBody(true, 780, 300, true, true);
-    //   } else {
-    //     this.myPaddle?.enableBody(true, 700, 400, true, true);
-    //     this.enemyPaddle?.enableBody(true, 100, 400, true, true);
-    //     this.myWall?.enableBody(true, 780, 300, true, true);
-    //     this.enemyWall?.enableBody(true, 20, 300, true, true);
-    //   }
-    // };
-
     this.socket.on('allIn', () => {
       this.startButton?.setVisible(true);
       this.startButton?.setInteractive();
@@ -128,7 +113,7 @@ export class GameScene extends Phaser.Scene {
       this.ball?.setVelocityX(payload.velocity.x);
       this.ball?.setVelocityY(payload.velocity.y);
     });
-    this.socket.on('win', ({isWinnerLeft}) => {
+    this.socket.on('done', ({isWinnerLeft}: {isWinnerLeft: boolean}) => {
       everyBodyStop();
       this.isStart = false;
 
@@ -136,6 +121,14 @@ export class GameScene extends Phaser.Scene {
       else console.log('오른쪽이 이겼지렁~~~!');
       this.restartButton?.setVisible(true);
       this.restartButton?.setInteractive();
+    });
+    this.socket.on('startAgain', ({isWinnerLeft}: {isWinnerLeft: boolean}) => {
+      everyBodyStop();
+      this.isStart = false;
+
+      if (isWinnerLeft) console.log('왼쪽이 이겼지렁~~~!');
+      else console.log('오른쪽이 이겼지렁~~~!');
+      this.socket?.emit('restart', {roomId: this.roomId});
     });
     this.socket.on('forceQuit', () => {
       this.add.text(315, 80, '상대방이 게임을 종료하였습니다.');
@@ -158,13 +151,8 @@ export class GameScene extends Phaser.Scene {
       this.ball?.setPosition(200, 150);
       this.ball?.setVelocity(500, 500);
     });
-    // this.socket.on('exitedGame', () => {
-    //   this.socket?.emit('exit', {roomId: this.roomId});
-    //   this.add.text(315, 80, '상대방이 종료하였습니다.');
-    //   everyBodyStop();
-    //   this.socket?.disconnect();
-    // });
-    // 여기가 진짜 시작하는 부분. 처음 세팅이라고 생각하자.
+
+    // 초기 세팅
     this.socket.on('matchGame', () => {
       // 내 paddle이 왼쪽인지 오른쪽인지 판단하고 오브젝트를 세팅하는 부분.
       if (this.isLeft) {
@@ -236,8 +224,8 @@ export class GameScene extends Phaser.Scene {
           roomId: GameData.roomId,
           isLeft: this.isLeft,
         });
-        this.restartButton?.setVisible(true);
-        this.restartButton?.setInteractive();
+        // this.restartButton?.setVisible(true);
+        // this.restartButton?.setInteractive();
       };
 
       // 충돌시 콜백 부르기.

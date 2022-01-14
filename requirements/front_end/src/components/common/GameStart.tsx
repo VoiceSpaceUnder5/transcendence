@@ -32,6 +32,7 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   };
   const onLadderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     void e;
+    if (isHard) setIsHard(!isHard);
     setIsLadder(!isLadder);
   };
   return (
