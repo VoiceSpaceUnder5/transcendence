@@ -18,6 +18,7 @@ export default function useRelation(
       meId: meId,
       userId: userId,
     },
+    fetchPolicy: 'no-cache',
   });
   const [typeId, setTypeId] = useState<string | undefined>(undefined);
 

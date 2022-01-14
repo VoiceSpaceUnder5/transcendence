@@ -15,7 +15,6 @@ export default function ChannelUserProfile({
   const [visible, setVisible] = useState(false);
   const typeId = useRelation(meId, userId);
   const onClick = () => setVisible(!visible);
-  if (!typeId) return <>로딩...</>;
   return (
     <>
       <Button bg="grey" onClick={onClick}>

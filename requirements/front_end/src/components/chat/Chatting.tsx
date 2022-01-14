@@ -43,9 +43,8 @@ const CREATE_MESSAGE = gql`
 export default function Chatting(): JSX.Element {
   const [meId] = useState(Number(localStorage.getItem('meId')));
   const [meName] = useState(localStorage.getItem('meName'));
-  const {channelId, role} = useSelector((state: RootState) => ({
+  const {channelId} = useSelector((state: RootState) => ({
     channelId: state.chatting.channelId,
-    role: state.chatting.role,
   }));
   const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
   const [messages, setMessages] = useState<
@@ -147,7 +146,6 @@ export default function Chatting(): JSX.Element {
           channelId={channelId as number}
           channelName={data.getChannelById.name as string}
           channelPasswd={data.getChannelById.password as string}
-          meRole={role as string}
         />
       </ChattingHeadStyles>
       <MessageBox meId={meId} messages={messages} />
