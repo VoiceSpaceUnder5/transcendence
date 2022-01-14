@@ -22,7 +22,7 @@ const GET_USER_BY_ID = gql`
 `;
 
 interface UserProfileProps {
-  typeId: string;
+  typeId?: string;
   userId: number;
   meId: number;
   onBackClick: () => void;
