@@ -209,8 +209,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   // 짐.
   @SubscribeMessage('lose')
   updateRecord(client: any, payload: LosePayload): any {
-    // 내 데이터 업데이트하지 말고 점수만.
-    // 무조거언 5판.
     let isWinnerLeft: boolean;
     rooms.forEach((room) => {
       if (room.roomId === payload.roomId) {
@@ -234,6 +232,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
           record.resultId = client.id === isWinnerLeft ? 'BR1' : 'BR0';
           room.leftUserScore = 0;
           room.rightUserScore = 0;
+          this.recordService.createRecord(record);
 
           // 3초 있다가 게임이 시작되게 하고 싶었는데 그건 settimeout을 어떻게 쓰는지 보고 추가하자.
           // this.server.to(room.roomId).emit('wait3');
