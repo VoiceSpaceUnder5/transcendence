@@ -12,7 +12,7 @@ const GET_CHANNEL_USERS = gql`
   }
 `;
 
-interface User {
+export interface UserRole {
   userId: number;
   roleId: string;
 }
@@ -43,10 +43,9 @@ export default React.memo(function ChannelOption({
   }, []);
   if (loading) return <>로딩</>;
   if (error) return <>에러</>;
-  const users: User[] = data.getChannelUsersByChannelId;
-  const userIds = users.map(user => user.userId);
-  const userRoles = users.map(user => user.roleId);
-  const meRole = userRoles[userIds.indexOf(meId)];
+  const userRoles: UserRole[] = data.getChannelUsersByChannelId;
+  const meRole = userRoles.find(userRole => userRole.userId === meId)
+    ?.roleId as string;
   return (
     <>
       <Button bg="dark" onClick={onClick} ani={false}>
@@ -56,7 +55,6 @@ export default React.memo(function ChannelOption({
         <>
           <ChannelOptionsList
             meId={meId}
-            userIds={userIds}
             userRoles={userRoles}
             channelId={channelId}
             channelName={channelName}

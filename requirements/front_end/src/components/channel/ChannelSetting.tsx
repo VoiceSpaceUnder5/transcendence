@@ -4,8 +4,8 @@ import useInput from '../../hooks/useInput';
 import {GET_CHANNEL_DATA} from '../chat/Chatting';
 import Button from '../common/Button';
 
-const UPDATE_CHANNEL = gql`
-  mutation updateChannel($input: CreateChannelInput!, $channelId: Int!) {
+const UPDATE_CHANNEL_NAME = gql`
+  mutation updateChannel($input: UpdateChannelInput!, $channelId: Int!) {
     updateChannel(updateChannelInput: $input, channelId: $channelId) {
       name
     }
@@ -22,21 +22,29 @@ interface ChannelSettingProps {
 export default function ChannelSetting({
   onBack,
   channelId,
-  channelName,
-  channelPasswd,
 }: ChannelSettingProps): JSX.Element {
   const [inputs, onChange, reset] = useInput({
-    name: channelName,
-    password: channelPasswd,
+    name: '',
+    password: '',
   });
-  const [updateChannel] = useMutation(UPDATE_CHANNEL);
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateChannel({
+  const [updateChannelName] = useMutation(UPDATE_CHANNEL_NAME);
+  const onClickNameChange = () => {
+    updateChannelName({
       variables: {
         channelId: channelId,
         input: {
           name: inputs.name,
+        },
+      },
+      refetchQueries: [GET_CHANNEL_DATA],
+    });
+    reset();
+  };
+  const onClickPasswordChange = () => {
+    updateChannelName({
+      variables: {
+        channelId: channelId,
+        input: {
           password: inputs.password,
           typeId: inputs.password === '' ? 'CT2' : 'CT1',
         },
@@ -45,17 +53,46 @@ export default function ChannelSetting({
     });
     reset();
   };
+  const preventEnterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
   return (
     <>
       <Button bg="grey" onClick={onBack}>
         {'<'}
       </Button>
-      <form onSubmit={onSubmit}>
-        <div>방 이름</div>
-        <input name="name" value={inputs.name} onChange={onChange} />
-        <div>비밀번호</div>
-        <input name="password" value={inputs.password} onChange={onChange} />
-        <Button type="submit">변경</Button>
+      <div>방 이름</div>
+      <form
+        style={{display: 'flex', width: '100%'}}
+        onSubmit={preventEnterSubmit}
+      >
+        <input
+          name="name"
+          value={inputs.name}
+          onChange={onChange}
+          style={{width: '60%'}}
+          required
+          autoComplete="off"
+          placeholder="새 채널 이름을 입력하세요"
+        />
+        <Button onClick={onClickNameChange}>변경</Button>
+      </form>
+      <div>비밀번호</div>
+      <form
+        style={{display: 'flex', width: '100%'}}
+        onSubmit={preventEnterSubmit}
+      >
+        <input
+          name="password"
+          type="password"
+          value={inputs.password}
+          onChange={onChange}
+          style={{width: '60%'}}
+          required
+          autoComplete="off"
+          placeholder="새 비밀번호를 입력하세요"
+        />
+        <Button onClick={onClickPasswordChange}>변경</Button>
       </form>
     </>
   );

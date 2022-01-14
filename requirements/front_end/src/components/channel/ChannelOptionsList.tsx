@@ -6,6 +6,7 @@ import ChannelUser from './ChannelUser';
 import {useDispatch} from 'react-redux';
 import {selectMenu} from '../../modules/chatting';
 import ChannelSetting from './ChannelSetting';
+import {UserRole} from './ChannelOption';
 
 const GET_USERS_BY_IDS = gql`
   query getUsersByIds($userIds: [Int!]!) {
@@ -34,8 +35,7 @@ interface UserInfo {
 
 interface ChannelOptionsListProps {
   meId: number;
-  userIds: number[];
-  userRoles: string[];
+  userRoles: UserRole[];
   channelId: number;
   channelName: string;
   channelPasswd: string;
@@ -44,7 +44,6 @@ interface ChannelOptionsListProps {
 
 export default function ChannelOptionsList({
   meId,
-  userIds,
   userRoles,
   channelId,
   channelName,
@@ -55,7 +54,7 @@ export default function ChannelOptionsList({
   const [isClick, setIsClick] = useState(false);
   const usersData = useQuery(GET_USERS_BY_IDS, {
     variables: {
-      userIds,
+      userIds: userRoles.map(user => user.userId),
     },
   });
   const [leaveChannel] = useMutation(LEAVE_CHANNEL);
@@ -78,6 +77,7 @@ export default function ChannelOptionsList({
   if (usersData.error) return <>에러</>;
 
   const users: UserInfo[] = usersData.data.getUsersByIds;
+  console.log(userRoles);
   return (
     <>
       <ChannelOptionsListStyles top={80}>
@@ -90,7 +90,7 @@ export default function ChannelOptionsList({
               userRole={meRole}
               name="나"
             />
-            {users.map((user, idx) => {
+            {users.map(user => {
               if (user.id !== meId)
                 return (
                   <ChannelUser
@@ -99,7 +99,10 @@ export default function ChannelOptionsList({
                     key={user.id}
                     name={user.name}
                     userId={user.id}
-                    userRole={userRoles[idx]}
+                    userRole={
+                      userRoles.find(userRole => userRole.userId)
+                        ?.roleId as string
+                    }
                   />
                 );
             })}
