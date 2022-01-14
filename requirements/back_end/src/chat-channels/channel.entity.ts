@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
+import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
 import { Code } from 'src/code/code.entity';
 import { DefaultEntity } from 'src/default.entity';
 import { Message } from 'src/message/message.entity';
@@ -13,7 +13,7 @@ import {
 
 @ObjectType({ description: 'Chatting Channel Data' })
 @Entity()
-export class ChatChannel extends DefaultEntity {
+export class Channel extends DefaultEntity {
   @Field((type) => Int)
   @PrimaryGeneratedColumn()
   id: number;
@@ -34,14 +34,11 @@ export class ChatChannel extends DefaultEntity {
   @Column({ type: 'varchar', length: 10 })
   typeId: string;
 
-  @Field(() => [ChatChannelUser], { nullable: 'items' })
-  @OneToMany(
-    () => ChatChannelUser,
-    (chatChannelUser) => chatChannelUser.chatChannel,
-  )
-  chatChannelUsers: ChatChannelUser[];
+  @Field(() => [ChannelUser], { nullable: 'items' })
+  @OneToMany(() => ChannelUser, (channelUser) => channelUser.channel)
+  channelUsers: ChannelUser[];
 
   @Field(() => [Message], { nullable: 'items' })
-  @OneToMany(() => Message, (message) => message.chatChannel)
+  @OneToMany(() => Message, (message) => message.channel)
   messages: Message[];
 }

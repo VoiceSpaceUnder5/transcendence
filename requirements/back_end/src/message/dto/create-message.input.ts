@@ -3,7 +3,7 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType()
 export class CreateMessageInput {
   @Field()
-  chatChannelId: number;
+  channelId: number;
 
   @Field()
   userId: number;

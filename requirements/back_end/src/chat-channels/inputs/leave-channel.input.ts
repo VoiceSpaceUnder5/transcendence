@@ -6,5 +6,5 @@ export class LeaveChannelInput {
   userId: number;
 
   @Field((type) => Int)
-  chatChannelId: number;
+  channelId: number;
 }

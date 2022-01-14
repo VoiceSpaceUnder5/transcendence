@@ -7,15 +7,15 @@ import * as path from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './users/user.entity';
-import { UsersModule } from './users/users.module';
-import { ChatChannelsModule } from './chat-channels/chat-channels.module';
-import { ChatChannelUserModule } from './chat-channel-user/chat-channel-user.module';
+import { UsersModule } from './users/user.module';
+import { channelsModule } from './chat-channels/channel.module';
+import { channelUserModule } from './chat-channel-user/channel-user.module';
 import { CodeService } from './code/code.service';
 import { CodeModule } from './code/code.module';
 import { MessageModule } from './message/message.module';
 import { AuthModule } from './auth/auth.module';
-import { ChatChannel } from './chat-channels/chat-channel.entity';
-import { ChatChannelUser } from './chat-channel-user/chat-channel-user.entity';
+import { Channel } from './chat-channels/channel.entity';
+import { ChannelUser } from './chat-channel-user/channel-user.entity';
 import { Code } from './code/code.entity';
 import { Message } from './message/message.entity';
 import { ChatModule } from './chat/chat.module';
@@ -24,6 +24,7 @@ import { ImageModule } from './image/image.module';
 import { GameModule } from './game/game.module';
 import { RecordModule } from './record/record.module';
 import { Record } from './record/record.entity';
+import { Relation } from './relation/relation.entity';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { Record } from './record/record.entity';
       username: 'kilee',
       password: 'kilee',
       database: 'test',
-      entities: [User, ChatChannel, ChatChannelUser, Code, Message, Record],
+      entities: [User, Channel, ChannelUser, Code, Message, Record, Relation],
       autoLoadEntities: true,
       synchronize: true,
       // logging: true, // 타입 Orm 이 콘솔에 로그를 찍습니다.
@@ -47,9 +48,9 @@ import { Record } from './record/record.entity';
         credentials: true,
       },
     }),
-    ChatChannelUserModule,
+    channelUserModule,
     UsersModule,
-    ChatChannelsModule,
+    channelsModule,
     CodeModule,
     MessageModule,
     AuthModule,

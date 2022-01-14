@@ -22,12 +22,12 @@ type Message {
   id: Int!
   user: User!
   userId: Int!
-  chatChannelId: Int!
+  channelId: Int!
   textMessage: String!
 }
 
 """Chatting Channel Data"""
-type ChatChannel {
+type Channel {
   created_at: DateTime!
   updated_at: DateTime!
   id: Int!
@@ -35,15 +35,15 @@ type ChatChannel {
   password: String
   type: Code!
   typeId: String!
-  chatChannelUsers: [ChatChannelUser]!
+  channelUsers: [ChannelUser]!
   messages: [Message]!
 }
 
-type ChatChannelUser {
+type ChannelUser {
   created_at: DateTime!
   updated_at: DateTime!
   userId: Int!
-  chatChannelId: Int!
+  channelId: Int!
   roleId: String!
   role: Code!
 }
@@ -87,24 +87,24 @@ type User {
   description: String
   authority: Code!
   authorityId: String!
-  chatChannelUsers: [ChatChannelUser!]!
+  channelUsers: [ChannelUser!]!
   messages: [Message!]!
   relations(typeId: String!): [Relation]!
   records: [Record]!
 }
 
 type Query {
-  getChatChannelUsers: [ChatChannelUser]!
-  getChatChannelUsersByChannelId(channelId: Int!): [ChatChannelUser!]!
+  getChannelUsers: [ChannelUser]!
+  getChannelUsersByChannelId(channelId: Int!): [ChannelUser!]!
   getMe: User!
   getUsers: [User]!
   getUserById(id: Int!): User!
   getUsersByIds(ids: [Int!]!): [User!]!
   getUsersByName(user_name: String!): [User!]!
-  getChatChannels: [ChatChannel]!
-  getChannelById(channelId: Int!): ChatChannel!
-  getParticipatingChannel(userId: Int!): [ChatChannel]!
-  getNotParticipatingChannel(userId: Int!): [ChatChannel!]!
+  getchannels: [Channel]!
+  getChannelById(channelId: Int!): Channel!
+  getParticipatingChannel(userId: Int!): [Channel]!
+  getNotParticipatingChannel(userId: Int!): [Channel!]!
   getCodes: [Code]!
   getCodeById(id: String!): Code!
   getCodesByIds(ids: [String!]!): [Code!]!
@@ -116,14 +116,12 @@ type Query {
 }
 
 type Mutation {
-  createChatChannelUser(createChatChannelUserInput: CreateChatChannelUserInput!): ChatChannelUser!
-  updateChatChannelUser(updateChatChannelUserInput: CreateChatChannelUserInput!): ChatChannelUser!
-  deleteChatChannelUser(deleteChatChannelUserInput: DeleteChatChannelUserInput!): Boolean!
+  updatechannelUser(updateChannelUserInput: CreateChannelUserInput!): ChannelUser!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!
   updateUserAuthority(authorityId: String!, id: Int!): User!
-  createChannel(createChannelInput: CreateChannelInput!, userId: Int!): ChatChannel!
-  updateChannel(updateChannelInput: CreateChannelInput!, channelId: Int!): ChatChannel!
+  createChannel(createChannelInput: CreateChannelInput!, userId: Int!): Channel!
+  updateChannel(updateChannelInput: CreateChannelInput!, channelId: Int!): Channel!
   joinChannel(joinChannelInput: JoinChannelInput!): Boolean!
   leaveChannel(leaveChannelInput: LeaveChannelInput!): Boolean!
   createCode(createCodeInput: CreateCodeInput!): Code!
@@ -133,15 +131,10 @@ type Mutation {
   createRecord(createRecordInput: CreateRecordInput!): Record!
 }
 
-input CreateChatChannelUserInput {
-  chatChannelId: Int!
+input CreateChannelUserInput {
+  channelId: Int!
   userId: Int!
   roleId: String!
-}
-
-input DeleteChatChannelUserInput {
-  chatChannelId: Int!
-  userId: Int!
 }
 
 input CreateUserInput {
@@ -172,7 +165,7 @@ input JoinChannelInput {
 
 input LeaveChannelInput {
   userId: Int!
-  chatChannelId: Int!
+  channelId: Int!
 }
 
 input CreateCodeInput {
@@ -183,7 +176,7 @@ input CreateCodeInput {
 }
 
 input CreateMessageInput {
-  chatChannelId: Float!
+  channelId: Float!
   userId: Float!
   textMessage: String!
 }

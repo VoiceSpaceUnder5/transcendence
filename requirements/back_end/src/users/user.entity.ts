@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { IsEmail } from 'class-validator';
-import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
+import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
 import { Code } from 'src/code/code.entity';
 import { DefaultEntity } from 'src/default.entity';
 import { Message } from 'src/message/message.entity';
@@ -48,9 +48,9 @@ export class User extends DefaultEntity {
   @Column()
   authorityId: string;
 
-  @Field(() => [ChatChannelUser])
-  @OneToMany(() => ChatChannelUser, (chatChannelUser) => chatChannelUser.user)
-  chatChannelUsers: ChatChannelUser[];
+  @Field(() => [ChannelUser])
+  @OneToMany(() => ChannelUser, (channelUser) => channelUser.user)
+  channelUsers: ChannelUser[];
 
   @Field(() => [Message])
   @OneToMany(() => Message, (message) => message.user)

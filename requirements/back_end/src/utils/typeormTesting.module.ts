@@ -1,6 +1,6 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ChatChannelUser } from 'src/chat-channel-user/chat-channel-user.entity';
-import { ChatChannel } from 'src/chat-channels/chat-channel.entity';
+import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
+import { Channel } from 'src/chat-channels/channel.entity';
 import { Code } from 'src/code/code.entity';
 import { Message } from 'src/message/message.entity';
 import { User } from 'src/users/user.entity';
@@ -14,10 +14,10 @@ export const TypeOrmTestingModule = () => [
     password: 'kilee',
     database: 'test',
     // entities: ['dist/**/*.entity.js'],
-    entities: [User, ChatChannel, ChatChannelUser, Code, Message],
+    entities: [User, Channel, ChannelUser, Code, Message],
     autoLoadEntities: true,
     synchronize: true,
     // logging: true,
   }),
-  TypeOrmModule.forFeature([User, Code, ChatChannel, ChatChannelUser, Message]),
+  TypeOrmModule.forFeature([User, Code, Channel, ChannelUser, Message]),
 ];
