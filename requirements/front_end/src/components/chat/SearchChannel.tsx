@@ -37,6 +37,8 @@ export default function SearchChannel(): JSX.Element {
     variables: {
       userId: meId,
     },
+    fetchPolicy: 'no-cache',
+    nextFetchPolicy: 'no-cache',
   });
   const dispatch = useDispatch();
 

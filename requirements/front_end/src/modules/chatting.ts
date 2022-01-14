@@ -49,12 +49,9 @@ export const joinChannel = (
   return {isOpen: true, type: JOIN_CHANNEL, menuIdx: 4, channelId, isPrivate};
 };
 
-export const afterJoin = (
-  channelId: number,
-  role: string,
-): ActionReturnType => {
+export const afterJoin = (channelId: number): ActionReturnType => {
   console.log(`channel ID:${channelId}에 입장 성공!`);
-  return {isOpen: true, type: AFTER_JOIN, menuIdx: 5, channelId, role};
+  return {isOpen: true, type: AFTER_JOIN, menuIdx: 5, channelId};
 };
 
 export const updateRelation = (): ActionReturnType => ({

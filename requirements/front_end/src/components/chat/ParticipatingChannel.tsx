@@ -67,8 +67,9 @@ export default function ParticipatingChannel(): JSX.Element {
     },
   );
   if (channelList.length === 0) return <>참여 중인 채널이 없습니다.</>;
-  const afterParticipatingChannel = (channelId: number, role: string) =>
-    dispatch(afterJoin(channelId, role));
+  const afterParticipatingChannel = (channelId: number) => {
+    dispatch(afterJoin(channelId));
+  };
   return (
     <MenuList>
       {channelList.map(channel => (
@@ -79,7 +80,7 @@ export default function ParticipatingChannel(): JSX.Element {
           number={channel.number}
           isPrivate={channel.isPrivate}
           role={channel.role}
-          onClick={() => afterParticipatingChannel(channel.id, channel.role)}
+          onClick={() => afterParticipatingChannel(channel.id)}
         ></Channel>
       ))}
     </MenuList>

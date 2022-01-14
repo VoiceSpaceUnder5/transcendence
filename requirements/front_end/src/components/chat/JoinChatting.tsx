@@ -8,16 +8,9 @@ import Button from '../common/Button';
 import {RootState} from '../../modules';
 import {gql, useMutation} from '@apollo/client';
 
-// 추후에 백엔드에서 joinChatting mutation을 제공하면 그것으로 변경할 예장
 const JOIN_CHATTING = gql`
-  mutation createChatChannelUser(
-    $createChatChannelUserInput: CreateChatChannelUserInput!
-  ) {
-    createChatChannelUser(
-      createChatChannelUserInput: $createChatChannelUserInput
-    ) {
-      chatChannelId
-    }
+  mutation joinChannel($input: JoinChannelInput!) {
+    joinChannel(joinChannelInput: $input)
   }
 `;
 
@@ -32,18 +25,15 @@ export default function JoinChatting(): JSX.Element {
   const [{password}, onChange, reset] = useInput({password: ''});
   const [joinChatting] = useMutation(JOIN_CHATTING, {
     variables: {
-      createChatChannelUserInput: {
-        chatChannelId: channelId,
+      input: {
+        channelId: channelId,
         userId: meId,
-        // 참여자
-        roleId: 'UR2',
-        // 패스워드도 보내야할듯?
+        password: password,
       },
     },
   });
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // 유효성 검사는 백에서 해야할듯?
     goToChatting();
     reset();
   };
@@ -54,12 +44,14 @@ export default function JoinChatting(): JSX.Element {
     }
   }, []);
 
-  const goToChatting = () => {
-    // joinChatting 쿼리가 생기면 true를 반환했을 때와 false를 반환했을 때 분리할 예정
-    joinChatting().then(data => {
-      const {createChatChannelUser} = data.data;
-      dispatch(afterJoin(createChatChannelUser.chatChannelId, 'UR2'));
-    });
+  const goToChatting = async () => {
+    const data = await joinChatting();
+    const {joinChannel} = data.data;
+    if (joinChannel === true) {
+      dispatch(afterJoin(channelId as number));
+    } else {
+      alert('비밀번호가 틀렸습니다');
+    }
   };
   return (
     <Form onSubmit={onSubmit}>
@@ -68,6 +60,7 @@ export default function JoinChatting(): JSX.Element {
       <input
         type="password"
         name="password"
+        autoComplete="off"
         onChange={onChange}
         value={password}
       />
