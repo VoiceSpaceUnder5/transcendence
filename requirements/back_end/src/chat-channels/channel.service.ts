@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { Channel } from './channel.entity';
 import { CreateChannelInput } from './inputs/create-channel.input';
 import { JoinChannelInput } from './inputs/join-channel.input';
+import { UpdateChannelInput } from './inputs/update-channel.input';
 
 @Injectable()
 export class ChannelService {
@@ -41,7 +42,7 @@ export class ChannelService {
 
   async updateChannel(
     channelId: number,
-    updateChannelInput: CreateChannelInput,
+    updateChannelInput: UpdateChannelInput,
   ): Promise<Channel> {
     if (updateChannelInput.password)
       updateChannelInput.password = await transformPwToHash(

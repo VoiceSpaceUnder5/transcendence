@@ -17,6 +17,7 @@ import { ChannelService } from './channel.service';
 import { CreateChannelInput } from './inputs/create-channel.input';
 import { JoinChannelInput } from './inputs/join-channel.input';
 import { LeaveChannelInput } from './inputs/leave-channel.input';
+import { UpdateChannelInput } from './inputs/update-channel.input';
 
 @Resolver((type) => Channel)
 export class ChannelResolver {
@@ -102,7 +103,7 @@ export class ChannelResolver {
   @Mutation(() => Channel, { name: 'updateChannel' })
   async updateChannel(
     @Args('channelId', { type: () => Int }) channelId: number,
-    @Args('updateChannelInput') updateChannelInput: CreateChannelInput,
+    @Args('updateChannelInput') updateChannelInput: UpdateChannelInput,
   ) {
     return await this.channelService.updateChannel(
       channelId,
