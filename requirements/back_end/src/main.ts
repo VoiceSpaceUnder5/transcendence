@@ -26,7 +26,11 @@ async function bootstrap() {
 
   //✅ 앱이 리스폰스를 보낼 때, 헤더에 Access-Control-Allow-Origin에 프론트엔드 URI를 추가합니다.(Cors 허용을 위해)
   app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', process.env.FRONT_URI);
+    res.header(
+      'Access-Control-Allow-Origin',
+      process.env.FRONT_URI,
+      process.env.ADMIN_URI,
+    );
     next();
   });
 
