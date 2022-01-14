@@ -17,6 +17,9 @@ const GET_USERS_BY_IDS = gql`
   }
 `;
 
+// 소유자가 나가면 다른 유저한테 소유자 권한 넘기기
+// 1. 관리자 탐색하고 관리자 있으면 관리자에게
+// 2. 없으면 참여자에게
 const LEAVE_CHANNEL = gql`
   mutation leaveChannel($input: LeaveChannelInput!) {
     leaveChannel(leaveChannelInput: $input)

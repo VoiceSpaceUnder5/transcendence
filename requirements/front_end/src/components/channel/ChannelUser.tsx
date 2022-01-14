@@ -18,8 +18,7 @@ export default function ChannelUser({
   userId,
   userRole,
   name,
-}: // role,
-ChannelUserProps): JSX.Element {
+}: ChannelUserProps): JSX.Element {
   const [isClicked, setIsClicked] = useState(false);
   const onDivClick = () => {
     if (userId !== meId) !isClicked && setIsClicked(true);
