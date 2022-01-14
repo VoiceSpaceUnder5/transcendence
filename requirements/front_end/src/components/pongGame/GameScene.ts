@@ -42,6 +42,8 @@ export class GameScene extends Phaser.Scene {
   private roomId: number | null = null;
   private restartButton: Phaser.GameObjects.Image | null = null;
   private startButton: Phaser.GameObjects.Image | null = null;
+  private counterNumber: Phaser.GameObjects.Text | null = null;
+  private winnerText: Phaser.GameObjects.Text | null = null;
 
   constructor() {
     super({key: 'game', active: true});
@@ -117,25 +119,42 @@ export class GameScene extends Phaser.Scene {
       everyBodyStop();
       this.isStart = false;
 
-      if (isWinnerLeft) console.log('왼쪽이 이겼지렁~~~!');
-      else console.log('오른쪽이 이겼지렁~~~!');
+      this.winnerText?.setPosition(330, 220);
+      if (isWinnerLeft) this.winnerText?.setText('승자는 왼쪽!');
+      else this.winnerText?.setText('승자는 오른쪽!');
+      this.winnerText?.setVisible(true);
       this.restartButton?.setVisible(true);
       this.restartButton?.setInteractive();
     });
-    this.socket.on('startAgain', ({isWinnerLeft}: {isWinnerLeft: boolean}) => {
+    this.socket.on('oneGame', ({isWinnerLeft}: {isWinnerLeft: boolean}) => {
       everyBodyStop();
       this.isStart = false;
 
-      if (isWinnerLeft) console.log('왼쪽이 이겼지렁~~~!');
-      else console.log('오른쪽이 이겼지렁~~~!');
-      this.socket?.emit('restart', {roomId: this.roomId});
+      this.winnerText?.setPosition(360, 220);
+      isWinnerLeft
+        ? this.winnerText?.setText('왼쪽 승!')
+        : this.winnerText?.setText('오른쪽 승!');
+      this.winnerText?.setVisible(true);
     });
+    this.socket.on('wait3', () => {
+      this.counterNumber?.setVisible(true);
+      this.counterNumber?.setText('3');
+    });
+    this.socket.on('wait2', () => {
+      this.counterNumber?.setText('2');
+    });
+    this.socket.on('wait1', () => {
+      this.counterNumber?.setText('1');
+    });
+
     this.socket.on('forceQuit', () => {
       this.add.text(315, 80, '상대방이 게임을 종료하였습니다.');
       everyBodyStop();
       this.socket?.disconnect();
     });
     this.socket.on('restartGame', () => {
+      this.counterNumber?.setVisible(false);
+      this.winnerText?.setVisible(false);
       if (this.isLeft) {
         this.myPaddle?.setPosition(100, 300);
         this.enemyPaddle?.setPosition(700, 300);
@@ -179,7 +198,17 @@ export class GameScene extends Phaser.Scene {
       this.myPaddle.setImmovable();
       this.enemyPaddle.setCollideWorldBounds(true);
       this.enemyPaddle.setImmovable();
-
+      //text 세팅
+      this.counterNumber = this.add.text(400, 300, '', {
+        fontSize: '32px',
+        align: 'center',
+      });
+      this.winnerText = this.add.text(360, 220, '', {
+        fontSize: '32px',
+        align: 'center',
+      });
+      this.counterNumber.setVisible(false);
+      this.winnerText.setVisible(false);
       // 공 세팅
       this.ball = this.physics.add.image(200, 150, 'ball');
       this.ball.setGravity(0, 0);

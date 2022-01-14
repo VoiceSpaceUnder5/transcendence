@@ -11,6 +11,13 @@ import { Server } from 'socket.io';
 import { CreateRecordInput } from 'src/record/dto/create-record.input';
 import { RecordService } from 'src/record/record.service';
 
+enum winState {
+  leftUserWin,
+  rightUserWin,
+  draw,
+  canceled,
+}
+
 interface UserInfo {
   clientId: number;
   gameStatus: GameStatus;
@@ -52,6 +59,22 @@ const users: UserInfo[] = [];
 })
 export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   constructor(private readonly recordService: RecordService) {}
+  updateRecordData(room: Room, winner: winState) {
+    const record = new CreateRecordInput();
+    record.leftUserId = room.leftUser.userId;
+    record.rightUserId = room.rightUser.userId;
+    record.modeId = room.isHard ? 'BM1' : 'BM0';
+    record.typeId = room.isLadder ? 'BT1' : 'BT0';
+    record.leftUserScore = room.leftUserScore;
+    record.rightUserScore = room.rightUserScore;
+    if (winner === winState.leftUserWin) record.resultId = 'BR0';
+    else if (winner === winState.rightUserWin) record.resultId = 'BR1';
+    else if (winner === winState.draw) record.resultId = 'BR2';
+    else if (winner === winState.canceled) record.resultId = 'BR3';
+    room.leftUserScore = 0;
+    room.rightUserScore = 0;
+    this.recordService.createRecord(record);
+  }
   // 유저 초기화
   handleConnection(client: any, ...args: any[]) {
     if (!client) throw new Error('Method not implemented.');
@@ -66,6 +89,12 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
           room.leftUser?.clientId === client.id ||
           room.rightUser?.clientId === client.id
         ) {
+          // 종료한 사람이 짐.
+          if (!(room.rightUserScore === 0 && room.leftUserScore === 0)) {
+            room.leftUser.clientId === client.id
+              ? this.updateRecordData(room, winState.rightUserWin)
+              : this.updateRecordData(room, winState.leftUserWin);
+          }
           this.server.to(room.roomId).emit('forceQuit');
           rooms.splice(i, 1);
           users.forEach((user, i) => {
@@ -216,45 +245,32 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
           ? room.rightUserScore++ || (isWinnerLeft = false)
           : room.leftUserScore++ || (isWinnerLeft = true);
         isWinnerLeft = client.id === room.rightUser.clientId;
-        console.log(`left: `, room.leftUserScore);
-        console.log('right: ', room.rightUserScore);
         if (room.rightUserScore >= 5 || room.leftUserScore >= 5) {
           // 데이터 업데이트 후 스코어 초기화
-          const record = new CreateRecordInput();
+          if (room.rightUserScore >= 5)
+            this.updateRecordData(room, winState.rightUserWin);
+          else this.updateRecordData(room, winState.leftUserWin);
+
           this.server
             .to(room.roomId)
             .emit('done', { isWinnerLeft: isWinnerLeft });
-          record.leftUserId = room.leftUser.userId;
-          record.rightUserId = room.rightUser.userId;
-          record.modeId = room.isHard ? 'BM1' : 'BM0';
-          record.typeId = room.isLadder ? 'BT1' : 'BT0';
-          record.leftUserScore = room.leftUserScore;
-          record.rightUserScore = room.rightUserScore;
-          record.resultId = isWinnerLeft ? 'BR1' : 'BR0';
-          room.leftUserScore = 0;
-          room.rightUserScore = 0;
-
-          this.recordService.createRecord(record);
-
-          // 3초 있다가 게임이 시작되게 하고 싶었는데 그건 settimeout을 어떻게 쓰는지 보고 추가하자.
-          // this.server.to(room.roomId).emit('wait3');
-
-          // @setTimeout('timeout', 1000)
-
-          // this.server.to(room.roomId).emit('wait2');
-
-          // @setTimeout('timeout', 2000)
-          // this.server.to(room.roomId).emit('wait1');
-
-          // @setTimeout('timeout', 3000)
-          // this.server.to(room.roomId).emit('restartGame');
         } else {
-          // 게임 안끝남.
           this.server
             .to(room.roomId)
-            .emit('startAgain', { isWinnerLeft: isWinnerLeft });
-        }
+            .emit('oneGame', { isWinnerLeft: isWinnerLeft });
 
+          this.server.to(room.roomId).emit('wait3');
+
+          setTimeout(() => {
+            this.server.to(room.roomId).emit('wait2');
+          }, 1000);
+          setTimeout(() => {
+            this.server.to(room.roomId).emit('wait1');
+          }, 2000);
+          setTimeout(() => {
+            this.server.to(room.roomId).emit('restartGame');
+          }, 3000);
+        }
         return;
       }
     });
@@ -270,18 +286,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   @SubscribeMessage('exitGame')
   exitGame(client: any, payload: any): any {
     this.server.to(payload.roomId).emit('forceQuit');
-    // 누가 게임을 종료하였다.
-    rooms.forEach((room, i) => {
-      if (room.roomId === payload.roomId) {
-        rooms.splice(i, 1);
-        return;
-      }
-    });
-    users.forEach((user, i) => {
-      if (user.clientId === client.id) {
-        users.splice(i, 1);
-      }
-    });
   }
 
   @SubscribeMessage('paddleMoving')
