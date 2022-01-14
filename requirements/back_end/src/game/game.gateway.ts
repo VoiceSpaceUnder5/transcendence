@@ -220,7 +220,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         console.log('right: ', room.rightUserScore);
         if (room.rightUserScore >= 5 || room.leftUserScore >= 5) {
           // 데이터 업데이트 후 스코어 초기화
-
           const record = new CreateRecordInput();
           this.server
             .to(room.roomId)
@@ -229,9 +228,12 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
           record.rightUserId = room.rightUser.userId;
           record.modeId = room.isHard ? 'BM1' : 'BM0';
           record.typeId = room.isLadder ? 'BT1' : 'BT0';
-          record.resultId = client.id === isWinnerLeft ? 'BR1' : 'BR0';
+          record.leftUserScore = room.leftUserScore;
+          record.rightUserScore = room.rightUserScore;
+          record.resultId = isWinnerLeft ? 'BR1' : 'BR0';
           room.leftUserScore = 0;
           room.rightUserScore = 0;
+
           this.recordService.createRecord(record);
 
           // 3초 있다가 게임이 시작되게 하고 싶었는데 그건 settimeout을 어떻게 쓰는지 보고 추가하자.
