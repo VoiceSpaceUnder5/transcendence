@@ -7,7 +7,7 @@ import {gql, useQuery} from '@apollo/client';
 
 const GET_SEARCH_CHANNEL = gql`
   query notParticipatingChannel($userId: Int!) {
-    getNotParticipatingChannel(userId: $userId) {
+    getChannelsByUserId(userId: $userId, joined: false) {
       type {
         id
       }
@@ -48,16 +48,14 @@ export default function SearchChannel(): JSX.Element {
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  const channelList = (data.getNotParticipatingChannel as Channel[]).map(
-    channel => {
-      return {
-        id: channel.id,
-        name: channel.name,
-        number: channel.channelUsers.length,
-        isPrivate: channel.type.id === 'CT1' ? true : false,
-      };
-    },
-  );
+  const channelList = (data.getChannelsByUserId as Channel[]).map(channel => {
+    return {
+      id: channel.id,
+      name: channel.name,
+      number: channel.channelUsers.length,
+      isPrivate: channel.type.id === 'CT1' ? true : false,
+    };
+  });
 
   // 각각의 채널을 클릭하면
   // 비밀번호를 요구하는 JoinChatting으로 넘어감

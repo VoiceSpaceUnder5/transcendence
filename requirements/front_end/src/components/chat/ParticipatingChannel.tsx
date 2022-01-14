@@ -7,7 +7,7 @@ import {gql, useQuery} from '@apollo/client';
 
 const GET_PARTICIPATING_CHANNEL = gql`
   query participatingChannel($userId: Int!) {
-    getParticipatingChannel(userId: $userId) {
+    getChannelsByUserId(userId: $userId, joined: true) {
       type {
         id
       }
@@ -52,18 +52,16 @@ export default function ParticipatingChannel(): JSX.Element {
 
   if (loading) return <>로딩 중</>;
   if (error) return <>에러</>;
-  const channelList = (data.getParticipatingChannel as Channel[]).map(
-    channel => {
-      return {
-        id: channel.id,
-        name: channel.name,
-        number: channel.channelUsers.length,
-        role: channel.channelUsers.filter(user => user.userId === meId)[0].role
-          .id,
-        isPrivate: channel.type.id === 'CT1' ? true : false,
-      };
-    },
-  );
+  const channelList = (data.getChannelsByUserId as Channel[]).map(channel => {
+    return {
+      id: channel.id,
+      name: channel.name,
+      number: channel.channelUsers.length,
+      role: channel.channelUsers.filter(user => user.userId === meId)[0].role
+        .id,
+      isPrivate: channel.type.id === 'CT1' ? true : false,
+    };
+  });
   if (channelList.length === 0) return <>참여 중인 채널이 없습니다.</>;
   const afterParticipatingChannel = (channelId: number) => {
     dispatch(afterJoin(channelId));
