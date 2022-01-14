@@ -20,7 +20,7 @@ async function bootstrap() {
 
   //✅ 앱이 실행되면서 CORS 설정을 추가합니다.
   app.enableCors({
-    origin: [process.env.FRONT_URI, process.env.LOCAL_HOST],
+    origin: [process.env.FRONT_URI, process.env.ADMIN_URI],
     credentials: true,
   });
 

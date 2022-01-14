@@ -44,7 +44,7 @@ import { Relation } from './relation/relation.entity';
     GraphQLModule.forRoot({
       autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
       cors: {
-        origin: [process.env.FRONT_URI, process.env.LOCAL_HOST], // 여기 코스설정 안해주면, 그래프큐엘(아폴로서버) 리스폰스에 access-control-allow-origin 에 에러남
+        origin: [process.env.FRONT_URI, process.env.ADMIN_URI], // 여기 코스설정 안해주면, 그래프큐엘(아폴로서버) 리스폰스에 access-control-allow-origin 에 에러남
         credentials: true,
       },
     }),
