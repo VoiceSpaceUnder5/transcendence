@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import Button from '../common/Button';
 import Img from '../common/Img';
+import ChangeAuthority from './ChangeAuthority';
 import ChannelUserProfile from './ChannelUserProfile';
 
 interface ChannelUserProps {
@@ -10,6 +11,7 @@ interface ChannelUserProps {
   userId: number;
   userRole: string;
   name: string;
+  channelId: number;
 }
 
 export default function ChannelUser({
@@ -18,6 +20,7 @@ export default function ChannelUser({
   userId,
   userRole,
   name,
+  channelId,
 }: ChannelUserProps): JSX.Element {
   const [isClicked, setIsClicked] = useState(false);
   const onDivClick = () => {
@@ -42,15 +45,14 @@ export default function ChannelUser({
           <div style={{marginRight: '4px'}}>
             <ChannelUserProfile meId={meId} userId={userId} />
           </div>
-          {(meRole === 'UR0' || meRole === 'UR1') && userRole === 'UR2' && (
-            <Button
-              bg="grey"
-              onClick={() => {
-                console.log('차단 버튼 클릭');
-              }}
-            >
-              차단
-            </Button>
+          {(meRole === 'UR0' || meRole == 'UR1') && (
+            <ChangeAuthority
+              meId={meId}
+              meRole={meRole}
+              userId={userId}
+              userRole={userRole}
+              channelId={channelId}
+            />
           )}
         </>
       )}

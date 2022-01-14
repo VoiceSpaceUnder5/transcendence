@@ -77,7 +77,6 @@ export default function ChannelOptionsList({
   if (usersData.error) return <>에러</>;
 
   const users: UserInfo[] = usersData.data.getUsersByIds;
-  console.log(userRoles);
   return (
     <>
       <ChannelOptionsListStyles top={80}>
@@ -89,6 +88,7 @@ export default function ChannelOptionsList({
               userId={meId}
               userRole={meRole}
               name="나"
+              channelId={channelId}
             />
             {users.map(user => {
               if (user.id !== meId)
@@ -100,9 +100,10 @@ export default function ChannelOptionsList({
                     name={user.name}
                     userId={user.id}
                     userRole={
-                      userRoles.find(userRole => userRole.userId)
+                      userRoles.find(userRole => userRole.userId === user.id)
                         ?.roleId as string
                     }
+                    channelId={channelId}
                   />
                 );
             })}
@@ -133,8 +134,8 @@ export default function ChannelOptionsList({
 const ChannelOptionsListStyles = styled.ul<{top?: number}>`
   position: absolute;
   top: ${props => props.top}px;
-  left: 45%;
-  width: 152px;
+  right: 5%;
+  width: 58%;
   background-color: #dddddd;
   lists-tyle: none;
   padding: 4px;

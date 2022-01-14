@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import Button from '../common/Button';
 import ChannelOptionsList from './ChannelOptionsList';
 
-const GET_CHANNEL_USERS = gql`
+export const GET_CHANNEL_USERS = gql`
   query getChannelUsersByChannelId($channelId: Int!) {
     getChannelUsersByChannelId(channelId: $channelId) {
       userId
