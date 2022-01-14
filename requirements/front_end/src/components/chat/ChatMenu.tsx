@@ -1,6 +1,33 @@
 import React from 'react';
 import styled, {css} from 'styled-components';
 
+interface ChatMenuProps {
+  onClick: (idx: number) => void;
+  clickedIdx: number;
+}
+
+function ChatMenu({onClick, clickedIdx}: ChatMenuProps): JSX.Element {
+  const items = ['친구 목록', '참여 중', '채널 탐색', '채널 생성'];
+  return (
+    <ChatMenuList>
+      {items.map((item, idx) => {
+        return (
+          <ChatMenuItem
+            key={idx}
+            index={idx}
+            onClick={() => onClick(idx)}
+            clickedIdx={clickedIdx}
+          >
+            {item}
+          </ChatMenuItem>
+        );
+      })}
+    </ChatMenuList>
+  );
+}
+
+export default ChatMenu;
+
 const ChatMenuList = styled.div`
   /* Layout */
   display: flex;
@@ -63,30 +90,3 @@ const ChatMenuItem = styled.button<{index: number; clickedIdx: number}>`
     transition: 0.3s;
   }
 `;
-
-interface ChatMenuProps {
-  onClick: (idx: number) => void;
-  clickedIdx: number;
-}
-
-function ChatMenu({onClick, clickedIdx}: ChatMenuProps): JSX.Element {
-  const items = ['친구 목록', '참여 중', '채널 탐색', '채널 생성'];
-  return (
-    <ChatMenuList>
-      {items.map((item, idx) => {
-        return (
-          <ChatMenuItem
-            key={idx}
-            index={idx}
-            onClick={() => onClick(idx)}
-            clickedIdx={clickedIdx}
-          >
-            {item}
-          </ChatMenuItem>
-        );
-      })}
-    </ChatMenuList>
-  );
-}
-
-export default ChatMenu;

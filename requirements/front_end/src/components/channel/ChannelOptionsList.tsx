@@ -6,6 +6,7 @@ import ChannelUser from './ChannelUser';
 import {useDispatch} from 'react-redux';
 import {selectMenu} from '../../modules/chatting';
 import ChannelSetting from './ChannelSetting';
+import {UserRole} from './ChannelOption';
 
 const GET_USERS_BY_IDS = gql`
   query getUsersByIds($userIds: [Int!]!) {
@@ -34,8 +35,7 @@ interface UserInfo {
 
 interface ChannelOptionsListProps {
   meId: number;
-  userIds: number[];
-  userRoles: string[];
+  userRoles: UserRole[];
   channelId: number;
   channelName: string;
   channelPasswd: string;
@@ -44,7 +44,6 @@ interface ChannelOptionsListProps {
 
 export default function ChannelOptionsList({
   meId,
-  userIds,
   userRoles,
   channelId,
   channelName,
@@ -55,7 +54,7 @@ export default function ChannelOptionsList({
   const [isClick, setIsClick] = useState(false);
   const usersData = useQuery(GET_USERS_BY_IDS, {
     variables: {
-      userIds,
+      userIds: userRoles.map(user => user.userId),
     },
   });
   const [leaveChannel] = useMutation(LEAVE_CHANNEL);
@@ -89,8 +88,9 @@ export default function ChannelOptionsList({
               userId={meId}
               userRole={meRole}
               name="나"
+              channelId={channelId}
             />
-            {users.map((user, idx) => {
+            {users.map(user => {
               if (user.id !== meId)
                 return (
                   <ChannelUser
@@ -99,7 +99,11 @@ export default function ChannelOptionsList({
                     key={user.id}
                     name={user.name}
                     userId={user.id}
-                    userRole={userRoles[idx]}
+                    userRole={
+                      userRoles.find(userRole => userRole.userId === user.id)
+                        ?.roleId as string
+                    }
+                    channelId={channelId}
                   />
                 );
             })}
@@ -130,8 +134,8 @@ export default function ChannelOptionsList({
 const ChannelOptionsListStyles = styled.ul<{top?: number}>`
   position: absolute;
   top: ${props => props.top}px;
-  left: 45%;
-  width: 152px;
+  right: 5%;
+  width: 58%;
   background-color: #dddddd;
   lists-tyle: none;
   padding: 4px;
