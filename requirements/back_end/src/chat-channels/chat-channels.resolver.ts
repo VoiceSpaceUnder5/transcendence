@@ -16,6 +16,7 @@ import { ChatChannel } from './chat-channel.entity';
 import { ChatChannelsService } from './chat-channels.service';
 import { CreateChannelInput } from './inputs/create-channel.input';
 import { JoinChannelInput } from './inputs/join-channel.input';
+import { LeaveChannelInput } from './inputs/leave-channel.input';
 
 @Resolver((type) => ChatChannel)
 export class ChatChannelsResolver {
@@ -118,6 +119,15 @@ export class ChatChannelsResolver {
     joinChannelInput: JoinChannelInput,
   ) {
     return await this.chatChannelsService.joinChannel(joinChannelInput);
+  }
+
+  @Mutation(() => Boolean, { name: 'leaveChannel' })
+  async leaveChannel(
+    @Args('leaveChannelInput') leaveChannelInput: LeaveChannelInput,
+  ) {
+    if (await this.chatChannelUserService.delete(leaveChannelInput))
+      return true;
+    return false;
   }
 
   @ResolveField(() => Code) // 이렇게 하면 이렇게 쓸 수 있다.
