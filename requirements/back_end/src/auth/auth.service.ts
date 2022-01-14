@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { CreateUserInput } from 'src/users/dto/create-user.input';
 import { User } from 'src/users/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/user.service';
 import { JwtPayload } from './interface/jwt-payload.interface';
 
 @Injectable()

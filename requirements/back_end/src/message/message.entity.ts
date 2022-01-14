@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { ChatChannel } from 'src/chat-channels/chat-channel.entity';
+import { Channel } from 'src/chat-channels/channel.entity';
 import { DefaultEntity } from 'src/default.entity';
 import { User } from 'src/users/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -19,13 +19,12 @@ export class Message extends DefaultEntity {
   @Column()
   userId: number;
 
-  // @Field(() => ChatChannel)
-  @ManyToOne((type) => ChatChannel, (channel) => channel.messages)
-  chatChannel: ChatChannel;
+  @ManyToOne((type) => Channel, (channel) => channel.messages)
+  channel: Channel;
 
   @Field((type) => Int)
   @Column()
-  chatChannelId: number;
+  channelId: number;
 
   @Field(() => String)
   @Column({ type: 'varchar', length: '255' })

@@ -5,7 +5,7 @@ export const dbSeed = async () => {
   const connection = await getConnection();
   const entityManager = connection.createEntityManager();
 
-  // ** 유저 채팅방 역할 ChatChannelUser.role
+  // ** 유저 채팅방 역할 ChannelUser.role
   entityManager.upsert<Code>(
     Code,
     {
@@ -67,7 +67,7 @@ export const dbSeed = async () => {
     ['id'],
   );
 
-  // ** 채팅방 타입 ChatChannel.type
+  // ** 채팅방 타입 channel.type
   entityManager.upsert<Code>(
     Code,
     {
