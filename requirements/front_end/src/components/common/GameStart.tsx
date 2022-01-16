@@ -1,9 +1,10 @@
-import React, {FormEvent, useState} from 'react';
+import React, {FormEvent, useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Button from './Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
 import {useHistory} from 'react-router-dom';
 import {GameData} from '../pongGame/GameData';
+import {io} from 'socket.io-client';
 
 interface GameStartProps {
   isStart?: boolean;
@@ -14,6 +15,19 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   const [isHard, setIsHard] = useState(false);
   const history = useHistory();
   const [isLadder, setIsLadder] = useState(false);
+
+  // 게임 소켓은 스타트 버튼이 뜨면  바로 연결됩니다.
+  useEffect(() => {
+    // 멍청한 코드네...
+    if (GameData.socket) {
+      console.log(GameData.socket.id);
+      GameData.socket.disconnect();
+    }
+    GameData.setSocket(io('http://api.ts.io:33000/game'));
+    GameData.setId(Number(localStorage.getItem('meId')));
+    // user 데이터 집어넣기.
+    GameData.socket.emit('sendUserData', {userId: GameData.id});
+  }, []);
 
   const onToggle = () => {
     setToggle(!toggle);
