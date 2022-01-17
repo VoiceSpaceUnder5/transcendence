@@ -103,10 +103,10 @@ export class GameData {
   paddleSpeed: number;
   paddleControll: PaddleControllData;
 
-  constructor() {
-    this.reset();
+  constructor(isHard: boolean) {
+    this.reset(isHard);
   }
-  reset() {
+  reset(isHard: boolean) {
     this.leftPaddlePos = new Vec(-canvasWidth / 2 + 20, 0);
     this.leftPaddleOldPos = new Vec(-canvasWidth / 2 + 20, 0);
     this.leftPaddleVel = new Vec(0, 0);
@@ -115,8 +115,10 @@ export class GameData {
     this.rightPaddleVel = new Vec(0, 0);
     this.ballPos = new Vec(0, 0);
     this.ballOldPos = new Vec(0, 0);
-    this.ballVel = new Vec(1, 0);
-    this.ballSpeed = 1;
+    const random = Math.random();
+    this.ballVel =
+      random > 0.7 ? new Vec(random, 1 - random) : new Vec(1 - random, random);
+    isHard ? (this.ballSpeed = 4) : (this.ballSpeed = 2);
     this.paddleSpeed = 2;
     this.paddleControll = {
       leftPaddleControll: ControllData.nothing,
@@ -277,7 +279,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
           roomId,
           payload.isHard,
           payload.isLadder,
-          new GameData(),
+          new GameData(payload.isHard),
         );
         // 실제 방 생성.
         rooms[roomId] = room;
@@ -285,9 +287,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         users[client.id].roomId = room.id;
         users[client.id].isLeft = true;
         commonRoomIds.push({ id: roomId, isStart: false });
-        if (room.isHard) {
-          room.gameData.ballSpeed = 3;
-        }
       }
     } else {
       // random매칭이 아닌경우.

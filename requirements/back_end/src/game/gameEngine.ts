@@ -161,7 +161,7 @@ function winTheGame(room: Room, server: Server, isWinnerLeft: boolean) {
     room.rightUserReady = false;
     //record 저장.
   }
-  room.gameData.reset();
+  room.gameData.reset(room.isHard);
 }
 
 // 이벤트는 밖에서 받고 room을 업데이트 해준다.
