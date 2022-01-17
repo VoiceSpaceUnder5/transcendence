@@ -21,4 +21,4 @@ import { UsersService } from './user.service';
   exports: [TypeOrmModule, UsersService],
   providers: [UsersService, UserResolver],
 })
-export class UsersModule {}
+export class UserModule {}

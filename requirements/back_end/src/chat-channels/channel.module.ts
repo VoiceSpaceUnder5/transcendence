@@ -6,6 +6,7 @@ import { Channel } from './channel.entity';
 import { CodeModule } from 'src/code/code.module';
 import { channelUserModule } from 'src/chat-channel-user/channel-user.module';
 import { MessageModule } from 'src/message/message.module';
+import { UserModule } from 'src/users/user.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MessageModule } from 'src/message/message.module';
     CodeModule,
     forwardRef(() => channelUserModule),
     forwardRef(() => MessageModule),
+    forwardRef(() => UserModule),
   ],
   exports: [TypeOrmModule, ChannelService],
   providers: [ChannelService, ChannelResolver],

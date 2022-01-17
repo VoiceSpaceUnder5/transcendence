@@ -7,7 +7,7 @@ import * as path from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './users/user.entity';
-import { UsersModule } from './users/user.module';
+import { UserModule } from './users/user.module';
 import { channelsModule } from './chat-channels/channel.module';
 import { channelUserModule } from './chat-channel-user/channel-user.module';
 import { CodeService } from './code/code.service';
@@ -49,7 +49,7 @@ import { Relation } from './relation/relation.entity';
       },
     }),
     channelUserModule,
-    UsersModule,
+    UserModule,
     channelsModule,
     CodeModule,
     MessageModule,
