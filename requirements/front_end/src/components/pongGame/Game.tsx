@@ -3,6 +3,7 @@ import {useHistory} from 'react-router-dom';
 import GameExit from './GameExit';
 import {GameData} from './GameData';
 import {GameScene} from './GameScene';
+import GameStart from '../common/GameStart';
 
 interface startGamePayload {
   isRandomMatch: boolean;
@@ -63,6 +64,7 @@ export default function Game(): JSX.Element {
       });
       GameData.socket.on('count', (counter: string) => {
         setCounter(counter);
+        setStartState(StartState.run);
       });
       GameData.socket.on('gameOver', (gameScoreData: GameScoreData) => {
         setScore(gameScoreData);
@@ -71,7 +73,10 @@ export default function Game(): JSX.Element {
         setScore(gameScoreData);
         setStartState(StartState.done);
       });
-
+      GameData.socket.on('forceQuit', () => {
+        setStartState(StartState.quit);
+        console.log(startState);
+      });
       GameData.socket.on('rendering', gamePositionData => {
         // console.log(gamePositionData.ballPos.x, gamePositionData.ballPos.y);
         gameScene.setBallPos(
@@ -99,33 +104,37 @@ export default function Game(): JSX.Element {
           setUserNames({rightName: rightName, leftName: leftName});
 
           // 키 세팅
-          const keydownEvent = (e: KeyboardEvent) => {
-            let controllData = ControllData.nothing;
-            if (e.key === 'ArrowUp') {
-              controllData = ControllData.up;
-            } else if (e.key === 'ArrowDown') {
-              controllData = ControllData.down;
-            }
-            GameData.socket.emit('inputEvent', {
-              controllData: controllData,
-              roomId: GameData.roomId,
-            });
-          };
-          const keyupEvent = (e: KeyboardEvent) => {
-            const controllData = ControllData.nothing;
-            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-              GameData.socket.emit('inputEvent', {
-                controllData: controllData,
-                roomId: GameData.roomId,
-              });
-            }
-          };
 
           addEventListener('keydown', keydownEvent);
           addEventListener('keyup', keyupEvent);
         },
       );
     }
+    const keydownEvent = (e: KeyboardEvent) => {
+      let controllData = ControllData.nothing;
+      if (e.key === 'ArrowUp') {
+        controllData = ControllData.up;
+      } else if (e.key === 'ArrowDown') {
+        controllData = ControllData.down;
+      }
+      GameData.socket.emit('inputEvent', {
+        controllData: controllData,
+        roomId: GameData.roomId,
+      });
+    };
+    const keyupEvent = (e: KeyboardEvent) => {
+      const controllData = ControllData.nothing;
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        GameData.socket.emit('inputEvent', {
+          controllData: controllData,
+          roomId: GameData.roomId,
+        });
+      }
+    };
+    return () => {
+      removeEventListener('keydown', keydownEvent);
+      removeEventListener('keyup', keyupEvent);
+    };
   }, []);
 
   const onReadyClick = () => {
@@ -167,6 +176,12 @@ export default function Game(): JSX.Element {
       <button onClick={onReadyClick} hidden={startState !== StartState.done}>
         Restart
       </button>
+      <div style={{color: 'white'}} hidden={startState !== StartState.quit}>
+        상대방이 나갔습니다.
+      </div>
+      <div style={{color: 'white'}} hidden={startState !== StartState.waiting}>
+        상대방 기다리는 중...
+      </div>
       <h2 style={{color: 'white'}}>{counter}</h2>
       <canvas
         id="pixi-canvas"

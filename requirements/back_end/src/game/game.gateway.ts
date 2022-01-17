@@ -154,6 +154,7 @@ export function countAndRun(server: Server, room: Room) {
     room.isStart = true;
   }, 3000);
 }
+
 @WebSocketGateway(33000, {
   namespace: 'game',
   cors: {
@@ -182,13 +183,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   //   else if (winner === winState.rightUserWin) record.resultId = 'BR1';
   //   else if (winner === winState.draw) record.resultId = 'BR2';
   //   else if (winner === winState.canceled) record.resultId = 'BR3';
-  //   room.leftUserScore = 0;
-  //   room.rightUserScore = 0;
   //   this.recordService.createRecord(record);
   // }
   // 유저 초기화
   handleConnection(client: any, ...args: any[]) {
-    console.log('소켓이 연결되었습니다. : ', client.id);
+    console.log('게임 소켓이 연결되었습니다. : ', client.id);
   }
   // 나가면 유저 지우기, 룸 지우기.
   handleDisconnect(client: any) {
@@ -206,7 +205,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
       });
     }
     delete users[client.id];
-    console.log('소켓 연결이 끊겼습니다. : ', client.id);
+    console.log('게임소켓 연결이 끊겼습니다. : ', client.id);
   }
   @WebSocketServer()
   server: Server;
