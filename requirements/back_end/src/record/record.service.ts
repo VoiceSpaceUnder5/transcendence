@@ -15,6 +15,11 @@ export class RecordService {
     return this.recordRepository.find();
   }
 
+  getRecordByUserId(userId: number): Promise<Record[]> {
+    return this.recordRepository.find({
+      where: [{ leftUserId: userId }, { rightUserId: userId }],
+    });
+  }
   createRecord(createRecordInput: CreateRecordInput): Promise<Record> {
     return this.recordRepository.save(createRecordInput);
   }
