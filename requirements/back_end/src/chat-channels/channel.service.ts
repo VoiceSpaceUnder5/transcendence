@@ -9,6 +9,7 @@ import { CreateChannelInput } from './inputs/create-channel.input';
 import { JoinChannelInput } from './inputs/join-channel.input';
 import { UpdateChannelInput } from './inputs/update-channel.input';
 import { v4 as uuidv4 } from 'uuid';
+import { UsersService } from 'src/users/user.service';
 
 @Injectable()
 export class ChannelService {
@@ -17,6 +18,7 @@ export class ChannelService {
     private channelRepository: Repository<Channel>,
     private codeService: CodeService,
     private channelUserService: ChannelUserService,
+    private userService: UsersService,
   ) {}
 
   findChannels(ids?: string[]): Promise<Channel[]> {
@@ -74,10 +76,12 @@ export class ChannelService {
     const firstUserId = Math.min(userId, otherUserId);
     const secondUserId = Math.max(userId, otherUserId);
     const channelId = `${firstUserId}-${secondUserId}`;
+    const firstUser = await this.userService.findUserById(firstUserId);
+    const secondUser = await this.userService.findUserById(secondUserId);
 
     const channelInput = {
       id: channelId,
-      name: `${firstUserId}-${secondUserId}`,
+      name: `${firstUser.name}-${secondUser.name}`,
       typeId: 'CT0',
     };
     const channel = await this.channelRepository.save(channelInput);
