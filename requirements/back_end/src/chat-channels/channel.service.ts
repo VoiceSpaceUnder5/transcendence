@@ -8,6 +8,7 @@ import { Channel } from './channel.entity';
 import { CreateChannelInput } from './inputs/create-channel.input';
 import { JoinChannelInput } from './inputs/join-channel.input';
 import { UpdateChannelInput } from './inputs/update-channel.input';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ChannelService {
@@ -65,7 +66,34 @@ export class ChannelService {
       createChannelInput.password = await transformPwToHash(
         createChannelInput.password,
       );
-    return await this.channelRepository.save(createChannelInput);
+    const id = uuidv4();
+    return await this.channelRepository.save({ id, ...createChannelInput });
+  }
+
+  async joinDirectChannel(userId: number, otherUserId: number) {
+    const firstUserId = Math.min(userId, otherUserId);
+    const secondUserId = Math.max(userId, otherUserId);
+    const channelId = `${firstUserId}-${secondUserId}`;
+
+    const channelInput = {
+      id: channelId,
+      name: `${firstUserId}-${secondUserId}`,
+      typeId: 'CT0',
+    };
+    const channel = await this.channelRepository.save(channelInput);
+    const firstUserInput = {
+      userId: firstUserId,
+      channelId: channel.id,
+      roleId: 'UR2',
+    }; // 'UR2' = 참여자}
+    const secondUserInput = {
+      userId: secondUserId,
+      channelId: channel.id,
+      roleId: 'UR2',
+    }; // 'UR2' = 참여자}
+    await this.channelUserService.create(firstUserInput);
+    await this.channelUserService.create(secondUserInput);
+    return channel;
   }
 
   async updateChannel(

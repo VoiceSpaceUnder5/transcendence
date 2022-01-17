@@ -3,20 +3,13 @@ import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
 import { Code } from 'src/code/code.entity';
 import { DefaultEntity } from 'src/default.entity';
 import { Message } from 'src/message/message.entity';
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 
 @ObjectType({ description: 'Chatting Channel Data' })
 @Entity()
 export class Channel extends DefaultEntity {
   @Field((type) => ID)
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
 
   @Field((type) => String)
