@@ -285,6 +285,9 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         users[client.id].roomId = room.id;
         users[client.id].isLeft = true;
         commonRoomIds.push({ id: roomId, isStart: false });
+        if (room.isHard) {
+          room.gameData.ballSpeed = 3;
+        }
       }
     } else {
       // random매칭이 아닌경우.
