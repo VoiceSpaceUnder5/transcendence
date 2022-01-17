@@ -276,6 +276,8 @@ export const dbSeed = async () => {
     },
     ['id'],
   );
+
+  // ** 유저 접속 상태 user.connection_status
   entityManager.upsert<Code>(
     Code,
     {
@@ -313,6 +315,38 @@ export const dbSeed = async () => {
       id: 'CS3',
       label_korean: '관전 중',
       label_english: 'on-watch',
+    },
+    ['id'],
+  );
+
+  // ** 업적 종류 achievement.type
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'AT',
+      id: 'AT0',
+      label_korean: '첫 로그인',
+      label_english: 'first-login',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'AT',
+      id: 'AT1',
+      label_korean: '첫 승',
+      label_english: 'first-win',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'AT',
+      id: 'AT2',
+      label_korean: '첫 패',
+      label_english: 'first-lose',
     },
     ['id'],
   );

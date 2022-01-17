@@ -25,6 +25,8 @@ import { GameModule } from './game/game.module';
 import { RecordModule } from './record/record.module';
 import { Record } from './record/record.entity';
 import { Relation } from './relation/relation.entity';
+import { AchievementModule } from './achievement/achievement.module';
+import { Achievement } from './achievement/achievement.entity';
 
 @Module({
   imports: [
@@ -36,7 +38,16 @@ import { Relation } from './relation/relation.entity';
       username: 'kilee',
       password: 'kilee',
       database: 'test',
-      entities: [User, Channel, ChannelUser, Code, Message, Record, Relation],
+      entities: [
+        User,
+        Channel,
+        ChannelUser,
+        Code,
+        Message,
+        Record,
+        Relation,
+        Achievement,
+      ],
       autoLoadEntities: true,
       synchronize: true,
       // logging: true, // 타입 Orm 이 콘솔에 로그를 찍습니다.
@@ -59,6 +70,7 @@ import { Relation } from './relation/relation.entity';
     ImageModule,
     GameModule,
     RecordModule,
+    AchievementModule,
   ],
   controllers: [AppController],
   providers: [AppService, CodeService],
