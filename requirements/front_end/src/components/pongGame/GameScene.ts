@@ -59,11 +59,11 @@ export class GameScene {
 
   // gameStart() {}
 
-  getRadius() {
+  getRadius(): number {
     return this.radius;
   }
 
-  setPlayerPos(playerPos: string) {
+  setPlayerPos(playerPos: string): void {
     console.log(playerPos);
     if (playerPos === 'left') {
       this.isLeft = true;
@@ -72,32 +72,32 @@ export class GameScene {
     }
   }
 
-  setBallPos(x: number, y: number) {
+  setBallPos(x: number, y: number): void {
     this.ball.x = (x * this.edge) / 600;
     this.ball.y = (y * this.edge) / 600;
   }
 
-  setLPaddlePos(y: number) {
+  setLPaddlePos(y: number): void {
     this.lPaddle.y = (y * this.edge) / 600;
   }
 
-  setRPaddlePos(y: number) {
+  setRPaddlePos(y: number): void {
     this.rPaddle.y = (y * this.edge) / 600;
   }
 
-  paddleUp() {
+  paddleUp(): void {
     this.socket.emit('upPaddle', {
       playerIsLeft: this.isLeft,
     });
   }
 
-  paddleDown() {
+  paddleDown(): void {
     this.socket.emit('downPaddle', {
       playerIsLeft: this.isLeft,
     });
   }
 
-  keyUp() {
+  keyUp(): void {
     this.socket.emit('keyUp', {
       playerIsLeft: this.isLeft,
     });

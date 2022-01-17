@@ -1,19 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import GameExit from './GameExit';
 import {GameData} from './GameData';
-import {removeListener} from 'process';
-import Button from '../common/Button';
 import {GameScene} from './GameScene';
-import styled from 'styled-components';
-import game from '../../modules/game';
-
-const paddleWidth = 30;
-const paddleHeight = 100;
-const ballWidth = 30;
-const ballHeight = 30;
-const canvasWidth = 800;
-const canvasHeight = 600;
 
 interface startGamePayload {
   isRandomMatch: boolean;
