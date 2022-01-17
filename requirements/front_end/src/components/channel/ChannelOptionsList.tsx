@@ -58,6 +58,7 @@ export default function ChannelOptionsList({
     },
   });
   const [leaveChannel] = useMutation(LEAVE_CHANNEL);
+  console.log(meId, channelId);
   const onLeave = () => {
     leaveChannel({
       variables: {
@@ -66,9 +67,11 @@ export default function ChannelOptionsList({
           channelId: channelId,
         },
       },
-    }).then(() => {
-      dispatch(selectMenu(1));
-    });
+    })
+      .then(() => {
+        dispatch(selectMenu(1));
+      })
+      .catch(console.log);
   };
   const onSetting = () => {
     setIsClick(!isClick);
