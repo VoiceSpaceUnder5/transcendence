@@ -32,7 +32,7 @@ export class ChannelUserResolver {
     name: 'getChannelUsersByChannelId',
   })
   async getChannelUsersByChannelId(
-    @Args('channelId', { type: () => Int }) channelId: number,
+    @Args('channelId', { type: () => Int }) channelId: string,
   ) {
     return this.channelUserService.findByChannelId(channelId);
   }

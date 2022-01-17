@@ -18,9 +18,9 @@ export class ChannelUser extends DefaultEntity {
   @ManyToOne((type) => Channel, (channel) => channel.channelUsers)
   channel: Channel;
 
-  @Field((type) => Int)
+  @Field((type) => String)
   @PrimaryColumn()
-  channelId: number;
+  channelId: string;
 
   @ManyToOne((type) => Code, (code) => code.id)
   role: Code;

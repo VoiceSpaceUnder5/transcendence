@@ -6,7 +6,7 @@ export class JoinChannelInput {
   userId: number;
 
   @Field((type) => Int)
-  channelId: number;
+  channelId: string;
 
   @Field((type) => String)
   password: string;
