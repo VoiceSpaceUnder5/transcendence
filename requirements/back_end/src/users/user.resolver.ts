@@ -21,6 +21,7 @@ import { User } from './user.entity';
 import { GetUser } from './user.decorator';
 import { UsersService } from './user.service';
 import { CodeService } from 'src/code/code.service';
+import { Record } from 'src/record/record.entity';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -116,5 +117,10 @@ export class UserResolver {
   @ResolveField(() => Code)
   connectionStatus(@Parent() user: User) {
     return this.codeService.findCodebyId(user.connectionStatusId);
+  }
+
+  @ResolveField(() => [Record])
+  records(@Parent() user: User) {
+    return this.recordService.getRecordByUserId(user.id);
   }
 }
