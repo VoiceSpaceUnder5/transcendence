@@ -1,5 +1,6 @@
 import {
   Args,
+  ID,
   Int,
   Mutation,
   Parent,
@@ -42,7 +43,7 @@ export class ChannelResolver {
 
   @Query(() => Channel, { name: 'getChannelById' })
   async getChannelById(
-    @Args('channelId', { type: () => Int }) channelId: string,
+    @Args('channelId', { type: () => ID }) channelId: string,
   ) {
     return await this.channelService.findChannelById(channelId);
   }
@@ -110,7 +111,7 @@ export class ChannelResolver {
   //여기는 권한 가드 만들어야할듯 (해당 방을 업데이트할 수 있는 권한이 있는지)
   @Mutation(() => Channel, { name: 'updateChannel' })
   async updateChannel(
-    @Args('channelId', { type: () => Int }) channelId: number,
+    @Args('channelId', { type: () => ID }) channelId: number,
     @Args('updateChannelInput') updateChannelInput: UpdateChannelInput,
   ) {
     return await this.channelService.updateChannel(

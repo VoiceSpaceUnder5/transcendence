@@ -1,5 +1,6 @@
 import {
   Args,
+  ID,
   Int,
   Mutation,
   Parent,
@@ -32,7 +33,7 @@ export class ChannelUserResolver {
     name: 'getChannelUsersByChannelId',
   })
   async getChannelUsersByChannelId(
-    @Args('channelId', { type: () => Int }) channelId: string,
+    @Args('channelId', { type: () => ID }) channelId: string,
   ) {
     return this.channelUserService.findByChannelId(channelId);
   }

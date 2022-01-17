@@ -24,7 +24,7 @@ const ChannelStyles = styled.div`
 `;
 
 interface ChannelProps {
-  id: number;
+  id: string;
   name: string;
   number: number;
   isPrivate: boolean;

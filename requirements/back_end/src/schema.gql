@@ -95,7 +95,7 @@ type User {
 
 type Query {
   getChannelUsers: [ChannelUser]!
-  getChannelUsersByChannelId(channelId: Int!): [ChannelUser!]!
+  getChannelUsersByChannelId(channelId: ID!): [ChannelUser!]!
   getMe: User!
   getUsers: [User]!
   getUserById(id: Int!): User!
@@ -103,7 +103,7 @@ type Query {
   getUsersByName(user_name: String!): [User!]!
   getChannels: [Channel]!
   getChannelsByUserId(joined: Boolean!, userId: Int!): [Channel]!
-  getChannelById(channelId: Int!): Channel!
+  getChannelById(channelId: ID!): Channel!
   getParticipatingChannel(userId: Int!): [Channel]!
   getNotParticipatingChannel(userId: Int!): [Channel!]!
   getCodes: [Code]!
@@ -122,7 +122,7 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!
   updateUserAuthority(authorityId: String!, id: Int!): User!
   createChannel(createChannelInput: CreateChannelInput!, userId: Int!): Channel!
-  updateChannel(updateChannelInput: UpdateChannelInput!, channelId: Int!): Channel!
+  updateChannel(updateChannelInput: UpdateChannelInput!, channelId: ID!): Channel!
   joinChannel(joinChannelInput: JoinChannelInput!): Boolean!
   leaveChannel(leaveChannelInput: LeaveChannelInput!): Boolean!
   createCode(createCodeInput: CreateCodeInput!): Code!

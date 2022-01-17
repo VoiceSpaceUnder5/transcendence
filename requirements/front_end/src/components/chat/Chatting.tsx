@@ -46,6 +46,7 @@ export default function Chatting(): JSX.Element {
   const {channelId} = useSelector((state: RootState) => ({
     channelId: state.chatting.channelId,
   }));
+  console.log(channelId);
   const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
   const [messages, setMessages] = useState<
     {user: {id: number; name: string}; textMessage: string}[]
@@ -136,14 +137,17 @@ export default function Chatting(): JSX.Element {
   }, []);
 
   if (loading) return <>로딩 중..</>;
-  if (error) return <>에러!</>;
+  if (error) {
+    console.log(error);
+    return <>에러!</>;
+  }
   return (
     <>
       <ChattingHeadStyles>
         <Div>{data.getChannelById.name}</Div>
         <ChannelOption
           meId={meId}
-          channelId={channelId as number}
+          channelId={channelId as string}
           channelName={data.getChannelById.name as string}
           channelPasswd={data.getChannelById.password as string}
         />
