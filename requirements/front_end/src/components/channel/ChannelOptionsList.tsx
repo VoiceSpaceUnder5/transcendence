@@ -36,7 +36,7 @@ interface UserInfo {
 interface ChannelOptionsListProps {
   meId: number;
   userRoles: UserRole[];
-  channelId: number;
+  channelId: string;
   channelName: string;
   channelPasswd: string;
   meRole: string;

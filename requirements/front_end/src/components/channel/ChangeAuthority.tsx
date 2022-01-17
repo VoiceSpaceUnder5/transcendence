@@ -17,7 +17,7 @@ interface ChangeAuthorityProps {
   meRole: string;
   userId: number;
   userRole: string;
-  channelId: number;
+  channelId: string;
 }
 
 export default function ChangeAuthority({

@@ -12,7 +12,7 @@ import {io, Socket} from 'socket.io-client';
 import Div from '../common/Div';
 
 export const GET_CHANNEL_DATA = gql`
-  query getChannelData($channelId: Int!) {
+  query getChannelData($channelId: ID!) {
     getChannelById(channelId: $channelId) {
       name
       password

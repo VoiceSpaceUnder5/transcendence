@@ -13,7 +13,7 @@ type ActionReturnType = {
   type: string;
   isOpen: boolean;
   menuIdx: number;
-  channelId?: number;
+  channelId?: string;
   isPrivate?: boolean;
   isUpdated?: boolean;
   role?: string;
@@ -41,7 +41,7 @@ export const createChannel = (): ActionReturnType => ({
 });
 
 export const joinChannel = (
-  channelId: number,
+  channelId: string,
   isPrivate: boolean,
 ): ActionReturnType => {
   // const privateRoom = isPrivate ? '비공개방' : '공개방';
@@ -49,7 +49,7 @@ export const joinChannel = (
   return {isOpen: true, type: JOIN_CHANNEL, menuIdx: 4, channelId, isPrivate};
 };
 
-export const afterJoin = (channelId: number): ActionReturnType => {
+export const afterJoin = (channelId: string): ActionReturnType => {
   console.log(`channel ID:${channelId}에 입장 성공!`);
   return {isOpen: true, type: AFTER_JOIN, menuIdx: 5, channelId};
 };
@@ -70,7 +70,7 @@ export const exit = (): ActionReturnType => ({
 interface StateTypes {
   isOpen: boolean;
   menuIdx: number;
-  channelId?: number;
+  channelId?: string;
   isPrivate?: boolean;
   isUpdated?: boolean;
   role?: string;
