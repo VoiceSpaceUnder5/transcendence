@@ -20,11 +20,13 @@ import { UpdateUserInput } from './dto/update-user.update';
 import { User } from './user.entity';
 import { GetUser } from './user.decorator';
 import { UsersService } from './user.service';
+import { CodeService } from 'src/code/code.service';
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(
     private readonly usersService: UsersService,
+    private readonly codeService: CodeService,
     private readonly channelUserService: ChannelUserService,
     private readonly relationService: RelationService,
     private readonly recordService: RecordService,
@@ -81,9 +83,18 @@ export class UserResolver {
     return this.usersService.updateUserAuthority(id, authorityId);
   }
 
+  @Mutation(() => User, { name: 'updateUserConnectionStatus' })
+  async updateUserConnectionStatus(
+    @Args('id') id: number,
+    @Args('connectionStatusId') connectionStatusId: string,
+  ) {
+    return this.usersService.updateUserConnectionStatus(id, connectionStatusId);
+  }
+
+  //🏑 필드 리졸버
   @ResolveField(() => Code)
   authority(@Parent() user: User) {
-    return this.usersService.getAuthority(user.authorityId);
+    return this.codeService.findCodebyId(user.authorityId);
   }
 
   @ResolveField(() => [ChannelUser])
@@ -102,8 +113,8 @@ export class UserResolver {
     );
   }
 
-  // @ResolveField(() => [Record])
-  // async records(@Parent() user: User) {
-  //   return this.recordService.getRecords();
-  // }
+  @ResolveField(() => Code)
+  connectionStatus(@Parent() user: User) {
+    return this.codeService.findCodebyId(user.connectionStatusId);
+  }
 }

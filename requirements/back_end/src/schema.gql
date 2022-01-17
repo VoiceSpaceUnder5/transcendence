@@ -91,6 +91,8 @@ type User {
   messages: [Message!]!
   relations(typeId: String!): [Relation]!
   records: [Record]!
+  connectionStatus: Code!
+  connectionStatusId: String!
 }
 
 type Query {
@@ -119,6 +121,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!
   updateUserAuthority(authorityId: String!, id: Int!): User!
+  updateUserConnectionStatus(connectionStatusId: String!, id: Float!): User!
   createChannel(createChannelInput: CreateChannelInput!, userId: Int!): Channel!
   updateChannel(updateChannelInput: UpdateChannelInput!, channelId: ID!): Channel!
   joinChannel(joinChannelInput: JoinChannelInput!): Boolean!

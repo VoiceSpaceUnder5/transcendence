@@ -45,7 +45,7 @@ export class User extends DefaultEntity {
   authority: Code;
 
   @Field()
-  @Column()
+  @Column({ default: 'UA1' })
   authorityId: string;
 
   @Field(() => [ChannelUser])
@@ -63,4 +63,12 @@ export class User extends DefaultEntity {
   @OneToMany(() => Record, (record) => record.leftUser)
   @OneToMany(() => Record, (record) => record.rightUser)
   records: Record[];
+
+  @Field((type) => Code)
+  @ManyToOne((type) => Code, (code) => code.id)
+  connectionStatus: Code;
+
+  @Field()
+  @Column({ default: 'CS1' })
+  connectionStatusId: string;
 }
