@@ -42,7 +42,7 @@ export class ChannelResolver {
 
   @Query(() => Channel, { name: 'getChannelById' })
   async getChannelById(
-    @Args('channelId', { type: () => Int }) channelId: number,
+    @Args('channelId', { type: () => Int }) channelId: string,
   ) {
     return await this.channelService.findChannelById(channelId);
   }
@@ -135,6 +135,9 @@ export class ChannelResolver {
     if (await this.channelUserService.delete(leaveChannelInput)) return true;
     return false;
   }
+
+  // @Mutation(() => Channel, { name: 'deleteChannel' })
+  // async joinDirectChannel(@Args('')
 
   @ResolveField(() => Code) // 이렇게 하면 이렇게 쓸 수 있다.
   async type(@Parent() channel: Channel) {

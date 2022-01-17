@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
 import { Code } from 'src/code/code.entity';
 import { DefaultEntity } from 'src/default.entity';
@@ -8,15 +8,16 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @ObjectType({ description: 'Chatting Channel Data' })
 @Entity()
 export class Channel extends DefaultEntity {
-  @Field((type) => Int)
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Field((type) => ID)
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Field((type) => String)
   @Column({ type: 'varchar', length: 30 })

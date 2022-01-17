@@ -43,5 +43,6 @@ async function bootstrap() {
   //✅ 앱을 실행 시킵니다.
   await app.listen(port);
   console.log(`listening on port ${port}`);
+  console.log(new Date().getUTCMilliseconds());
 }
 bootstrap();
