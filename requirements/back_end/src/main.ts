@@ -1,4 +1,4 @@
-import { HttpException, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
@@ -43,6 +43,5 @@ async function bootstrap() {
   //✅ 앱을 실행 시킵니다.
   await app.listen(port);
   console.log(`listening on port ${port}`);
-  console.log(new Date().getUTCMilliseconds());
 }
 bootstrap();

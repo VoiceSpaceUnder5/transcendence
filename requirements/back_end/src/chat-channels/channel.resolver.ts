@@ -48,48 +48,6 @@ export class ChannelResolver {
     return await this.channelService.findChannelById(channelId);
   }
 
-  @Query(() => [Channel], {
-    name: 'getParticipatingChannel',
-    nullable: 'items',
-  })
-  async getParticipatingChannel(
-    @Args('userId', { type: () => Int }) userId: number,
-  ) {
-    // 내가 속한 channelUsers를 가져오고, 그 채널들의 Id를 긁어옴
-    const channelUsers = await this.channelUserService.findByUserId(userId);
-    const channelsId = channelUsers.map((channelUser) => {
-      return channelUser.channelId;
-    });
-
-    // 내가 있는 채널 Id를 기준으로 채널들을 긁어옴
-    return this.channelService.findChannelsByIds(channelsId);
-  }
-
-  @Query(() => [Channel], { name: 'getNotParticipatingChannel' })
-  async getNotParticipatingChannel(
-    @Args('userId', { type: () => Int }) userId: number,
-  ) {
-    // 모든 channelUsers를 가져오고, 그 채널들의 Id를 긁어옴
-    const allChannelUsers = await this.channelUserService.findAll();
-    const allChannelsId = allChannelUsers.map(
-      (channelUser) => channelUser.channelId,
-    );
-
-    // 내가 속한 channelUsers를 가져오고, 그 채널들의 Id를 긁어옴
-    const meChannelUsers = await this.channelUserService.findByUserId(userId);
-    const channelsId = meChannelUsers.map(
-      (channelUser) => channelUser.channelId,
-    );
-
-    // 모든 channelId에서 내가 속한 채널 Id를 뺌
-    const channelsExceptMeId = allChannelsId.filter(
-      (channelId) => !channelsId.includes(channelId),
-    );
-
-    // 내가 없는 채널 Id를 기준으로 채널들을 긁어옴
-    return this.channelService.findChannelsByIds(channelsExceptMeId);
-  }
-
   //UserId validation check 필요
   @Mutation(() => Channel, { name: 'createChannel' })
   async createChannel(
@@ -137,8 +95,13 @@ export class ChannelResolver {
     return false;
   }
 
-  // @Mutation(() => Channel, { name: 'deleteChannel' })
-  // async joinDirectChannel(@Args('')
+  @Mutation(() => Channel, { name: 'joinDirectChannel' })
+  async joinDirectChannel(
+    @Args('userId', { type: () => Int }) userId: number,
+    @Args('otherUserId', { type: () => Int }) otherUserId: number,
+  ) {
+    return this.channelService.joinDirectChannel(userId, otherUserId);
+  }
 
   @ResolveField(() => Code) // 이렇게 하면 이렇게 쓸 수 있다.
   async type(@Parent() channel: Channel) {
