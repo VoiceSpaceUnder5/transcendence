@@ -1,315 +1,105 @@
-import Phaser from 'phaser';
+import * as PIXI from 'pixi.js';
 import {Socket} from 'socket.io-client';
-import {GameData} from './GameData';
 
-const PADDLE_SPEED = 700;
+export class GameScene {
+  private edge: number;
+  private socket: Socket;
+  private app: PIXI.Application;
+  public ball: PIXI.Graphics;
+  private radius: number;
+  public lPaddle: PIXI.Graphics;
+  public rPaddle: PIXI.Graphics;
+  private isLeft: boolean | undefined = undefined;
 
-interface PaddleInfo {
-  pos: {
-    x: number;
-    y: number;
-  };
-  isLeft: boolean;
-}
-interface BallInfo {
-  pos: {
-    x: number;
-    y: number;
-  };
-  velocity: {
-    x: number;
-    y: number;
-  };
-}
+  constructor(edge: number, socket: Socket) {
+    this.edge = edge;
+    this.socket = socket;
 
-export class GameScene extends Phaser.Scene {
-  private myPaddle: Phaser.Types.Physics.Arcade.ImageWithDynamicBody | null =
-    null;
-  private enemyPaddle: Phaser.Types.Physics.Arcade.ImageWithDynamicBody | null =
-    null;
-  private ball: Phaser.Physics.Arcade.Image | null = null;
-  private myWall: Phaser.Types.Physics.Arcade.ImageWithStaticBody | null = null;
-  private enemyWall: Phaser.Types.Physics.Arcade.ImageWithStaticBody | null =
-    null;
-
-  private upKey1: Phaser.Input.Keyboard.Key | null = null;
-  private downKey1: Phaser.Input.Keyboard.Key | null = null;
-
-  private socket: Socket | null = null;
-  private oldPos = {x: 0, y: 0};
-  private isLeft: boolean | null = null;
-  private isStart: boolean | null = null;
-  private roomId: number | null = null;
-  private restartButton: Phaser.GameObjects.Image | null = null;
-  private startButton: Phaser.GameObjects.Image | null = null;
-  private counterNumber: Phaser.GameObjects.Text | null = null;
-  private winnerText: Phaser.GameObjects.Text | null = null;
-
-  constructor() {
-    super({key: 'game', active: true});
-  }
-
-  preload(): void {
-    this.load.image('me', '/paddle.png');
-    this.load.image('enemy', '/paddle2.png');
-    this.load.image('ball', '/ball.png');
-    this.load.image('myWall', '/wall.png');
-    this.load.image('enemyWall', '/wall2.png');
-    this.load.image('startButton', '/startButton.png');
-    this.load.image('restartButton', '/restartButton.png');
-  }
-
-  create(): void {
-    // 소켓 연결 부분
-    this.socket = GameData.socket;
-    this.socket.emit('startGame', {
-      isHard: GameData.isHard,
-      isLadder: GameData.isLadder,
-      userId: GameData.id,
+    this.app = new PIXI.Application({
+      view: document.getElementById('pixi-canvas') as HTMLCanvasElement,
+      backgroundColor: 0x000000,
+      width: edge,
+      height: edge,
+      antialias: true,
     });
 
-    // 버튼 세팅
-    this.startButton = this.add.image(400, 300, 'startButton').setInteractive();
-    this.restartButton = this.add
-      .image(400, 300, 'restartButton')
-      .setInteractive();
-    this.startButton.on('pointerdown', () => {
-      this.socket?.emit('ready', {roomId: this.roomId});
-      this.startButton?.disableInteractive();
-      this.startButton?.setVisible(false);
-    });
-    this.restartButton.on('pointerdown', () => {
-      this.socket?.emit('restart', {roomId: this.roomId});
-      this.restartButton?.disableInteractive();
-      this.restartButton?.setVisible(false);
-    });
-    this.restartButton.disableInteractive();
-    this.restartButton.setVisible(false);
-    this.startButton.disableInteractive();
-    this.startButton.setVisible(false);
+    const paddleX = (edge * 20) / 600;
+    const paddleY = (edge * 100) / 600;
 
-    // 모두 멈춰라!
-    const everyBodyStop = () => {
-      this.myPaddle?.setVelocity(0, 0);
-      this.enemyPaddle?.setVelocity(0, 0);
-      this.ball?.setVelocity(0, 0);
-    };
+    // 왼쪽 패들
+    this.lPaddle = new PIXI.Graphics();
+    this.lPaddle.beginFill(0xff0000);
+    this.lPaddle.drawRect(10, (edge - paddleY) / 2, paddleX, paddleY);
+    this.lPaddle.endFill();
 
-    this.socket.on('allIn', () => {
-      this.startButton?.setVisible(true);
-      this.startButton?.setInteractive();
-    });
-    this.socket.on('waitingGame', payload => {
-      this.isLeft = payload.isLeft;
-      this.roomId = payload.roomId;
-      GameData.setRoomId(payload.roomId);
-      GameData.setIsHard(payload.isHard);
-    });
-    this.socket.on('movedOtherPaddle', (payload: PaddleInfo) => {
-      if (this.isLeft !== payload.isLeft)
-        this.enemyPaddle?.setPosition(payload.pos.x, payload.pos.y);
-    });
-    this.socket.on('updateBall', (payload: BallInfo) => {
-      this.ball?.setX(payload.pos.x);
-      this.ball?.setY(payload.pos.y);
-      this.ball?.setVelocityX(payload.velocity.x);
-      this.ball?.setVelocityY(payload.velocity.y);
-    });
-    this.socket.on('done', ({isWinnerLeft}: {isWinnerLeft: boolean}) => {
-      everyBodyStop();
-      this.isStart = false;
-
-      this.winnerText?.setPosition(330, 220);
-      if (isWinnerLeft) this.winnerText?.setText('승자는 왼쪽!');
-      else this.winnerText?.setText('승자는 오른쪽!');
-      this.winnerText?.setVisible(true);
-      this.restartButton?.setVisible(true);
-      this.restartButton?.setInteractive();
-    });
-    this.socket.on('oneGame', ({isWinnerLeft}: {isWinnerLeft: boolean}) => {
-      everyBodyStop();
-      this.isStart = false;
-
-      this.winnerText?.setPosition(360, 220);
-      isWinnerLeft
-        ? this.winnerText?.setText('왼쪽 승!')
-        : this.winnerText?.setText('오른쪽 승!');
-      this.winnerText?.setVisible(true);
-    });
-    this.socket.on('wait3', () => {
-      this.counterNumber?.setVisible(true);
-      this.counterNumber?.setText('3');
-    });
-    this.socket.on('wait2', () => {
-      this.counterNumber?.setText('2');
-    });
-    this.socket.on('wait1', () => {
-      this.counterNumber?.setText('1');
-    });
-
-    this.socket.on('forceQuit', () => {
-      this.add.text(315, 80, '상대방이 게임을 종료하였습니다.');
-      everyBodyStop();
-      this.socket?.disconnect();
-    });
-    this.socket.on('restartGame', () => {
-      this.counterNumber?.setVisible(false);
-      this.winnerText?.setVisible(false);
-      if (this.isLeft) {
-        this.myPaddle?.setPosition(100, 300);
-        this.enemyPaddle?.setPosition(700, 300);
-        this.ball?.setPosition(200, 150);
-        this.ball?.setVelocity(500, 500);
-      } else {
-        this.myPaddle?.setPosition(700, 300);
-        this.enemyPaddle?.setPosition(100, 300);
-        this.ball?.setPosition(200, 150);
-        this.ball?.setVelocity(500, 500);
-      }
-      this.isStart = true;
-      this.ball?.setPosition(200, 150);
-      this.ball?.setVelocity(500, 500);
-    });
-
-    // 초기 세팅
-    this.socket.on('matchGame', () => {
-      // 내 paddle이 왼쪽인지 오른쪽인지 판단하고 오브젝트를 세팅하는 부분.
-      if (this.isLeft) {
-        this.myPaddle = this.physics.add.image(100, 300, 'me');
-        this.enemyPaddle = this.physics.add.image(700, 300, 'enemy');
-        this.myWall = this.physics.add.staticImage(20, 300, 'myWall');
-        this.enemyWall = this.physics.add.staticImage(780, 300, 'enemyWall');
-      } else {
-        this.myPaddle = this.physics.add.image(700, 300, 'me');
-        this.enemyPaddle = this.physics.add.image(100, 300, 'enemy');
-        this.myWall = this.physics.add.staticImage(780, 300, 'myWall');
-        this.enemyWall = this.physics.add.staticImage(20, 300, 'enemyWall');
-      }
-      // 모드 세팅
-      if (GameData.isHard) this.add.text(600, 20, 'Hard');
-      else this.add.text(600, 80, 'Normal');
-      if (GameData.isLadder) this.add.text(600, 40, 'Ladder');
-
-      // 시작
-      this.isStart = true;
-      // 초기 오브젝트 세팅
-      // 패들 세팅
-      this.myPaddle.setCollideWorldBounds(true);
-      this.myPaddle.setImmovable();
-      this.enemyPaddle.setCollideWorldBounds(true);
-      this.enemyPaddle.setImmovable();
-      //text 세팅
-      this.counterNumber = this.add.text(400, 300, '', {
-        fontSize: '32px',
-        align: 'center',
-      });
-      this.winnerText = this.add.text(360, 220, '', {
-        fontSize: '32px',
-        align: 'center',
-      });
-      this.counterNumber.setVisible(false);
-      this.winnerText.setVisible(false);
-      // 공 세팅
-      this.ball = this.physics.add.image(200, 150, 'ball');
-      this.ball.setGravity(0, 0);
-      this.ball.setCollideWorldBounds(true);
-      this.ball.setBounce(1);
-      this.ball.setVelocity(500, 500);
-
-      // 상대 벽과 충돌 처리
-      this.physics.add.collider(this.ball, this.enemyWall);
-
-      // 상대 paddle과 공과의 충돌 처리
-      if (this.enemyPaddle)
-        this.physics.add.collider(this.enemyPaddle, this.ball);
-
-      // 공, 내 패들이랑 충돌 콜백
-      const hitMyPaddle = () => {
-        if (!this.ball) return;
-        const ballInfo: BallInfo = {
-          pos: {
-            x: this.ball.x,
-            y: this.ball.y,
-          },
-          velocity: {
-            x: this.ball.body.velocity.x,
-            y: this.ball.body.velocity.y,
-          },
-        };
-        this.socket?.emit('hitBall', {
-          ballInfo: ballInfo,
-          roomId: this.roomId,
-        });
-      };
-      // 공, 내 골대 충돌 콜백
-      const goalMyGoalPost = () => {
-        if (!this.ball) return;
-        // 여기에서 점수 조작하면 된다. gql을 쓰던 socket을 쓰던
-        // 내 골대에 공이 들어 가면 실행된다.
-        everyBodyStop();
-        console.log('내 골대에 닿음.');
-        this.socket?.emit('lose', {
-          id: GameData.id,
-          roomId: GameData.roomId,
-          isLeft: this.isLeft,
-        });
-        // this.restartButton?.setVisible(true);
-        // this.restartButton?.setInteractive();
-      };
-
-      // 충돌시 콜백 부르기.
-      // 공, 패들 충돌
-      this.physics.add.collider(this.myPaddle, this.ball).collideCallback =
-        hitMyPaddle;
-      // 공, 내 골대
-      this.physics.add.collider(this.ball, this.myWall).collideCallback =
-        goalMyGoalPost;
-    });
-
-    // 키 추가
-    this.upKey1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-    this.downKey1 = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.DOWN,
+    // 오른쪽 패들
+    this.rPaddle = new PIXI.Graphics();
+    this.rPaddle.beginFill(0x0000ff);
+    this.rPaddle.drawRect(
+      edge - paddleX - 10,
+      (edge - paddleY) / 2,
+      paddleX,
+      paddleY,
     );
+    this.rPaddle.endFill();
 
-    // destroy 이벤트 잡기.
-    this.sys.scene.events.on('destroy', () => {
-      this.socket?.emit('exitGame', {roomId: this.roomId});
-      this.socket?.disconnect();
-    });
+    // 반지름: edge가 600일 때 10이 기준
+    const radius = (edge * 10) / 600;
+    this.radius = radius;
+    this.ball = new PIXI.Graphics();
+    this.ball.beginFill(0xffffff);
+    this.ball.drawCircle(edge / 2, edge / 2, radius);
+    this.ball.endFill();
 
-    // // 브라우저가 종료되거나 새로고침 되었을 때
-    // window.addEventListener('beforeunload', e => {
-    //   this.socket!.emit('exitGame', {roomId: this.roomId});
-    //   this.socket?.disconnect();
-    //   this.game.destroy(true);
-    // });
+    // app에 붙이기
+    this.app.stage.addChild(this.ball);
+    this.app.stage.addChild(this.lPaddle);
+    this.app.stage.addChild(this.rPaddle);
   }
-  // 루프
-  update(): void {
-    // 시작을 해야 동작함.
-    if (this.isStart && this.myPaddle) {
-      if (this.downKey1?.isDown) this.myPaddle.setVelocityY(PADDLE_SPEED);
-      else if (this.upKey1?.isDown) this.myPaddle.setVelocityY(-PADDLE_SPEED);
-      else this.myPaddle.setVelocityY(0);
 
-      // 움직이면 내 paddle 위치 emit
-      if (
-        this.myPaddle.x !== this.oldPos.x ||
-        this.myPaddle.y !== this.oldPos.y
-      ) {
-        const payload = {
-          pos: {
-            x: this.myPaddle.x,
-            y: this.myPaddle.y,
-          },
-          isLeft: this.isLeft,
-          roomId: this.roomId,
-        };
-        this.socket?.emit('paddleMoving', payload);
-      }
+  // gameStart() {}
+
+  getRadius() {
+    return this.radius;
+  }
+
+  setPlayerPos(playerPos: string) {
+    console.log(playerPos);
+    if (playerPos === 'left') {
+      this.isLeft = true;
+    } else {
+      this.isLeft = false;
     }
-    // 과거 위치와 현재위치 비교해서 안움직였으면 최대한 socket 메세지 안날리게 하려고 넣음.
-    if (this.myPaddle) this.oldPos = {x: this.myPaddle.x, y: this.myPaddle.y};
+  }
+
+  setBallPos(x: number, y: number) {
+    this.ball.x = (x * this.edge) / 600;
+    this.ball.y = (y * this.edge) / 600;
+  }
+
+  setLPaddlePos(y: number) {
+    this.lPaddle.y = (y * this.edge) / 600;
+  }
+
+  setRPaddlePos(y: number) {
+    this.rPaddle.y = (y * this.edge) / 600;
+  }
+
+  paddleUp() {
+    this.socket.emit('upPaddle', {
+      playerIsLeft: this.isLeft,
+    });
+  }
+
+  paddleDown() {
+    this.socket.emit('downPaddle', {
+      playerIsLeft: this.isLeft,
+    });
+  }
+
+  keyUp() {
+    this.socket.emit('keyUp', {
+      playerIsLeft: this.isLeft,
+    });
   }
 }
