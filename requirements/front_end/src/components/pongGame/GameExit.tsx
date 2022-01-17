@@ -7,7 +7,7 @@ interface OnGameExitProps {
 
 function GameExit({onExitClick}: OnGameExitProps): JSX.Element {
   return (
-    <Button large onClick={onExitClick}>
+    <Button bg="white" large onClick={onExitClick}>
       <span>게임 종료</span>
     </Button>
   );
