@@ -276,4 +276,44 @@ export const dbSeed = async () => {
     },
     ['id'],
   );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'CS',
+      id: 'CS0',
+      label_korean: '오프라인',
+      label_english: 'off-line',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'CS',
+      id: 'CS1',
+      label_korean: '온라인',
+      label_english: 'on-line',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'CS',
+      id: 'CS2',
+      label_korean: '게임 중',
+      label_english: 'on-game',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'CS',
+      id: 'CS3',
+      label_korean: '관전 중',
+      label_english: 'on-watch',
+    },
+    ['id'],
+  );
 };

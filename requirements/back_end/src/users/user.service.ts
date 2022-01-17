@@ -47,8 +47,9 @@ export class UsersService {
     return await this.userRepository.findOneOrFail(id);
   }
 
-  getAuthority(authorityId: string) {
-    return this.codeService.findCodebyId(authorityId);
+  async updateUserConnectionStatus(id: number, connectionStatusId: string) {
+    await this.userRepository.update(id, { connectionStatusId });
+    return this.userRepository.findOneOrFail(id);
   }
 
   async updateDescription(id: number, description: string) {
