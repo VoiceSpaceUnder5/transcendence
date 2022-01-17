@@ -18,7 +18,7 @@ export class ChannelService {
     private channelUserService: ChannelUserService,
   ) {}
 
-  findChannels(ids?: number[]): Promise<Channel[]> {
+  findChannels(ids?: string[]): Promise<Channel[]> {
     if (ids) return this.channelRepository.findByIds(ids);
     return this.channelRepository.find();
   }
@@ -50,11 +50,11 @@ export class ChannelService {
     }
   }
 
-  findChannelById(channelId: number): Promise<Channel> {
+  findChannelById(channelId: string): Promise<Channel> {
     return this.channelRepository.findOneOrFail(channelId);
   }
 
-  findChannelsByIds(channelsId: number[]): Promise<Channel[]> {
+  findChannelsByIds(channelsId: string[]): Promise<Channel[]> {
     return this.channelRepository.findByIds(channelsId);
   }
 

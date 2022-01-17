@@ -22,9 +22,9 @@ export class Message extends DefaultEntity {
   @ManyToOne((type) => Channel, (channel) => channel.messages)
   channel: Channel;
 
-  @Field((type) => Int)
+  @Field((type) => String)
   @Column()
-  channelId: number;
+  channelId: string;
 
   @Field(() => String)
   @Column({ type: 'varchar', length: '255' })

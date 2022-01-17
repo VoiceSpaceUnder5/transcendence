@@ -22,7 +22,7 @@ type Message {
   id: Int!
   user: User!
   userId: Int!
-  channelId: Int!
+  channelId: String!
   textMessage: String!
 }
 
@@ -30,7 +30,7 @@ type Message {
 type Channel {
   created_at: DateTime!
   updated_at: DateTime!
-  id: Int!
+  id: ID!
   name: String!
   password: String
   type: Code!
@@ -43,7 +43,7 @@ type ChannelUser {
   created_at: DateTime!
   updated_at: DateTime!
   userId: Int!
-  channelId: Int!
+  channelId: String!
   roleId: String!
   role: Code!
 }
@@ -133,7 +133,7 @@ type Mutation {
 }
 
 input CreateChannelUserInput {
-  channelId: Int!
+  channelId: String!
   userId: Int!
   roleId: String!
 }
@@ -183,7 +183,7 @@ input CreateCodeInput {
 }
 
 input CreateMessageInput {
-  channelId: Float!
+  channelId: String!
   userId: Float!
   textMessage: String!
 }

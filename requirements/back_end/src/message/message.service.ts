@@ -19,7 +19,7 @@ export class MessageService {
     return this.messageRepository.save(createMessageInput);
   }
 
-  findByChannelId(channelId: number): Promise<Message[]> {
+  findByChannelId(channelId: string): Promise<Message[]> {
     return this.messageRepository.find({ channelId });
   }
 }

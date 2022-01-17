@@ -20,7 +20,7 @@ export class ChannelUserService {
     return this.channelUserRepository.find({ userId });
   }
 
-  findByChannelId(channelId: number): Promise<ChannelUser[]> {
+  findByChannelId(channelId: string): Promise<ChannelUser[]> {
     return this.channelUserRepository.find({ channelId });
   }
 
