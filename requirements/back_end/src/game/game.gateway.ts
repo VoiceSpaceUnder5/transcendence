@@ -12,6 +12,7 @@ import { identity } from 'rxjs';
 import { Server } from 'socket.io';
 import { CreateRecordInput } from 'src/record/dto/create-record.input';
 import { RecordService } from 'src/record/record.service';
+import { UsersService } from 'src/users/user.service';
 import gameEngine, { canvasHeight, canvasWidth } from './gameEngine';
 
 interface User {
@@ -136,6 +137,21 @@ const commonRoomIds: { id: string; isStart: boolean }[] = [];
 // key: clientId, value: User
 const users = {};
 
+export function countAndRun(server: Server, room: Room) {
+  server.to(room.id).emit('test', '둘 다 준비되었다.');
+  // 게임 시작 counter 돌리자
+  server.to(room.id).emit('count', '3');
+  setTimeout(() => {
+    server.to(room.id).emit('count', '2');
+  }, 1000);
+  setTimeout(() => {
+    server.to(room.id).emit('count', '1');
+  }, 2000);
+  setTimeout(() => {
+    server.to(room.id).emit('count', '');
+    room.isStart = true;
+  }, 3000);
+}
 @WebSocketGateway(33000, {
   namespace: 'game',
   cors: {
@@ -143,7 +159,10 @@ const users = {};
   },
 })
 export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
-  constructor(private readonly recordService: RecordService) {
+  constructor(
+    private readonly recordService: RecordService,
+    private readonly userService: UsersService,
+  ) {
     // request animation frame 추가.
     setInterval(() => {
       this.runGameEngine();
@@ -195,10 +214,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     this.server.to(roomId).emit('count3');
   }
   @SubscribeMessage('sendUserData')
-  sendUserData(client: any, { userId }: { userId: number }): any {
+  async sendUserData(client: any, { userId }: { userId: number }) {
+    const userName = (await this.userService.findUserById(userId)).name;
     const user: User = {
       userId: userId,
-      userName: 'testName',
+      userName: userName,
       isLeft: true,
       isPlayer: false,
       roomId: '',
@@ -239,7 +259,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
             commonRoomId.isStart = true;
             isEmptyRoomExist = true;
             client.join(room.id);
-            this.server.to(room.id).emit('waitingRoom', { roomId: room.id });
+            this.server.to(room.id).emit('waitingRoom', {
+              roomId: room.id,
+              rightName: room.rightUser.userName,
+              leftName: room.leftUser.userName,
+            });
             return;
           }
         }
@@ -282,19 +306,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
       room.rightUserReady = true;
     }
     if (room.leftUserReady && room.rightUserReady) {
-      this.server.to(roomId).emit('test', '둘 다 준비되었다.');
-      // 게임 시작 counter 돌리자
-      this.server.to(roomId).emit('count', '3');
-      setTimeout(() => {
-        this.server.to(roomId).emit('count', '2');
-      }, 1000);
-      setTimeout(() => {
-        this.server.to(roomId).emit('count', '1');
-      }, 2000);
-      setTimeout(() => {
-        this.server.to(roomId).emit('count', '');
-        room.isStart = true;
-      }, 3000);
+      countAndRun(this.server, room);
     }
   }
 

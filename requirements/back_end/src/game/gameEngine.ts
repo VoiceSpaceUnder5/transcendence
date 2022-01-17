@@ -1,7 +1,15 @@
 import { VerifyCallback } from 'passport-oauth2';
 import { Server } from 'socket.io';
-import { Room, Vec, Pos, ControllData, GameData } from './game.gateway';
+import {
+  Room,
+  Vec,
+  Pos,
+  ControllData,
+  GameData,
+  countAndRun,
+} from './game.gateway';
 
+const winnerScore = 5;
 const paddleWidth = 20;
 const paddleHeight = 100;
 const ballWidth = 30;
@@ -136,6 +144,26 @@ function gameController(gameData: GameData) {
   }
 }
 
+// 게임 승리.
+function winTheGame(room: Room, server: Server, isWinnerLeft: boolean) {
+  isWinnerLeft ? room.leftUserScore++ : room.rightUserScore++;
+  room.isStart = false;
+  const score: GameScoreData = {
+    leftScore: room.leftUserScore,
+    rightScore: room.rightUserScore,
+  };
+  if (room.rightUserScore < winnerScore && room.leftUserScore < winnerScore) {
+    server.to(room.id).emit('gameOver', score);
+    countAndRun(server, room);
+  } else {
+    server.to(room.id).emit('done', score);
+    room.leftUserReady = false;
+    room.rightUserReady = false;
+    //record 저장.
+  }
+  room.gameData.reset();
+}
+
 // 이벤트는 밖에서 받고 room을 업데이트 해준다.
 // 이 친구는 socket연결되어 있는 친구들에게 그릴 데이터를 보내주기만 한다.
 // 게임 종료는 밖에서 확인한다.
@@ -212,28 +240,12 @@ export default function gameEngine(room: Room, server: Server) {
     if (gameData.ballSpeed <= maxBallSpeed) {
       gameData.ballSpeed += 0.5;
     }
-  } else if (isWallBallCollide === WallCollisionCheck.leftCollision) {
     // 승리 판단
-    console.log('오른쪽 승');
-    room.rightUserScore++;
-    room.isStart = false;
-    const score: GameScoreData = {
-      leftScore: room.leftUserScore,
-      rightScore: room.rightUserScore,
-    };
-    server.to(room.id).emit('gameOver', score);
-    room.gameData.reset();
+  } else if (isWallBallCollide === WallCollisionCheck.leftCollision) {
+    winTheGame(room, server, false);
     return;
   } else if (isWallBallCollide === WallCollisionCheck.rightCollision) {
-    console.log('왼쪽 승');
-    room.leftUserScore++;
-    room.isStart = false;
-    const score: GameScoreData = {
-      leftScore: room.leftUserScore,
-      rightScore: room.rightUserScore,
-    };
-    server.to(room.id).emit('gameOver', score);
-    room.gameData.reset();
+    winTheGame(room, server, true);
     return;
   }
 
