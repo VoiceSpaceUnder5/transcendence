@@ -5,7 +5,7 @@ import {GET_CHANNEL_DATA} from '../chat/Chatting';
 import Button from '../common/Button';
 
 const UPDATE_CHANNEL_NAME = gql`
-  mutation updateChannel($input: UpdateChannelInput!, $channelId: Int!) {
+  mutation updateChannel($input: UpdateChannelInput!, $channelId: ID!) {
     updateChannel(updateChannelInput: $input, channelId: $channelId) {
       name
     }
@@ -14,7 +14,7 @@ const UPDATE_CHANNEL_NAME = gql`
 
 interface ChannelSettingProps {
   onBack: () => void;
-  channelId: number;
+  channelId: string;
   channelName: string;
   channelPasswd: string;
 }

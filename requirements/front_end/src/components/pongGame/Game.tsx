@@ -11,6 +11,7 @@ export default function Game(): JSX.Element {
   useEffect(() => {
     // 게임 신청
     const phaser = new Phaser.Game(config);
+    phaser.scale.setGameSize(300, 800);
     GameData.setSocket(io('http://api.ts.io:33000/game'));
     GameData.setId(Number(localStorage.getItem('meId')));
     // setPhaser(new Phaser.Game(config));

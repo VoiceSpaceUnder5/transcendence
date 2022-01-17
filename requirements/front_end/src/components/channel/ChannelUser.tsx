@@ -11,7 +11,7 @@ interface ChannelUserProps {
   userId: number;
   userRole: string;
   name: string;
-  channelId: number;
+  channelId: string;
 }
 
 export default function ChannelUser({

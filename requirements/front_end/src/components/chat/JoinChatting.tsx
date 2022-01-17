@@ -34,13 +34,13 @@ export default function JoinChatting(): JSX.Element {
   });
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    goToChatting();
+    goToChatting().catch(console.log);
     reset();
   };
   const onClick = () => dispatch(selectMenu(2));
   useEffect(() => {
     if (isPrivate === false) {
-      goToChatting();
+      goToChatting().catch(console.log);
     }
   }, []);
 
@@ -48,7 +48,7 @@ export default function JoinChatting(): JSX.Element {
     const data = await joinChatting();
     const {joinChannel} = data.data;
     if (joinChannel === true) {
-      dispatch(afterJoin(channelId as number));
+      dispatch(afterJoin(channelId as string));
     } else {
       alert('비밀번호가 틀렸습니다');
     }

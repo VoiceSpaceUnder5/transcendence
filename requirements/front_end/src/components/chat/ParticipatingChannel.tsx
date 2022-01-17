@@ -24,7 +24,7 @@ const GET_PARTICIPATING_CHANNEL = gql`
 `;
 
 interface Channel {
-  id: number;
+  id: string;
   name: string;
   type: {
     id: string;
@@ -63,7 +63,7 @@ export default function ParticipatingChannel(): JSX.Element {
     };
   });
   if (channelList.length === 0) return <>참여 중인 채널이 없습니다.</>;
-  const afterParticipatingChannel = (channelId: number) => {
+  const afterParticipatingChannel = (channelId: string) => {
     dispatch(afterJoin(channelId));
   };
   return (

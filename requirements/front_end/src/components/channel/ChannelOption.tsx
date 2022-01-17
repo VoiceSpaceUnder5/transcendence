@@ -4,7 +4,7 @@ import Button from '../common/Button';
 import ChannelOptionsList from './ChannelOptionsList';
 
 export const GET_CHANNEL_USERS = gql`
-  query getChannelUsersByChannelId($channelId: Int!) {
+  query getChannelUsersByChannelId($channelId: ID!) {
     getChannelUsersByChannelId(channelId: $channelId) {
       userId
       roleId
@@ -19,7 +19,7 @@ export interface UserRole {
 
 interface ChannelUsersProps {
   meId: number;
-  channelId: number;
+  channelId: string;
   channelName: string;
   channelPasswd: string;
 }
