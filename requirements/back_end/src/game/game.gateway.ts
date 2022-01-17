@@ -12,7 +12,7 @@ import { identity } from 'rxjs';
 import { Server } from 'socket.io';
 import { CreateRecordInput } from 'src/record/dto/create-record.input';
 import { RecordService } from 'src/record/record.service';
-import { canvasHeight, canvasWidth } from './gameEngine';
+import gameEngine, { canvasHeight, canvasWidth } from './gameEngine';
 
 interface User {
   userId: number;
@@ -106,17 +106,17 @@ export class GameData {
     this.reset();
   }
   reset() {
-    this.leftPaddlePos = new Vec(20, canvasHeight / 2);
-    this.leftPaddleOldPos = new Vec(20, canvasHeight / 2);
+    this.leftPaddlePos = new Vec(-canvasWidth / 2 + 20, 0);
+    this.leftPaddleOldPos = new Vec(-canvasWidth / 2 + 20, 0);
     this.leftPaddleVel = new Vec(0, 0);
-    this.rightPaddlePos = new Vec(canvasWidth - 20, canvasHeight / 2);
-    this.rightPaddleOldPos = new Vec(canvasWidth - 20, canvasHeight / 2);
+    this.rightPaddlePos = new Vec(canvasWidth / 2 - 20, 0);
+    this.rightPaddleOldPos = new Vec(canvasWidth / 2 - 20, 0);
     this.rightPaddleVel = new Vec(0, 0);
-    this.ballPos = new Vec(canvasWidth / 2, canvasHeight / 2);
-    this.ballOldPos = new Vec(canvasWidth / 2, canvasHeight / 2);
-    this.ballVel = new Vec(0, 0);
-    this.ballSpeed = 10;
-    this.paddleSpeed = 12;
+    this.ballPos = new Vec(0, 0);
+    this.ballOldPos = new Vec(0, 0);
+    this.ballVel = new Vec(1, 0);
+    this.ballSpeed = 1;
+    this.paddleSpeed = 2;
     this.paddleControll = {
       leftPaddleControll: ControllData.nothing,
       rightPaddleControll: ControllData.nothing,
@@ -143,7 +143,12 @@ const users = {};
   },
 })
 export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
-  constructor(private readonly recordService: RecordService) {}
+  constructor(private readonly recordService: RecordService) {
+    // request animation frame 추가.
+    setInterval(() => {
+      this.runGameEngine();
+    }, 16);
+  }
   // updateRecordData(room: Room, winner: winState) {
   //   const record = new CreateRecordInput();
   //   record.leftUserId = room.leftUser.userId;
@@ -278,20 +283,21 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     }
     if (room.leftUserReady && room.rightUserReady) {
       this.server.to(roomId).emit('test', '둘 다 준비되었다.');
-      room.isStart = true;
       // 게임 시작 counter 돌리자
-      this.server.to(roomId).emit('count3');
+      this.server.to(roomId).emit('count', '3');
       setTimeout(() => {
-        this.server.to(roomId).emit('count2');
+        this.server.to(roomId).emit('count', '2');
       }, 1000);
       setTimeout(() => {
-        this.server.to(roomId).emit('count1');
+        this.server.to(roomId).emit('count', '1');
       }, 2000);
       setTimeout(() => {
+        this.server.to(roomId).emit('count', '');
         room.isStart = true;
       }, 3000);
     }
   }
+
   // event 받기
   @SubscribeMessage('inputEvent')
   inputEvent(
@@ -299,19 +305,19 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     { controllData, roomId }: { controllData: ControllData; roomId: string },
   ): any {
     const room = rooms[roomId] as Room;
+    if (!users[client.id] || !room) return;
     if (users[client.id].isPlayer) {
       if (users[client.id].isLeft) {
-        room.gameData.paddleControll.oldLeftPaddleControll =
-          room.gameData.paddleControll.leftPaddleControll;
         room.gameData.paddleControll.leftPaddleControll = controllData;
       } else if (!users[client.id].isLeft) {
-        room.gameData.paddleControll.oldRightPaddleControll =
-          room.gameData.paddleControll.rightPaddleControll;
         room.gameData.paddleControll.rightPaddleControll = controllData;
       }
     }
   }
-
-  @SubscribeMessage('test')
-  test(client: any, { userId }: { userId: number }): any {}
+  runGameEngine() {
+    const roomIds = Object.keys(rooms);
+    roomIds.forEach((roomId) => {
+      gameEngine(rooms[roomId], this.server);
+    });
+  }
 }

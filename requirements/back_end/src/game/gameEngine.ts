@@ -2,14 +2,14 @@ import { VerifyCallback } from 'passport-oauth2';
 import { Server } from 'socket.io';
 import { Room, Vec, Pos, ControllData, GameData } from './game.gateway';
 
-const paddleWidth = 30;
+const paddleWidth = 20;
 const paddleHeight = 100;
 const ballWidth = 30;
 const ballHeight = 30;
-export const canvasWidth = 800;
+export const canvasWidth = 600;
 export const canvasHeight = 600;
-const timePerFrame = 10;
-
+const timePerFrame = 2;
+const maxBallSpeed = 30;
 enum WallCollisionCheck {
   leftCollision,
   rightCollision,
@@ -40,24 +40,53 @@ function reflectObj(nomalVec: Vec, objVel: Vec): Vec {
     .vecAdd(objVel);
 }
 
-function checkPaddleCollision(paddlePos: Pos, obj: Pos): boolean {
+function checkPaddleCollision(
+  paddlePos: Pos,
+  obj: Pos,
+  ballVel: Vec,
+  isLeft: boolean,
+): boolean {
+  if ((isLeft && ballVel.x > 0) || (!isLeft && ballVel.x < 0)) {
+    return false;
+  }
   if (
-    paddlePos.x + paddleWidth / 2 >= obj.x - ballWidth / 2 &&
-    paddlePos.x - paddleWidth / 2 <= obj.x + ballWidth / 2 &&
     paddlePos.y + paddleHeight / 2 >= obj.y - ballHeight / 2 &&
     paddlePos.y - paddleHeight / 2 <= obj.y + ballHeight / 2
   ) {
-    return true;
+    if (isLeft) {
+      if (paddlePos.x + paddleWidth / 2 >= obj.x - ballWidth / 2) return true;
+    } else {
+      if (paddlePos.x - paddleWidth / 2 <= obj.x + ballWidth / 2) return true;
+    }
   } else return false;
 }
 
-function checkWallCollision(ballPos: Pos): WallCollisionCheck {
-  if (ballPos.x - ballWidth / 2 <= 0) return WallCollisionCheck.leftCollision;
-  else if (ballPos.x + ballWidth / 2 >= canvasWidth)
+// function checkPaddleCollision(paddlePos: Pos, obj: Pos, vel: Vec): boolean {
+//   if (
+//     paddlePos.x + paddleWidth / 2 >= obj.x - ballWidth / 2
+//   ) {
+//     return true;
+//   } else if (paddlePos.x - paddleWidth / 2 <= obj.x + ballWidth / 2 &&) {
+//     // paddlePos.y + paddleHeight / 2 >= obj.y - ballHeight / 2 &&
+//     // paddlePos.y - paddleHeight / 2 <= obj.y + ballHeight / 2
+//   } else {
+//     return false;
+//   }
+// }
+
+function checkWallCollision(
+  objPos: Pos,
+  isPaddle: boolean,
+): WallCollisionCheck {
+  const objWidth = isPaddle ? paddleWidth : ballWidth;
+  const objHeight = isPaddle ? paddleHeight : ballHeight;
+  if (objPos.x - objWidth / 2 <= -(canvasWidth / 2))
+    return WallCollisionCheck.leftCollision;
+  else if (objPos.x + objWidth / 2 >= canvasWidth / 2)
     return WallCollisionCheck.rightCollision;
-  else if (ballPos.y + ballHeight / 2 >= canvasHeight)
+  else if (objPos.y + objHeight / 2 >= canvasHeight / 2)
     return WallCollisionCheck.topCollision;
-  else if (ballPos.y - ballHeight / 2 <= 0)
+  else if (objPos.y - objHeight / 2 <= -(canvasHeight / 2))
     return WallCollisionCheck.bottomCollision;
   else return WallCollisionCheck.notCollision;
 }
@@ -81,6 +110,8 @@ function gameController(gameData: GameData) {
         break;
       }
     }
+    gameData.paddleControll.oldLeftPaddleControll =
+      gameData.paddleControll.leftPaddleControll;
   }
   if (
     gameData.paddleControll.oldRightPaddleControll !==
@@ -100,6 +131,8 @@ function gameController(gameData: GameData) {
         break;
       }
     }
+    gameData.paddleControll.oldRightPaddleControll =
+      gameData.paddleControll.rightPaddleControll;
   }
 }
 
@@ -107,13 +140,80 @@ function gameController(gameData: GameData) {
 // 이 친구는 socket연결되어 있는 친구들에게 그릴 데이터를 보내주기만 한다.
 // 게임 종료는 밖에서 확인한다.
 // 이 친구는 오직 게임이 돌아가는 충돌처리만 담당한다.
-function gameEngine(room: Room, server: Server) {
+
+// velocity
+export default function gameEngine(room: Room, server: Server) {
+  if (!room) return;
   const gameData = room.gameData;
   gameController(gameData);
   if (!room.isStart) return;
   // 벽 공 충돌 확인.
-  const isWallBallCollide = checkWallCollision(gameData.ballPos);
-  if (isWallBallCollide === WallCollisionCheck.leftCollision) {
+  const isWallBallCollide = checkWallCollision(gameData.ballPos, false);
+  if (isWallBallCollide === WallCollisionCheck.topCollision) {
+    gameData.ballVel = reflectObj(new Vec(0, 1), gameData.ballVel);
+    gameData.ballPos = gameData.ballOldPos;
+  } else if (isWallBallCollide === WallCollisionCheck.bottomCollision) {
+    gameData.ballVel = reflectObj(new Vec(0, -1), gameData.ballVel);
+    gameData.ballPos = gameData.ballOldPos;
+  }
+
+  // 벽 패들 충돌 확인. 충돌시 더 못가게 막기.
+  const isWallLeftPaddleCollide = checkWallCollision(
+    gameData.leftPaddlePos,
+    true,
+  );
+  const isWallRightPaddleCollide = checkWallCollision(
+    gameData.rightPaddlePos,
+    true,
+  );
+  if (
+    isWallLeftPaddleCollide === WallCollisionCheck.topCollision ||
+    isWallLeftPaddleCollide === WallCollisionCheck.bottomCollision
+  ) {
+    gameData.leftPaddlePos = gameData.leftPaddleOldPos;
+  }
+  if (
+    isWallRightPaddleCollide === WallCollisionCheck.topCollision ||
+    isWallRightPaddleCollide === WallCollisionCheck.bottomCollision
+  ) {
+    gameData.rightPaddlePos = gameData.rightPaddleOldPos;
+  }
+  // 공 패들 충돌 확인.
+
+  const isBallLeftPaddleCollide = checkPaddleCollision(
+    gameData.leftPaddlePos,
+    gameData.ballPos,
+    gameData.ballVel,
+    true,
+  );
+  const isBallRightPaddleCollide = checkPaddleCollision(
+    gameData.rightPaddlePos,
+    gameData.ballPos,
+    gameData.ballVel,
+    false,
+  );
+  if (isBallLeftPaddleCollide) {
+    gameData.ballVel = reflectObj(new Vec(1, 0), gameData.ballVel);
+    if (gameData.leftPaddleOldPos.y < gameData.leftPaddlePos.y) {
+      gameData.ballVel.y += 0.25;
+    } else if (gameData.leftPaddleOldPos.y > gameData.leftPaddlePos.y) {
+      gameData.ballVel.y -= 0.25;
+    }
+    if (gameData.ballSpeed <= maxBallSpeed) {
+      gameData.ballSpeed += 0.25;
+    }
+  } else if (isBallRightPaddleCollide) {
+    gameData.ballVel = reflectObj(new Vec(-1, 0), gameData.ballVel);
+    if (gameData.rightPaddleOldPos.y < gameData.rightPaddlePos.y) {
+      gameData.ballVel.y += 1;
+    } else if (gameData.rightPaddleOldPos.y > gameData.rightPaddlePos.y) {
+      gameData.ballVel.y -= 1;
+    }
+    if (gameData.ballSpeed <= maxBallSpeed) {
+      gameData.ballSpeed += 0.5;
+    }
+  } else if (isWallBallCollide === WallCollisionCheck.leftCollision) {
+    // 승리 판단
     console.log('오른쪽 승');
     room.rightUserScore++;
     room.isStart = false;
@@ -122,6 +222,8 @@ function gameEngine(room: Room, server: Server) {
       rightScore: room.rightUserScore,
     };
     server.to(room.id).emit('gameOver', score);
+    room.gameData.reset();
+    return;
   } else if (isWallBallCollide === WallCollisionCheck.rightCollision) {
     console.log('왼쪽 승');
     room.leftUserScore++;
@@ -131,61 +233,28 @@ function gameEngine(room: Room, server: Server) {
       rightScore: room.rightUserScore,
     };
     server.to(room.id).emit('gameOver', score);
-  } else if (isWallBallCollide === WallCollisionCheck.topCollision) {
-    console.log('위쪽 충돌');
-    gameData.ballVel = reflectObj(new Vec(0, 1), gameData.ballVel);
-    gameData.ballPos = gameData.ballOldPos;
-  } else if (isWallBallCollide === WallCollisionCheck.bottomCollision) {
-    console.log('아래쪽 충돌');
-    gameData.ballVel = reflectObj(new Vec(0, -1), gameData.ballVel);
-    gameData.ballPos = gameData.ballOldPos;
-  }
-
-  // 벽 패들 충돌 확인. 충돌시 더 못가게 막기.
-  const isWallLeftPaddleCollide = checkWallCollision(gameData.leftPaddlePos);
-  const isWallRightPaddleCollide = checkWallCollision(gameData.rightPaddlePos);
-  if (isWallLeftPaddleCollide) {
-    gameData.leftPaddlePos = gameData.leftPaddleOldPos;
-  }
-  if (isWallRightPaddleCollide) {
-    gameData.rightPaddlePos = gameData.rightPaddleOldPos;
-  }
-
-  // 공 패들 충돌 확인.
-  const isBallLeftPaddleCollide = checkPaddleCollision(
-    gameData.leftPaddlePos,
-    gameData.ballPos,
-  );
-  const isBallRightPaddleCollide = checkPaddleCollision(
-    gameData.rightPaddlePos,
-    gameData.ballPos,
-  );
-  if (isBallLeftPaddleCollide) {
-    gameData.ballVel = reflectObj(new Vec(1, 0), gameData.ballVel);
-    gameData.ballSpeed += 1;
-  } else if (isBallRightPaddleCollide) {
-    gameData.ballVel = reflectObj(new Vec(-1, 0), gameData.ballVel);
-    gameData.ballSpeed += 1;
+    room.gameData.reset();
+    return;
   }
 
   // 공 이동
   gameData.ballOldPos = gameData.ballPos;
   gameData.ballPos = gameData.ballVel
     .vecMult(timePerFrame)
-    .vecAdd(gameData.ballPos)
-    .vecMult(gameData.ballSpeed);
+    .vecMult(gameData.ballSpeed)
+    .vecAdd(gameData.ballPos);
   // 왼쪽 패들 움직임.
   gameData.leftPaddleOldPos = gameData.leftPaddlePos;
   gameData.leftPaddlePos = gameData.leftPaddleVel
     .vecMult(timePerFrame)
-    .vecAdd(gameData.leftPaddlePos)
-    .vecMult(gameData.paddleSpeed);
+    .vecMult(gameData.paddleSpeed)
+    .vecAdd(gameData.leftPaddlePos);
   // 오른쪽 패들 움직임.
   gameData.rightPaddleOldPos = gameData.rightPaddlePos;
   gameData.rightPaddlePos = gameData.rightPaddleVel
     .vecMult(timePerFrame)
-    .vecAdd(gameData.rightPaddlePos)
-    .vecMult(gameData.paddleSpeed);
+    .vecMult(gameData.paddleSpeed)
+    .vecAdd(gameData.rightPaddlePos);
 
   // gameData 보내기.
   const gamePositionData: GamePositionData = {
