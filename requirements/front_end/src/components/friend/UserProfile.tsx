@@ -10,6 +10,7 @@ import useRelation from '../../hooks/useRelation';
 import Img from '../common/Img';
 import {MenuList} from '../common/MenuList';
 import Friend from './Friend';
+import DirectMessages from './DirectMessage';
 
 const GET_USER_BY_ID = gql`
   query getUserById($userId: Int!) {
@@ -153,11 +154,11 @@ export default function UserProfile({
                 {/* 대화방 없으면 만들고 입장 & 있으면 거기에 입장 */}
                 {/* 차단 중이면 대화하기, 게임하기 비활성화 */}
                 <>
-                  <OptionButton
-                    disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
-                  >
-                    대화하기
-                  </OptionButton>
+                  <DirectMessages
+                    changeVisible={onBackClick}
+                    meId={meId}
+                    userId={userId}
+                  />
                   <OptionButton
                     disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
                   >
