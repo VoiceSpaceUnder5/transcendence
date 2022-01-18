@@ -27,6 +27,7 @@ import { Record } from './record/record.entity';
 import { Relation } from './relation/relation.entity';
 import { AchievementModule } from './achievement/achievement.module';
 import { Achievement } from './achievement/achievement.entity';
+import { EncryptModule } from './encrypt/encrypt.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { Achievement } from './achievement/achievement.entity';
     GameModule,
     RecordModule,
     AchievementModule,
+    EncryptModule,
   ],
   controllers: [AppController],
   providers: [AppService, CodeService],

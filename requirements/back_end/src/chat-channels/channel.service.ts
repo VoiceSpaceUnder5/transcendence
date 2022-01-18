@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChannelUserService } from 'src/chat-channel-user/channel-user.service';
 import { CodeService } from 'src/code/code.service';
-import { isValidPassword, transformPwToHash } from 'src/utils/hashing';
+import { isValidPassword, transformPwToHash } from 'src/utils/security';
 import { Repository } from 'typeorm';
 import { Channel } from './channel.entity';
 import { CreateChannelInput } from './inputs/create-channel.input';

@@ -93,6 +93,8 @@ type User {
   records: [Record]!
   connectionStatus: Code!
   connectionStatusId: String!
+  twoFactorAuth: Boolean!
+  twoFactorAuthSecret: String
 }
 
 type Achievement {
@@ -127,6 +129,12 @@ type Query {
 
 type Mutation {
   updateChannelUser(updateChannelUserInput: CreateChannelUserInput!): ChannelUser!
+
+  """Return 데이터는 QRcode 이미지 데이터의 DataUri 이다"""
+  activateTwoFactorAuth: String!
+
+  """Return 데이터는 QRcode 이미지 데이터의 DataUri 이다"""
+  deactivateTwoFactorAuth: User!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!
   updateUserAuthority(authorityId: String!, id: Int!): User!

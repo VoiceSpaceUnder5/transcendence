@@ -71,4 +71,12 @@ export class User extends DefaultEntity {
   @Field()
   @Column({ default: 'CS1' })
   connectionStatusId: string;
+
+  @Field({ defaultValue: false })
+  @Column({ default: false })
+  twoFactorAuth: boolean;
+
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  twoFactorAuthSecret?: string;
 }
