@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CodeService } from 'src/code/code.service';
+import { EncryptService } from 'src/encrypt/encrypt.service';
 import { ImageService } from 'src/image/image.service';
+import { Otp } from 'src/utils/otp';
 import { Like, Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.update';
@@ -14,6 +16,7 @@ export class UsersService {
     private userRepository: Repository<User>,
     private codeService: CodeService,
     private imageService: ImageService,
+    private encryptService: EncryptService,
   ) {}
 
   findUsers(): Promise<User[]> {
@@ -32,6 +35,25 @@ export class UsersService {
 
   findUsersByName(name: string): Promise<User[]> {
     return this.userRepository.find({ name: Like(`%${name}%`) });
+  }
+
+  async activateTwoFactorAuth(user: User) {
+    if (user.twoFactorAuth) {
+      throw new BadRequestException('이미 2FA가 활성화 되어 있습니다.');
+    }
+    const { otpURI, secret } = Otp.createOtp(user.name);
+    user.twoFactorAuth = true;
+    user.twoFactorAuthSecret = this.encryptService.encrypt(secret);
+    await this.userRepository.update(user.id, user);
+    const dataUri = await Otp.createQrCode(otpURI);
+    return dataUri;
+  }
+
+  async deactivateTwoFactorAuth(user: User) {
+    await this.userRepository.update(user.id, {
+      twoFactorAuth: false,
+      twoFactorAuthSecret: null,
+    });
   }
 
   async create(createUserInput: CreateUserInput): Promise<User> {

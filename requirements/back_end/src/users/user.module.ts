@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { channelUserModule } from 'src/chat-channel-user/channel-user.module';
 import { CodeModule } from 'src/code/code.module';
+import { EncryptModule } from 'src/encrypt/encrypt.module';
 import { ImageModule } from 'src/image/image.module';
 import { RecordModule } from 'src/record/record.module';
 import { RelationModule } from 'src/relation/relation.module';
@@ -17,6 +18,7 @@ import { UsersService } from './user.service';
     RelationModule,
     ImageModule,
     RecordModule,
+    EncryptModule,
   ],
   exports: [TypeOrmModule, UsersService],
   providers: [UsersService, UserResolver],

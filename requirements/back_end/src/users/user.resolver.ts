@@ -40,6 +40,25 @@ export class UserResolver {
     return user;
   }
 
+  @UseGuards(GqlJwtAccessGuard)
+  @Mutation(() => String, {
+    name: 'activateTwoFactorAuth',
+    description: 'Return 데이터는 QRcode 이미지 데이터의 DataUri 이다',
+  })
+  async activateTwoFactorAuth(@GetUser() user: User) {
+    return await this.usersService.activateTwoFactorAuth(user);
+  }
+
+  @UseGuards(GqlJwtAccessGuard)
+  @Mutation(() => User, {
+    name: 'deactivateTwoFactorAuth',
+    description: 'Return 데이터는 QRcode 이미지 데이터의 DataUri 이다',
+  })
+  async deactivateTwoFactorAuth(@GetUser() user: User) {
+    await this.usersService.deactivateTwoFactorAuth(user);
+    return this.usersService.findUserById(user.id);
+  }
+
   @Query(() => [User], { name: 'getUsers', nullable: 'items' })
   async getUsers() {
     return this.usersService.findUsers();
