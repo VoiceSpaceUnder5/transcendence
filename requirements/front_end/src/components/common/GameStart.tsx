@@ -15,6 +15,7 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   const [isHard, setIsHard] = useState(false);
   const history = useHistory();
   const [isLadder, setIsLadder] = useState(false);
+  const [join, setJoin] = useState(false);
 
   // 게임 소켓은 스타트 버튼이 뜨면  바로 연결됩니다.
   useEffect(() => {
@@ -29,6 +30,9 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     GameData.setId(Number(localStorage.getItem('meId')));
     // user 데이터 집어넣기.
     GameData.socket.emit('sendUserData', {userId: GameData.id});
+    GameData.socket.on('requestGame', (roomId: string) => {
+      setJoin(true);
+    });
   }, []);
 
   const onToggle = () => {
@@ -52,6 +56,12 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     if (isHard) setIsHard(!isHard);
     setIsLadder(!isLadder);
   };
+  const onWithMeClick = () => {
+    if (GameData.socket) GameData.socket.emit('acceptGame');
+  };
+  const onCancelClick = () => {
+    history.push('/home');
+  };
   return (
     <GameStartStyles>
       {!isStart ? (
@@ -63,6 +73,20 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
             <Button left large onClick={onClickStart}>
               <span style={{paddingLeft: '24px'}}>게임 시작</span>
             </Button>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <button hidden={!join} onClick={onWithMeClick}>
+                함께하자
+              </button>
+              <button hidden={!join} onClick={onCancelClick}>
+                취소
+              </button>
+            </div>
             {toggle && (
               <GameOptions>
                 Game Mode

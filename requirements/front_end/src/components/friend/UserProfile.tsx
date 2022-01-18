@@ -11,6 +11,8 @@ import Img from '../common/Img';
 import {MenuList} from '../common/MenuList';
 import Friend from './Friend';
 import DirectMessages from './DirectMessage';
+import {GameData} from '../pongGame/GameData';
+import {useHistory} from 'react-router-dom';
 
 const GET_USER_BY_ID = gql`
   query getUserById($userId: Int!) {
@@ -42,8 +44,16 @@ export default function UserProfile({
     },
     fetchPolicy: 'no-cache',
   });
+  const history = useHistory();
   if (loading) return <></>;
   if (error) return <>에러 ..</>;
+  const onGameStartButtonClick = () => {
+    GameData.setIsHard(false);
+    GameData.setOnGameUserId(userId);
+    GameData.setIsRandomMatch(false);
+    GameData.setIsLadder(false);
+    history.push('/game');
+  };
   //   console.log(data.getUserById);
   return (
     <>
@@ -160,6 +170,7 @@ export default function UserProfile({
                     userId={userId}
                   />
                   <OptionButton
+                    onClick={onGameStartButtonClick}
                     disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
                   >
                     게임하기
