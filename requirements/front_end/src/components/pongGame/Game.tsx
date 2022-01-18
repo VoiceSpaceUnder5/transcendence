@@ -3,7 +3,6 @@ import {useHistory} from 'react-router-dom';
 import GameExit from './GameExit';
 import {GameData} from './GameData';
 import {GameScene} from './GameScene';
-import GameStart from '../common/GameStart';
 
 interface startGamePayload {
   isRandomMatch: boolean;
@@ -62,10 +61,13 @@ export default function Game(): JSX.Element {
       GameData.socket.on('forceQuit', () => {
         setStartState(StartState.quit);
       });
-      GameData.socket.on('count', (counter: string) => {
+      GameData.socket.on('count', ({counter}: {counter: string}) => {
         setCounter(counter);
         setStartState(StartState.run);
       });
+      // GameData.socket.on('setScore', (gameScoreData: GameScoreData) => {
+      //   setScore(gameScoreData);
+      // });
       GameData.socket.on('gameOver', (gameScoreData: GameScoreData) => {
         setScore(gameScoreData);
       });

@@ -1,5 +1,7 @@
 import { VerifyCallback } from 'passport-oauth2';
 import { Server } from 'socket.io';
+import { CreateRecordInput } from 'src/record/dto/create-record.input';
+import { RecordService } from 'src/record/record.service';
 import {
   Room,
   Vec,
@@ -32,7 +34,7 @@ interface GamePositionData {
   ballPos: Pos;
 }
 
-interface GameScoreData {
+export interface GameScoreData {
   leftScore: number;
   rightScore: number;
 }
@@ -67,6 +69,24 @@ function checkPaddleCollision(
       if (paddlePos.x - paddleWidth / 2 <= obj.x + ballWidth / 2) return true;
     }
   } else return false;
+}
+
+export function makeRecord(
+  room: Room,
+  isCanceled: boolean = false,
+): CreateRecordInput {
+  const record = new CreateRecordInput();
+  record.leftUserId = room.leftUser.userId;
+  record.rightUserId = room.rightUser.userId;
+  record.modeId = room.isHard ? 'BM1' : 'BM0';
+  record.typeId = room.isLadder ? 'BT1' : 'BT0';
+  record.leftUserScore = room.leftUserScore;
+  record.rightUserScore = room.rightUserScore;
+  if (isCanceled) record.resultId = 'BR3';
+  else if (room.leftUserScore >= winnerScore) record.resultId = 'BR0';
+  else if (room.rightUserScore >= winnerScore) record.resultId = 'BR1';
+
+  return record;
 }
 
 // function checkPaddleCollision(paddlePos: Pos, obj: Pos, vel: Vec): boolean {
@@ -145,7 +165,12 @@ function gameController(gameData: GameData) {
 }
 
 // 게임 승리.
-function winTheGame(room: Room, server: Server, isWinnerLeft: boolean) {
+async function winTheGame(
+  room: Room,
+  server: Server,
+  isWinnerLeft: boolean,
+  recordService: RecordService,
+) {
   isWinnerLeft ? room.leftUserScore++ : room.rightUserScore++;
   room.isStart = false;
   const score: GameScoreData = {
@@ -157,9 +182,12 @@ function winTheGame(room: Room, server: Server, isWinnerLeft: boolean) {
     countAndRun(server, room);
   } else {
     server.to(room.id).emit('done', score);
+
     room.leftUserReady = false;
     room.rightUserReady = false;
-    //record 저장.
+    recordService.createRecord(makeRecord(room));
+    room.leftUserScore = 0;
+    room.rightUserScore = 0;
   }
   room.gameData.reset(room.isHard);
 }
@@ -170,7 +198,11 @@ function winTheGame(room: Room, server: Server, isWinnerLeft: boolean) {
 // 이 친구는 오직 게임이 돌아가는 충돌처리만 담당한다.
 
 // velocity
-export default function gameEngine(room: Room, server: Server) {
+export default function gameEngine(
+  room: Room,
+  server: Server,
+  recordService: RecordService,
+) {
   if (!room) return;
   const gameData = room.gameData;
   gameController(gameData);
@@ -242,10 +274,10 @@ export default function gameEngine(room: Room, server: Server) {
     }
     // 승리 판단
   } else if (isWallBallCollide === WallCollisionCheck.leftCollision) {
-    winTheGame(room, server, false);
+    winTheGame(room, server, false, recordService);
     return;
   } else if (isWallBallCollide === WallCollisionCheck.rightCollision) {
-    winTheGame(room, server, true);
+    winTheGame(room, server, true, recordService);
     return;
   }
 

@@ -13,7 +13,12 @@ import { Server } from 'socket.io';
 import { CreateRecordInput } from 'src/record/dto/create-record.input';
 import { RecordService } from 'src/record/record.service';
 import { UsersService } from 'src/users/user.service';
-import gameEngine, { canvasHeight, canvasWidth } from './gameEngine';
+import gameEngine, {
+  canvasHeight,
+  canvasWidth,
+  GameScoreData,
+  makeRecord,
+} from './gameEngine';
 
 interface User {
   userId: number;
@@ -140,14 +145,19 @@ const commonRoomIds: { id: string; isStart: boolean }[] = [];
 const users = {};
 
 export function countAndRun(server: Server, room: Room) {
-  server.to(room.id).emit('test', '둘 다 준비되었다.');
   // 게임 시작 counter 돌리자
-  server.to(room.id).emit('count', '3');
+  const gameScoreData: GameScoreData = {
+    leftScore: room.leftUserScore,
+    rightScore: room.rightUserScore,
+  };
+
+  server.to(room.id).emit('setScore', { gameScoreData: gameScoreData });
+  server.to(room.id).emit('count', { counter: '3' });
   setTimeout(() => {
-    server.to(room.id).emit('count', '2');
+    server.to(room.id).emit('count', { counter: '2' });
   }, 1000);
   setTimeout(() => {
-    server.to(room.id).emit('count', '1');
+    server.to(room.id).emit('count', { counter: '1' });
   }, 2000);
   setTimeout(() => {
     server.to(room.id).emit('count', '');
@@ -171,20 +181,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
       this.runGameEngine();
     }, 16);
   }
-  // updateRecordData(room: Room, winner: winState) {
-  //   const record = new CreateRecordInput();
-  //   record.leftUserId = room.leftUser.userId;
-  //   record.rightUserId = room.rightUser.userId;
-  //   record.modeId = room.isHard ? 'BM1' : 'BM0';
-  //   record.typeId = room.isLadder ? 'BT1' : 'BT0';
-  //   record.leftUserScore = room.leftUserScore;
-  //   record.rightUserScore = room.rightUserScore;
-  //   if (winner === winState.leftUserWin) record.resultId = 'BR0';
-  //   else if (winner === winState.rightUserWin) record.resultId = 'BR1';
-  //   else if (winner === winState.draw) record.resultId = 'BR2';
-  //   else if (winner === winState.canceled) record.resultId = 'BR3';
-  //   this.recordService.createRecord(record);
-  // }
   // 유저 초기화
   handleConnection(client: any, ...args: any[]) {
     console.log('게임 소켓이 연결되었습니다. : ', client.id);
@@ -196,7 +192,12 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     if (!user) return;
     if (user.isPlayer) {
       this.server.to(user.roomId).emit('forceQuit');
-      delete rooms[user.roomId];
+      const room = rooms[user.roomId] as Room;
+      if (room) {
+        if (!(room.leftUserScore === 0 && room.rightUserScore === 0))
+          this.recordService.createRecord(makeRecord(room, true));
+        delete rooms[user.roomId];
+      }
       commonRoomIds.forEach((commonRoomId, i) => {
         if (commonRoomId.id === user.roomId) {
           commonRoomIds.splice(i, 1);
@@ -204,6 +205,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         }
       });
     }
+    this.userService.updateUserConnectionStatus(user.userId, 'CS0');
     delete users[client.id];
     console.log('게임소켓 연결이 끊겼습니다. : ', client.id);
   }
@@ -214,6 +216,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     setTimeout(() => {});
     this.server.to(roomId).emit('count3');
   }
+
   @SubscribeMessage('sendUserData')
   async sendUserData(client: any, { userId }: { userId: number }) {
     const userName = (await this.userService.findUserById(userId)).name;
@@ -225,6 +228,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
       roomId: '',
     };
     users[client.id] = user;
+    this.userService.updateUserConnectionStatus(userId, 'CS1');
   }
 
   @SubscribeMessage('startGame')
@@ -242,6 +246,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     // 왜 처음에 소켓 연결이 늦는지 모르겠네???
     if (!user) return;
     user.isPlayer = true;
+    this.userService.updateUserConnectionStatus(user.userId, 'CS2');
     // 랜덤 룸 매칭
     if (payload.isRandomMatch) {
       // 빈 방 있는지 확인.
@@ -330,7 +335,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   runGameEngine() {
     const roomIds = Object.keys(rooms);
     roomIds.forEach((roomId) => {
-      gameEngine(rooms[roomId], this.server);
+      gameEngine(rooms[roomId], this.server, this.recordService);
     });
   }
 }
