@@ -40,6 +40,7 @@ export default function Game(): JSX.Element {
     leftScore: 0,
     rightScore: 0,
   });
+  const [userNames, setUserNames] = useState({rightName: '', leftName: ''});
   const [counter, setCounter] = useState('');
 
   useEffect(() => {
@@ -60,13 +61,24 @@ export default function Game(): JSX.Element {
       GameData.socket.on('forceQuit', () => {
         setStartState(StartState.quit);
       });
-      GameData.socket.on('count', (counter: string) => {
+      GameData.socket.on('count', ({counter}: {counter: string}) => {
         setCounter(counter);
+        setStartState(StartState.run);
       });
+      // GameData.socket.on('setScore', (gameScoreData: GameScoreData) => {
+      //   setScore(gameScoreData);
+      // });
       GameData.socket.on('gameOver', (gameScoreData: GameScoreData) => {
         setScore(gameScoreData);
       });
-
+      GameData.socket.on('done', (gameScoreData: GameScoreData) => {
+        setScore(gameScoreData);
+        setStartState(StartState.done);
+      });
+      GameData.socket.on('forceQuit', () => {
+        setStartState(StartState.quit);
+        console.log(startState);
+      });
       GameData.socket.on('rendering', gamePositionData => {
         // console.log(gamePositionData.ballPos.x, gamePositionData.ballPos.y);
         gameScene.setBallPos(
@@ -78,37 +90,53 @@ export default function Game(): JSX.Element {
       });
 
       // socket io 메시지 받는곳
-      GameData.socket.on('waitingRoom', ({roomId}: {roomId: string}) => {
-        GameData.setRoomId(roomId);
-        setStartState(StartState.ready);
+      GameData.socket.on(
+        'waitingRoom',
+        ({
+          roomId,
+          rightName,
+          leftName,
+        }: {
+          roomId: string;
+          rightName: string;
+          leftName: string;
+        }) => {
+          GameData.setRoomId(roomId);
+          setStartState(StartState.ready);
+          setUserNames({rightName: rightName, leftName: leftName});
 
-        // 키 세팅
-        const keydownEvent = (e: KeyboardEvent) => {
-          let controllData = ControllData.nothing;
-          if (e.key === 'ArrowUp') {
-            controllData = ControllData.up;
-          } else if (e.key === 'ArrowDown') {
-            controllData = ControllData.down;
-          }
-          GameData.socket.emit('inputEvent', {
-            controllData: controllData,
-            roomId: GameData.roomId,
-          });
-        };
-        const keyupEvent = (e: KeyboardEvent) => {
-          const controllData = ControllData.nothing;
-          if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-            GameData.socket.emit('inputEvent', {
-              controllData: controllData,
-              roomId: GameData.roomId,
-            });
-          }
-        };
+          // 키 세팅
 
-        addEventListener('keydown', keydownEvent);
-        addEventListener('keyup', keyupEvent);
-      });
+          addEventListener('keydown', keydownEvent);
+          addEventListener('keyup', keyupEvent);
+        },
+      );
     }
+    const keydownEvent = (e: KeyboardEvent) => {
+      let controllData = ControllData.nothing;
+      if (e.key === 'ArrowUp') {
+        controllData = ControllData.up;
+      } else if (e.key === 'ArrowDown') {
+        controllData = ControllData.down;
+      }
+      GameData.socket.emit('inputEvent', {
+        controllData: controllData,
+        roomId: GameData.roomId,
+      });
+    };
+    const keyupEvent = (e: KeyboardEvent) => {
+      const controllData = ControllData.nothing;
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        GameData.socket.emit('inputEvent', {
+          controllData: controllData,
+          roomId: GameData.roomId,
+        });
+      }
+    };
+    return () => {
+      removeEventListener('keydown', keydownEvent);
+      removeEventListener('keyup', keyupEvent);
+    };
   }, []);
 
   const onReadyClick = () => {
@@ -129,13 +157,33 @@ export default function Game(): JSX.Element {
         alignItems: 'center',
       }}
     >
-      <GameExit onExitClick={onExit} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          color: 'white',
+          justifyContent: 'space-around',
+        }}
+      >
+        {userNames.leftName}
+        <GameExit onExitClick={onExit} />
+        {userNames.rightName}
+      </div>
       <div style={{color: 'white'}}>
         {score.leftScore} : {score.rightScore}
       </div>
       <button onClick={onReadyClick} hidden={startState !== StartState.ready}>
         Ready
       </button>
+      <button onClick={onReadyClick} hidden={startState !== StartState.done}>
+        Restart
+      </button>
+      <div style={{color: 'white'}} hidden={startState !== StartState.quit}>
+        상대방이 나갔습니다.
+      </div>
+      <div style={{color: 'white'}} hidden={startState !== StartState.waiting}>
+        상대방 기다리는 중...
+      </div>
       <h2 style={{color: 'white'}}>{counter}</h2>
       <canvas
         id="pixi-canvas"

@@ -1,7 +1,17 @@
 import { VerifyCallback } from 'passport-oauth2';
 import { Server } from 'socket.io';
-import { Room, Vec, Pos, ControllData, GameData } from './game.gateway';
+import { CreateRecordInput } from 'src/record/dto/create-record.input';
+import { RecordService } from 'src/record/record.service';
+import {
+  Room,
+  Vec,
+  Pos,
+  ControllData,
+  GameData,
+  countAndRun,
+} from './game.gateway';
 
+const winnerScore = 5;
 const paddleWidth = 20;
 const paddleHeight = 100;
 const ballWidth = 30;
@@ -24,7 +34,7 @@ interface GamePositionData {
   ballPos: Pos;
 }
 
-interface GameScoreData {
+export interface GameScoreData {
   leftScore: number;
   rightScore: number;
 }
@@ -59,6 +69,24 @@ function checkPaddleCollision(
       if (paddlePos.x - paddleWidth / 2 <= obj.x + ballWidth / 2) return true;
     }
   } else return false;
+}
+
+export function makeRecord(
+  room: Room,
+  isCanceled: boolean = false,
+): CreateRecordInput {
+  const record = new CreateRecordInput();
+  record.leftUserId = room.leftUser.userId;
+  record.rightUserId = room.rightUser.userId;
+  record.modeId = room.isHard ? 'BM1' : 'BM0';
+  record.typeId = room.isLadder ? 'BT1' : 'BT0';
+  record.leftUserScore = room.leftUserScore;
+  record.rightUserScore = room.rightUserScore;
+  if (isCanceled) record.resultId = 'BR3';
+  else if (room.leftUserScore >= winnerScore) record.resultId = 'BR0';
+  else if (room.rightUserScore >= winnerScore) record.resultId = 'BR1';
+
+  return record;
 }
 
 // function checkPaddleCollision(paddlePos: Pos, obj: Pos, vel: Vec): boolean {
@@ -136,13 +164,45 @@ function gameController(gameData: GameData) {
   }
 }
 
+// 게임 승리.
+async function winTheGame(
+  room: Room,
+  server: Server,
+  isWinnerLeft: boolean,
+  recordService: RecordService,
+) {
+  isWinnerLeft ? room.leftUserScore++ : room.rightUserScore++;
+  room.isStart = false;
+  const score: GameScoreData = {
+    leftScore: room.leftUserScore,
+    rightScore: room.rightUserScore,
+  };
+  if (room.rightUserScore < winnerScore && room.leftUserScore < winnerScore) {
+    server.to(room.id).emit('gameOver', score);
+    countAndRun(server, room);
+  } else {
+    server.to(room.id).emit('done', score);
+
+    room.leftUserReady = false;
+    room.rightUserReady = false;
+    recordService.createRecord(makeRecord(room));
+    room.leftUserScore = 0;
+    room.rightUserScore = 0;
+  }
+  room.gameData.reset(room.isHard);
+}
+
 // 이벤트는 밖에서 받고 room을 업데이트 해준다.
 // 이 친구는 socket연결되어 있는 친구들에게 그릴 데이터를 보내주기만 한다.
 // 게임 종료는 밖에서 확인한다.
 // 이 친구는 오직 게임이 돌아가는 충돌처리만 담당한다.
 
 // velocity
-export default function gameEngine(room: Room, server: Server) {
+export default function gameEngine(
+  room: Room,
+  server: Server,
+  recordService: RecordService,
+) {
   if (!room) return;
   const gameData = room.gameData;
   gameController(gameData);
@@ -212,28 +272,12 @@ export default function gameEngine(room: Room, server: Server) {
     if (gameData.ballSpeed <= maxBallSpeed) {
       gameData.ballSpeed += 0.5;
     }
-  } else if (isWallBallCollide === WallCollisionCheck.leftCollision) {
     // 승리 판단
-    console.log('오른쪽 승');
-    room.rightUserScore++;
-    room.isStart = false;
-    const score: GameScoreData = {
-      leftScore: room.leftUserScore,
-      rightScore: room.rightUserScore,
-    };
-    server.to(room.id).emit('gameOver', score);
-    room.gameData.reset();
+  } else if (isWallBallCollide === WallCollisionCheck.leftCollision) {
+    winTheGame(room, server, false, recordService);
     return;
   } else if (isWallBallCollide === WallCollisionCheck.rightCollision) {
-    console.log('왼쪽 승');
-    room.leftUserScore++;
-    room.isStart = false;
-    const score: GameScoreData = {
-      leftScore: room.leftUserScore,
-      rightScore: room.rightUserScore,
-    };
-    server.to(room.id).emit('gameOver', score);
-    room.gameData.reset();
+    winTheGame(room, server, true, recordService);
     return;
   }
 
