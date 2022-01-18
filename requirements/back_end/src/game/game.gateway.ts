@@ -8,6 +8,7 @@ import {
 import { isEmpty } from 'class-validator';
 import { RuleTester } from 'eslint';
 import { isObjectType } from 'graphql';
+import { stringify } from 'querystring';
 import { identity } from 'rxjs';
 import { Server } from 'socket.io';
 import { CreateRecordInput } from 'src/record/dto/create-record.input';
@@ -314,6 +315,38 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     if (room.leftUserReady && room.rightUserReady) {
       countAndRun(this.server, room);
     }
+  }
+
+  @SubscribeMessage('spectate')
+  spectateGame(
+    client: any,
+    {
+      onGameUserId,
+    }: {
+      onGameUserId: number;
+    },
+  ): any {
+    // 신청한 사람을 찾자.
+    const keys = Object.keys(users);
+    keys.forEach((key) => {
+      const user = users[key] as User;
+      if (user.userId === onGameUserId) {
+        const room = rooms[user.roomId] as Room;
+        if (!room) return;
+        client.join(user.roomId);
+        this.server.to(user.roomId).emit('updateScore', {
+          leftScore: room.leftUserScore,
+          rightScore: room.rightUserScore,
+        });
+        this.server.to(user.roomId).emit('updateUserName', {
+          leftName: room.leftUser.userName,
+          rightName: room.rightUser.userName,
+        });
+        const me = users[client.id] as User;
+        this.userService.updateUserConnectionStatus(me.userId, 'CS3');
+        return;
+      }
+    });
   }
 
   // event 받기

@@ -17,12 +17,6 @@ interface GameScoreData {
   rightScore: number;
 }
 
-enum ControllData {
-  up,
-  down,
-  nothing,
-}
-
 enum StartState {
   waiting,
   ready,
@@ -33,7 +27,7 @@ enum StartState {
 }
 
 // 여기서 프론트 게임을 다 구현해보자.
-export default function Game(): JSX.Element {
+export default function SpectateGame(): JSX.Element {
   const history = useHistory();
   const [startState, setStartState] = useState<StartState>(StartState.waiting);
   const [score, setScore] = useState<GameScoreData>({
@@ -48,16 +42,9 @@ export default function Game(): JSX.Element {
 
     const gameScene = new GameScene(edge, GameData.socket);
     // 게임 신청
-    const payload: StartGamePayload = {
-      isRandomMatch: GameData.isRandomMatch,
-      opponentUserId: 0,
-      isHard: GameData.isHard,
-      isLadder: GameData.isLadder,
-      userId: GameData.id,
-    };
     if (!GameData.socket) history.push('/home');
     if (GameData.socket) {
-      GameData.socket.emit('startGame', payload);
+      GameData.socket.emit('spectate', {onGameUserId: 76167});
       GameData.socket.on('forceQuit', () => {
         setStartState(StartState.quit);
       });
@@ -65,19 +52,25 @@ export default function Game(): JSX.Element {
         setCounter(counter);
         setStartState(StartState.run);
       });
-      // GameData.socket.on('setScore', (gameScoreData: GameScoreData) => {
-      //   setScore(gameScoreData);
-      // });
+      GameData.socket.on(
+        'updateScore',
+        (score: {leftScore: number; rightScore: number}) => {
+          setScore(score);
+        },
+      );
+      // setUserNames({rightName: rightName, leftName: leftName});
+      GameData.socket.on(
+        'updateUserName',
+        (names: {leftName: string; rightName: string}) => {
+          setUserNames(names);
+        },
+      );
       GameData.socket.on('gameOver', (gameScoreData: GameScoreData) => {
         setScore(gameScoreData);
       });
       GameData.socket.on('done', (gameScoreData: GameScoreData) => {
         setScore(gameScoreData);
-        setStartState(StartState.done);
-      });
-      GameData.socket.on('forceQuit', () => {
-        setStartState(StartState.quit);
-        console.log(startState);
+        setStartState(StartState.waiting);
       });
       GameData.socket.on('rendering', gamePositionData => {
         // console.log(gamePositionData.ballPos.x, gamePositionData.ballPos.y);
@@ -104,45 +97,11 @@ export default function Game(): JSX.Element {
           GameData.setRoomId(roomId);
           setStartState(StartState.ready);
           setUserNames({rightName: rightName, leftName: leftName});
-
-          // 키 세팅
-
-          addEventListener('keydown', keydownEvent);
-          addEventListener('keyup', keyupEvent);
         },
       );
     }
-    const keydownEvent = (e: KeyboardEvent) => {
-      let controllData = ControllData.nothing;
-      if (e.key === 'ArrowUp') {
-        controllData = ControllData.up;
-      } else if (e.key === 'ArrowDown') {
-        controllData = ControllData.down;
-      }
-      GameData.socket.emit('inputEvent', {
-        controllData: controllData,
-        roomId: GameData.roomId,
-      });
-    };
-    const keyupEvent = (e: KeyboardEvent) => {
-      const controllData = ControllData.nothing;
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        GameData.socket.emit('inputEvent', {
-          controllData: controllData,
-          roomId: GameData.roomId,
-        });
-      }
-    };
-    return () => {
-      removeEventListener('keydown', keydownEvent);
-      removeEventListener('keyup', keyupEvent);
-    };
   }, []);
 
-  const onReadyClick = () => {
-    setStartState(StartState.waiting);
-    GameData.socket.emit('ready', {roomId: GameData.roomId});
-  };
   // 소켓 연결이 끊어지나??
   const onExit = () => {
     history.push('/home');
@@ -172,17 +131,11 @@ export default function Game(): JSX.Element {
       <div style={{color: 'white'}}>
         {score.leftScore} : {score.rightScore}
       </div>
-      <button onClick={onReadyClick} hidden={startState !== StartState.ready}>
-        Ready
-      </button>
-      <button onClick={onReadyClick} hidden={startState !== StartState.done}>
-        Restart
-      </button>
       <div style={{color: 'white'}} hidden={startState !== StartState.quit}>
-        상대방이 나갔습니다.
+        방이 제거되었습니다.
       </div>
       <div style={{color: 'white'}} hidden={startState !== StartState.waiting}>
-        상대방 기다리는 중...
+        게임 준비중입니다...
       </div>
       <h2 style={{color: 'white'}}>{counter}</h2>
       <canvas
@@ -196,6 +149,3 @@ export default function Game(): JSX.Element {
     </div>
   );
 }
-
-// const GameDiv = styled.div`
-// `;

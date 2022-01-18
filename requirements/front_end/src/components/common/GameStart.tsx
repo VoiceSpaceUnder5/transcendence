@@ -24,6 +24,8 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
       GameData.socket.disconnect();
     }
     GameData.setSocket(io('http://api.ts.io:33000/game'));
+    GameData.setIsHard(isHard);
+    GameData.setIsLadder(isLadder);
     GameData.setId(Number(localStorage.getItem('meId')));
     // user 데이터 집어넣기.
     GameData.socket.emit('sendUserData', {userId: GameData.id});
@@ -37,6 +39,7 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   };
   const onClickStart = () => {
     GameData.setIsHard(isHard);
+    GameData.setIsRandomMatch(true);
     history.push({pathname: '/game', state: {isStart: true}});
     GameData.setIsLadder(isLadder);
   };

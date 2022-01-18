@@ -6,6 +6,7 @@ import Button from './Button';
 import GameStart from './GameStart';
 import LogOut from './LogOut';
 import Img from './Img';
+import SpectatingButton from '../pongGame/SpectatingButton';
 
 interface NavbarProps {
   isStart?: boolean;
@@ -20,6 +21,7 @@ function Navbar({isStart}: NavbarProps): JSX.Element {
   const onClick = () => setIsClick(!isClick);
   return (
     <NavbarBackground>
+      <SpectatingButton />
       <Nav align="start">
         <Button bg="dark" brand icon>
           <HiCube />
