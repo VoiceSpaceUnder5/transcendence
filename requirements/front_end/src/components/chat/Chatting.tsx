@@ -122,7 +122,7 @@ export default function Chatting(): JSX.Element {
           messages.concat({
             user: {
               id: body.userId,
-              name: body.username,
+              name: body.name,
             },
             textMessage: body.message,
           }),

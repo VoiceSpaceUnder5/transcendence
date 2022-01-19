@@ -11,6 +11,8 @@ import Img from '../common/Img';
 import {MenuList} from '../common/MenuList';
 import Friend from './Friend';
 import DirectMessages from './DirectMessage';
+import {GameData} from '../pongGame/GameData';
+import {useHistory} from 'react-router-dom';
 
 const GET_USER_BY_ID = gql`
   query getUserById($userId: Int!) {
@@ -18,6 +20,7 @@ const GET_USER_BY_ID = gql`
       name
       email
       description
+      connectionStatusId
     }
   }
 `;
@@ -42,9 +45,19 @@ export default function UserProfile({
     },
     fetchPolicy: 'no-cache',
   });
+  const history = useHistory();
   if (loading) return <></>;
   if (error) return <>에러 ..</>;
-  //   console.log(data.getUserById);
+  const onGameStartButtonClick = () => {
+    GameData.setIsHard(false);
+    GameData.setOnGameUserId(userId);
+    GameData.setIsRandomMatch(false);
+    GameData.setIsLadder(false);
+    history.push('/game');
+  };
+  const onGameSpectateButtonClick = () => {
+    history.push('/spectating');
+  };
   return (
     <>
       {data && (
@@ -160,9 +173,18 @@ export default function UserProfile({
                     userId={userId}
                   />
                   <OptionButton
+                    onClick={onGameStartButtonClick}
                     disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
+                    hidden={data.getUserById.connectionStatusId !== 'CS1'}
                   >
                     게임하기
+                  </OptionButton>
+                  <OptionButton
+                    onClick={onGameSpectateButtonClick}
+                    disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
+                    hidden={!(data.getUserById.connectionStatusId === 'CS2')}
+                  >
+                    관전하기
                   </OptionButton>
                 </>
                 <OptionButton onClick={onBackClick}>닫기</OptionButton>

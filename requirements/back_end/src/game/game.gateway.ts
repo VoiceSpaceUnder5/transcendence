@@ -1,3 +1,5 @@
+import { ObjectType } from '@nestjs/graphql';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -8,8 +10,10 @@ import {
 import { isEmpty } from 'class-validator';
 import { RuleTester } from 'eslint';
 import { isObjectType } from 'graphql';
+import { stringify } from 'querystring';
 import { identity } from 'rxjs';
 import { Server } from 'socket.io';
+import { Client } from 'socket.io/dist/client';
 import { CreateRecordInput } from 'src/record/dto/create-record.input';
 import { RecordService } from 'src/record/record.service';
 import { UsersService } from 'src/users/user.service';
@@ -140,18 +144,20 @@ const rooms = {};
 // just roomIds
 // random room
 const commonRoomIds: { id: string; isStart: boolean }[] = [];
+const specialRoomIds: { id: string; isStart: boolean }[] = [];
 
 // key: clientId, value: User
 const users = {};
 
 export function countAndRun(server: Server, room: Room) {
   // 게임 시작 counter 돌리자
-  const gameScoreData: GameScoreData = {
+
+  const score: GameScoreData = {
     leftScore: room.leftUserScore,
     rightScore: room.rightUserScore,
   };
 
-  server.to(room.id).emit('setScore', { gameScoreData: gameScoreData });
+  server.to(room.id).emit('updateScore', score);
   server.to(room.id).emit('count', { counter: '3' });
   setTimeout(() => {
     server.to(room.id).emit('count', { counter: '2' });
@@ -243,7 +249,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     },
   ): any {
     const user = users[client.id] as User;
-    // 왜 처음에 소켓 연결이 늦는지 모르겠네???
     if (!user) return;
     user.isPlayer = true;
     this.userService.updateUserConnectionStatus(user.userId, 'CS2');
@@ -294,11 +299,75 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
       }
     } else {
       // random매칭이 아닌경우.
-      // client에서 socket을 언제 만들지 생각을 먼저 한 후에 처리하자\
-      console.log(
-        'random매칭이 아닌경우는 아직 구현하지 않았습니다. 테스트 시 이 로그가 나오면 안됩니다.',
-      );
+      // 룸 만들고 넣고 watingRoom메시지 보내자. 그리고 상대한테 requestGame 메시지 날리자
+      // 상대가 동의하면 gameData 조작해서 startGame 해버리자. 여기에서 처음에 방이 있는지 확인하는 로직을 넣어주자.
+      // 없으면 룸 만들고 requestGame 날리고 아니면 말고
+      // 상대가 동의하지 않으면 gameRefect 넣고 아니면 isStart하자.
+      let isEmptyRoomExist = false;
+      specialRoomIds.forEach((specialRoomId) => {
+        if (!specialRoomId.isStart) {
+          const room = rooms[specialRoomId.id] as Room;
+          if (
+            room &&
+            room.isHard === payload.isHard &&
+            room.isLadder === payload.isLadder &&
+            room.leftUser.userId === payload.opponentUserId
+          ) {
+            room.rightUser = users[client.id];
+            users[client.id].isLeft = false;
+            users[client.id].roomId = room.id;
+            specialRoomId.isStart = true;
+            isEmptyRoomExist = true;
+            client.join(room.id);
+            this.server.to(room.id).emit('waitingRoom', {
+              roomId: room.id,
+              rightName: room.rightUser.userName,
+              leftName: room.leftUser.userName,
+            });
+            return;
+          }
+        }
+      });
+      // 새 방 만들기.
+      if (!isEmptyRoomExist) {
+        const roomId = Math.random().toString();
+        client.join(roomId);
+
+        const room = new Room(
+          roomId,
+          payload.isHard,
+          payload.isLadder,
+          new GameData(payload.isHard),
+        );
+        // 실제 방 생성.
+        rooms[roomId] = room;
+        room.leftUser = users[client.id];
+        users[client.id].roomId = room.id;
+        users[client.id].isLeft = true;
+        specialRoomIds.push({ id: roomId, isStart: false });
+        const userClientIds = Object.keys(users);
+        userClientIds.forEach((userClientId) => {
+          const user = users[userClientId] as User;
+          if (user.userId === payload.opponentUserId) {
+            this.server.to(userClientId).emit('requestGame', {
+              roomId: room.id,
+              opponentId: users[client.id].userId,
+            });
+            return;
+          }
+        });
+        // client.emit('requestGame', room.id);
+      }
     }
+  }
+  @SubscribeMessage('acceptGame')
+  acceptGame(client: any, { roomId }: { roomId: string }): any {
+    const room = rooms[roomId] as Room;
+    client.emit('waitingRoom', {
+      roomId: room.id,
+      rightName: room.rightUser.userName,
+      leftName: room.leftUser.userName,
+    });
   }
 
   @SubscribeMessage('ready')
@@ -314,6 +383,40 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     if (room.leftUserReady && room.rightUserReady) {
       countAndRun(this.server, room);
     }
+  }
+
+  @SubscribeMessage('spectate')
+  spectateGame(
+    client: any,
+    {
+      onGameUserId,
+    }: {
+      onGameUserId: number;
+    },
+  ): any {
+    const user = users[client.id] as User;
+    this.userService.updateUserConnectionStatus(user.userId, 'CS3');
+    // 신청한 사람을 찾자.
+    const keys = Object.keys(users);
+    keys.forEach((key) => {
+      const user = users[key] as User;
+      if (user.userId === onGameUserId) {
+        const room = rooms[user.roomId] as Room;
+        if (!room) return;
+        client.join(user.roomId);
+        this.server.to(user.roomId).emit('updateScore', {
+          leftScore: room.leftUserScore,
+          rightScore: room.rightUserScore,
+        });
+        this.server.to(user.roomId).emit('updateUserName', {
+          leftName: room.leftUser.userName,
+          rightName: room.rightUser.userName,
+        });
+        const me = users[client.id] as User;
+        this.userService.updateUserConnectionStatus(me.userId, 'CS3');
+        return;
+      }
+    });
   }
 
   // event 받기

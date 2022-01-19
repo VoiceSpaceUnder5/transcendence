@@ -1,9 +1,9 @@
 import React, {FormEvent, useEffect, useState} from 'react';
 import styled from 'styled-components';
-import Button from './Button';
+import Button from '../common/Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
 import {useHistory} from 'react-router-dom';
-import {GameData} from '../pongGame/GameData';
+import {GameData} from './GameData';
 import {io} from 'socket.io-client';
 
 interface GameStartProps {
@@ -15,18 +15,31 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   const [isHard, setIsHard] = useState(false);
   const history = useHistory();
   const [isLadder, setIsLadder] = useState(false);
+  const [join, setJoin] = useState(false);
 
   // 게임 소켓은 스타트 버튼이 뜨면  바로 연결됩니다.
   useEffect(() => {
     // 멍청한 코드네...
     if (GameData.socket) {
-      console.log(GameData.socket.id);
       GameData.socket.disconnect();
     }
     GameData.setSocket(io('http://api.ts.io:33000/game'));
+    GameData.setIsHard(isHard);
+    GameData.setIsLadder(isLadder);
     GameData.setId(Number(localStorage.getItem('meId')));
     // user 데이터 집어넣기.
     GameData.socket.emit('sendUserData', {userId: GameData.id});
+    GameData.socket.on(
+      'requestGame',
+      ({roomId, opponentId}: {roomId: string; opponentId: number}) => {
+        setJoin(true);
+        GameData.setRoomId(roomId);
+        GameData.setOnGameUserId(opponentId);
+      },
+    );
+    return () => {
+      GameData.socket.off('requestGame');
+    };
   }, []);
 
   const onToggle = () => {
@@ -37,6 +50,7 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   };
   const onClickStart = () => {
     GameData.setIsHard(isHard);
+    GameData.setIsRandomMatch(true);
     history.push({pathname: '/game', state: {isStart: true}});
     GameData.setIsLadder(isLadder);
   };
@@ -48,6 +62,15 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     void e;
     if (isHard) setIsHard(!isHard);
     setIsLadder(!isLadder);
+  };
+  const onWithMeClick = () => {
+    GameData.setIsHard(false);
+    GameData.setIsRandomMatch(false);
+    GameData.setIsLadder(false);
+    history.push('/game');
+  };
+  const onCancelClick = () => {
+    history.push('/home');
   };
   return (
     <GameStartStyles>
@@ -87,6 +110,20 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
               </GameOptions>
             )}
           </form>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <button hidden={!join} onClick={onWithMeClick}>
+              함께하자
+            </button>
+            <button hidden={!join} onClick={onCancelClick}>
+              취소
+            </button>
+          </div>
         </>
       ) : (
         <button>취소</button>

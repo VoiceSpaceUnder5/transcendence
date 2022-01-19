@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {useHistory} from 'react-router-dom';
 import {HiCube, HiMenu} from 'react-icons/hi';
 import Button from './Button';
-import GameStart from './GameStart';
+import GameStart from '../pongGame/GameStart';
 import LogOut from './LogOut';
 import Img from './Img';
 
