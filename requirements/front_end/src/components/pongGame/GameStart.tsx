@@ -1,9 +1,9 @@
 import React, {FormEvent, useEffect, useState} from 'react';
 import styled from 'styled-components';
-import Button from './Button';
+import Button from '../common/Button';
 import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
 import {useHistory} from 'react-router-dom';
-import {GameData} from '../pongGame/GameData';
+import {GameData} from './GameData';
 import {io} from 'socket.io-client';
 
 interface GameStartProps {
@@ -21,7 +21,6 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
   useEffect(() => {
     // 멍청한 코드네...
     if (GameData.socket) {
-      console.log(GameData.socket.id);
       GameData.socket.disconnect();
     }
     GameData.setSocket(io('http://api.ts.io:33000/game'));
@@ -30,9 +29,17 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     GameData.setId(Number(localStorage.getItem('meId')));
     // user 데이터 집어넣기.
     GameData.socket.emit('sendUserData', {userId: GameData.id});
-    GameData.socket.on('requestGame', (roomId: string) => {
-      setJoin(true);
-    });
+    GameData.socket.on(
+      'requestGame',
+      ({roomId, opponentId}: {roomId: string; opponentId: number}) => {
+        setJoin(true);
+        GameData.setRoomId(roomId);
+        GameData.setOnGameUserId(opponentId);
+      },
+    );
+    return () => {
+      GameData.socket.off('requestGame');
+    };
   }, []);
 
   const onToggle = () => {
@@ -57,7 +64,10 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     setIsLadder(!isLadder);
   };
   const onWithMeClick = () => {
-    if (GameData.socket) GameData.socket.emit('acceptGame');
+    GameData.setIsHard(false);
+    GameData.setIsRandomMatch(false);
+    GameData.setIsLadder(false);
+    history.push('/game');
   };
   const onCancelClick = () => {
     history.push('/home');
@@ -73,20 +83,6 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
             <Button left large onClick={onClickStart}>
               <span style={{paddingLeft: '24px'}}>게임 시작</span>
             </Button>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <button hidden={!join} onClick={onWithMeClick}>
-                함께하자
-              </button>
-              <button hidden={!join} onClick={onCancelClick}>
-                취소
-              </button>
-            </div>
             {toggle && (
               <GameOptions>
                 Game Mode
@@ -114,6 +110,20 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
               </GameOptions>
             )}
           </form>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <button hidden={!join} onClick={onWithMeClick}>
+              함께하자
+            </button>
+            <button hidden={!join} onClick={onCancelClick}>
+              취소
+            </button>
+          </div>
         </>
       ) : (
         <button>취소</button>

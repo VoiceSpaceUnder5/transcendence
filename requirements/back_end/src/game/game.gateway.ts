@@ -1,3 +1,5 @@
+import { ObjectType } from '@nestjs/graphql';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -149,12 +151,13 @@ const users = {};
 
 export function countAndRun(server: Server, room: Room) {
   // 게임 시작 counter 돌리자
-  const gameScoreData: GameScoreData = {
+
+  const score: GameScoreData = {
     leftScore: room.leftUserScore,
     rightScore: room.rightUserScore,
   };
 
-  server.to(room.id).emit('setScore', { gameScoreData: gameScoreData });
+  server.to(room.id).emit('updateScore', score);
   server.to(room.id).emit('count', { counter: '3' });
   setTimeout(() => {
     server.to(room.id).emit('count', { counter: '2' });
@@ -305,6 +308,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         if (!specialRoomId.isStart) {
           const room = rooms[specialRoomId.id] as Room;
           if (
+            room &&
             room.isHard === payload.isHard &&
             room.isLadder === payload.isLadder &&
             room.leftUser.userId === payload.opponentUserId
@@ -314,8 +318,12 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
             users[client.id].roomId = room.id;
             specialRoomId.isStart = true;
             isEmptyRoomExist = true;
-            client.emit('requestGame', room.id);
             client.join(room.id);
+            this.server.to(room.id).emit('waitingRoom', {
+              roomId: room.id,
+              rightName: room.rightUser.userName,
+              leftName: room.leftUser.userName,
+            });
             return;
           }
         }
@@ -337,10 +345,19 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
         users[client.id].roomId = room.id;
         users[client.id].isLeft = true;
         specialRoomIds.push({ id: roomId, isStart: false });
+        const userClientIds = Object.keys(users);
+        userClientIds.forEach((userClientId) => {
+          const user = users[userClientId] as User;
+          if (user.userId === payload.opponentUserId) {
+            this.server.to(userClientId).emit('requestGame', {
+              roomId: room.id,
+              opponentId: users[client.id].userId,
+            });
+            return;
+          }
+        });
+        // client.emit('requestGame', room.id);
       }
-      console.log(
-        'random매칭이 아닌경우는 아직 구현하지 않았습니다. 테스트 시 이 로그가 나오면 안됩니다.',
-      );
     }
   }
   @SubscribeMessage('acceptGame')
@@ -377,6 +394,8 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
       onGameUserId: number;
     },
   ): any {
+    const user = users[client.id] as User;
+    this.userService.updateUserConnectionStatus(user.userId, 'CS3');
     // 신청한 사람을 찾자.
     const keys = Object.keys(users);
     keys.forEach((key) => {

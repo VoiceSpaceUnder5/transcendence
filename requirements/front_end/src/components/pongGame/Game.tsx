@@ -10,6 +10,7 @@ export interface StartGamePayload {
   isHard: boolean;
   isLadder: boolean;
   userId: number;
+  roomId: string;
 }
 
 interface GameScoreData {
@@ -50,10 +51,11 @@ export default function Game(): JSX.Element {
     // 게임 신청
     const payload: StartGamePayload = {
       isRandomMatch: GameData.isRandomMatch,
-      opponentUserId: 0,
+      opponentUserId: GameData.onGameUserId,
       isHard: GameData.isHard,
       isLadder: GameData.isLadder,
       userId: GameData.id,
+      roomId: GameData.roomId,
     };
     if (!GameData.socket) history.push('/home');
     if (GameData.socket) {
@@ -65,9 +67,9 @@ export default function Game(): JSX.Element {
         setCounter(counter);
         setStartState(StartState.run);
       });
-      // GameData.socket.on('setScore', (gameScoreData: GameScoreData) => {
-      //   setScore(gameScoreData);
-      // });
+      GameData.socket.on('updateScore', (gameScoreData: GameScoreData) => {
+        setScore(gameScoreData);
+      });
       GameData.socket.on('gameOver', (gameScoreData: GameScoreData) => {
         setScore(gameScoreData);
       });
@@ -77,10 +79,8 @@ export default function Game(): JSX.Element {
       });
       GameData.socket.on('forceQuit', () => {
         setStartState(StartState.quit);
-        console.log(startState);
       });
       GameData.socket.on('rendering', gamePositionData => {
-        // console.log(gamePositionData.ballPos.x, gamePositionData.ballPos.y);
         gameScene.setBallPos(
           gamePositionData.ballPos.x,
           gamePositionData.ballPos.y,
@@ -88,8 +88,6 @@ export default function Game(): JSX.Element {
         gameScene.setLPaddlePos(gamePositionData.leftPaddlePos.y);
         gameScene.setRPaddlePos(gamePositionData.rightPaddlePos.y);
       });
-
-      // socket io 메시지 받는곳
       GameData.socket.on(
         'waitingRoom',
         ({

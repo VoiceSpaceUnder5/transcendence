@@ -20,6 +20,7 @@ const GET_USER_BY_ID = gql`
       name
       email
       description
+      connectionStatusId
     }
   }
 `;
@@ -54,7 +55,9 @@ export default function UserProfile({
     GameData.setIsLadder(false);
     history.push('/game');
   };
-  //   console.log(data.getUserById);
+  const onGameSpectateButtonClick = () => {
+    history.push('/spectating');
+  };
   return (
     <>
       {data && (
@@ -172,8 +175,16 @@ export default function UserProfile({
                   <OptionButton
                     onClick={onGameStartButtonClick}
                     disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
+                    hidden={data.getUserById.connectionStatusId !== 'CS1'}
                   >
                     게임하기
+                  </OptionButton>
+                  <OptionButton
+                    onClick={onGameSpectateButtonClick}
+                    disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
+                    hidden={!(data.getUserById.connectionStatusId === 'CS2')}
+                  >
+                    관전하기
                   </OptionButton>
                 </>
                 <OptionButton onClick={onBackClick}>닫기</OptionButton>
