@@ -47,7 +47,7 @@ export default function Chatting(): JSX.Element {
   const {channelId} = useSelector((state: RootState) => ({
     channelId: state.chatting.channelId,
   }));
-  const [socket] = useState<Socket>(io('http://api.ts.io:30000'));
+  const [socket, setSocket] = useState<Socket>();
   const [messages, setMessages] = useState<
     {user: {id: number; name: string}; textMessage: string}[]
   >([]);
@@ -76,12 +76,14 @@ export default function Chatting(): JSX.Element {
       sendMessage()
         .then(data => {
           const sendedMessage = data.data.createMessage;
-          socket.emit('sendToServer', {
-            channelId: sendedMessage.channelId,
-            userId: sendedMessage.user.id,
-            name: sendedMessage.user.name,
-            message: sendedMessage.textMessage,
-          });
+          if (socket) {
+            socket.emit('sendToServer', {
+              channelId: sendedMessage.channelId,
+              userId: sendedMessage.user.id,
+              name: sendedMessage.user.name,
+              message: sendedMessage.textMessage,
+            });
+          }
           reset();
         })
         .catch(e => console.log(e));
@@ -95,6 +97,9 @@ export default function Chatting(): JSX.Element {
   );
 
   useEffect(() => {
+    const socket = io('http://api.ts.io:30000');
+    setSocket(socket);
+    socket.connect();
     socket.emit(
       'joinRoom',
       {channelId, userId: meId, name: meName},
@@ -102,7 +107,6 @@ export default function Chatting(): JSX.Element {
     );
     socket.on('notice', body => console.log(body.message));
     socket.on('sendToClient', body => {
-      // 차단한 애들 메시지는 어떻게 막지?
       if (body.userId === meId) {
         setMessages(messages =>
           messages.concat({
@@ -126,7 +130,7 @@ export default function Chatting(): JSX.Element {
       }
     });
     return () => {
-      socket.close();
+      socket.disconnect();
     };
   }, []);
 
