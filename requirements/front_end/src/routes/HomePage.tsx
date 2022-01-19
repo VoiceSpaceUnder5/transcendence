@@ -6,9 +6,9 @@ import {
   BackboardBoxLayout,
   BackboardBoxInnerLayout,
 } from '../components/common/Body';
-import MatchRecord from '../components/matchRecord/MatchRecordBoard';
 import Ladder from '../components/ladder/LadderBoard';
 import AchievementBoard from '../components/achievement/AchievementBoard';
+import MatchRecordBoard from '../components/matchRecord/MatchRecordBoard';
 
 function HomePage(): JSX.Element {
   const ladderData = {
@@ -17,26 +17,6 @@ function HomePage(): JSX.Element {
     win: 10,
     lose: 5,
   };
-  const matchRecordData = [
-    {
-      username: 'kilee',
-      imagePath: '',
-      record: '승',
-      isOnline: true,
-    },
-    {
-      username: 'mijeong',
-      imagePath: '',
-      record: '패',
-      isOnline: true,
-    },
-    {
-      username: 'hyeonkim',
-      imagePath: '',
-      record: '승',
-      isOnline: false,
-    },
-  ];
   const achievementData = [
     {achievement: '가', isSuccess: true},
     {achievement: '나', isSuccess: false},
@@ -48,7 +28,7 @@ function HomePage(): JSX.Element {
         <Navbar />
         <BackboardBoxLayout>
           <BackboardBoxInnerLayout speed={5}>
-            <MatchRecord matchRecordData={matchRecordData} />
+            <MatchRecordBoard />
           </BackboardBoxInnerLayout>
           <BackboardBoxInnerLayout speed={20}>
             <Ladder ladderData={ladderData} />

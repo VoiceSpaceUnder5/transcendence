@@ -21,6 +21,13 @@ const GET_USER_BY_ID = gql`
       email
       description
       connectionStatusId
+      records {
+        leftUserId
+        rightUserId
+        result {
+          id
+        }
+      }
     }
   }
 `;
@@ -215,14 +222,13 @@ const UserProfileStyles = styled.div`
     flex-direction: column;
     height: 100%;
     justify-content: start;
-    overflow-y: auto;
   }
 `;
 
 const UserProfileBackboard = styled.div`
-  width: 50%;
   min-width: 320px;
-  // height: 70%;
+  height: 90%;
+  overflow-y: auto;
 
   display: flex;
   flex-direction: column;

@@ -15,7 +15,6 @@ interface FriendProps {
 }
 
 export default function Friend({
-  typeId,
   userId,
   username,
   imagePath,
@@ -32,14 +31,18 @@ export default function Friend({
   const onProfileClick = () => {
     setProfileVisible(!profileVisible);
   };
-  console.log(connectionStatus);
   return (
     <FriendStyle onClick={onDivClick}>
       {!visible && (
         <>
           <ProfileImageStyle src={imagePath} isOnline={connectionStatus} />
           <MenuInfoList>
-            {username && <MenuInfo>{username}</MenuInfo>}
+            {username && !matchRecord && <MenuInfo>{username}</MenuInfo>}
+            {username && matchRecord && (
+              <MenuInfo>
+                <span style={{fontWeight: 'bold'}}>vs</span> {username}
+              </MenuInfo>
+            )}
             {description && <MenuInfo>{description}</MenuInfo>}
             {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
           </MenuInfoList>
@@ -51,7 +54,6 @@ export default function Friend({
           <UserProfile
             meId={meId}
             userId={userId as number}
-            typeId={typeId as string}
             onBackClick={onBackClick}
           ></UserProfile>
         )}
