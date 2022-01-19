@@ -1,4 +1,11 @@
 import React from 'react';
+import BackBoard from '../components/common/BackBoard';
+import Ball from '../components/common/Ball';
+import Body, {
+  BackboardBoxInnerLayout,
+  BackboardBoxLayout,
+} from '../components/common/Body';
+import Button from '../components/common/Button';
 
 export default function LoginPage(): JSX.Element {
   const onClick = () => {
@@ -6,8 +13,17 @@ export default function LoginPage(): JSX.Element {
   };
   return (
     <>
-      <div>트랜센던스</div>
-      <button onClick={onClick}>로그인</button>
+      <Ball />
+      <Body>
+        <BackboardBoxLayout>
+          <BackboardBoxInnerLayout>
+            <BackBoard>
+              <h1>트랜센던스</h1>
+              <Button onClick={onClick}>로그인</Button>
+            </BackBoard>
+          </BackboardBoxInnerLayout>
+        </BackboardBoxLayout>
+      </Body>
     </>
   );
 }
