@@ -98,8 +98,8 @@ export default function Chatting(): JSX.Element {
 
   useEffect(() => {
     const socket = io('http://api.ts.io:30000');
-    setSocket(socket);
     socket.connect();
+    setSocket(socket);
     socket.emit(
       'joinRoom',
       {channelId, userId: meId, name: meName},

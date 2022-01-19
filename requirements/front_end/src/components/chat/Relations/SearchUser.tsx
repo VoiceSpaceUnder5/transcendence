@@ -9,6 +9,7 @@ const GET_USER_BY_NAME = gql`
       name
       description
       profile_image
+      connectionStatusId
     }
   }
 `;
@@ -23,6 +24,7 @@ interface UserData {
   name: string;
   profile_image: string;
   description?: string;
+  connectionStatusId: string;
 }
 
 export default function SearchUser({
@@ -69,6 +71,7 @@ export default function SearchUser({
           userId={user.id}
           username={user.name}
           description={user.description}
+          connectionStatus={user.connectionStatusId}
         ></Friend>
       )}
     </>

@@ -88,20 +88,20 @@ export default function UserProfile({
                   <Friend
                     imagePath="#"
                     username="hi"
-                    isOnline={false}
                     matchRecord="패"
+                    connectionStatus="CS0"
                   />
                   <Friend
                     imagePath="#"
                     username="hi"
-                    isOnline={false}
                     matchRecord="패"
+                    connectionStatus="CS0"
                   />
                   <Friend
                     imagePath="#"
                     username="hi"
-                    isOnline={false}
                     matchRecord="패"
+                    connectionStatus="CS1"
                   />
                 </MenuList>
               </InnerLayout>

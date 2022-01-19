@@ -25,8 +25,8 @@ function MatchRecordBoard({
             key={matchRecord.username}
             imagePath={matchRecord.imagePath}
             username={matchRecord.username}
-            isOnline={matchRecord.isOnline}
             matchRecord={matchRecord.record}
+            connectionStatus="CS1"
           ></Friend>
         ))}
       </MenuList>

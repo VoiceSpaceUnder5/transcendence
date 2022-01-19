@@ -8,6 +8,7 @@ const GET_USERS_BY_IDS = gql`
       id
       name
       description
+      connectionStatusId
     }
   }
 `;
@@ -15,6 +16,7 @@ interface User {
   id: number;
   name: string;
   description: string;
+  connectionStatusId: string;
 }
 
 interface UserListProps {
@@ -42,6 +44,7 @@ export default function UserList({
           username={user.name}
           userId={user.id}
           description={user.description ? user.description : '.'}
+          connectionStatus={user.connectionStatusId}
         ></Friend>
       ))}
     </>
