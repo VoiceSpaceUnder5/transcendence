@@ -8,11 +8,10 @@ import CreateRelation from '../chat/Relations/CreateRelation';
 import UpdateRelation from '../chat/Relations/UpdateRelation';
 import useRelation from '../../hooks/useRelation';
 import Img from '../common/Img';
-import {MenuList} from '../common/MenuList';
-import Friend from './Friend';
 import DirectMessages from './DirectMessage';
 import {GameData} from '../pongGame/GameData';
 import {useHistory} from 'react-router-dom';
+import MatchRecords from '../matchRecord/MatchRecords';
 
 const GET_USER_BY_ID = gql`
   query getUserById($userId: Int!) {
@@ -21,13 +20,6 @@ const GET_USER_BY_ID = gql`
       email
       description
       connectionStatusId
-      records {
-        leftUserId
-        rightUserId
-        result {
-          id
-        }
-      }
     }
   }
 `;
@@ -40,7 +32,6 @@ interface UserProfileProps {
 }
 
 export default function UserProfile({
-  // typeId,
   userId,
   meId,
   onBackClick,
@@ -91,26 +82,7 @@ export default function UserProfile({
             <WholeLayout>
               <InnerLayout>
                 <Div>대전 기록</Div>
-                <MenuList height="fit">
-                  <Friend
-                    imagePath="#"
-                    username="hi"
-                    matchRecord="패"
-                    connectionStatus="CS0"
-                  />
-                  <Friend
-                    imagePath="#"
-                    username="hi"
-                    matchRecord="패"
-                    connectionStatus="CS0"
-                  />
-                  <Friend
-                    imagePath="#"
-                    username="hi"
-                    matchRecord="패"
-                    connectionStatus="CS1"
-                  />
-                </MenuList>
+                <MatchRecords userId={userId} height="fit" />
               </InnerLayout>
               <InnerLayout>
                 <Div>업적</Div>
@@ -123,7 +95,6 @@ export default function UserProfile({
                 </UserAchivementList>
               </InnerLayout>
             </WholeLayout>
-            {/* 친구 상태에 따라 신청할지 차단할지? */}
             <OptionBoxLayout>
               <OptionBox>
                 {typeId === 'RE1' && (
