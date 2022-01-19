@@ -186,7 +186,7 @@ input UpdateChannelInput {
 
 input JoinChannelInput {
   userId: Int!
-  channelId: Int!
+  channelId: ID!
   password: String!
 }
 
