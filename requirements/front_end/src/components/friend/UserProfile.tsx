@@ -12,6 +12,8 @@ import DirectMessages from './DirectMessage';
 import {GameData} from '../pongGame/GameData';
 import {useHistory} from 'react-router-dom';
 import MatchRecords from '../matchRecord/MatchRecords';
+import useRecord from '../../hooks/useRecord';
+import AchievementList from '../achievement/AchievementList';
 
 const GET_USER_BY_ID = gql`
   query getUserById($userId: Int!) {
@@ -37,15 +39,16 @@ export default function UserProfile({
   onBackClick,
 }: UserProfileProps): JSX.Element {
   const typeId = useRelation(meId, userId);
-  const {loading, error, data} = useQuery(GET_USER_BY_ID, {
+  const user = useQuery(GET_USER_BY_ID, {
     variables: {
       userId: userId,
     },
     fetchPolicy: 'no-cache',
   });
+  const records = useRecord(userId);
   const history = useHistory();
-  if (loading) return <></>;
-  if (error) return <>에러 ..</>;
+  if (user.loading || records.loading) return <></>;
+  if (user.error || records.error) return <>에러 ..</>;
   const onGameStartButtonClick = () => {
     GameData.setIsHard(false);
     GameData.setOnGameUserId(userId);
@@ -58,7 +61,7 @@ export default function UserProfile({
   };
   return (
     <>
-      {data && (
+      {user.data && (
         <UserProfileStyles>
           <UserProfileBackboard>
             <TitleDiv color="black">친구 프로필</TitleDiv>
@@ -69,30 +72,23 @@ export default function UserProfile({
               </InnerLayout>
               <InnerLayout>
                 <Div>이름</Div>
-                <UserProfileDiv>{data.getUserById.name}</UserProfileDiv>
+                <UserProfileDiv>{user.data.getUserById.name}</UserProfileDiv>
                 <Div>email</Div>
-                <UserProfileDiv>test@test.com</UserProfileDiv>
-                {/* <UserProfileDiv>{data.getUserById.email}</UserProfileDiv> */}
+                <UserProfileDiv>{user.data.getUserById.email}</UserProfileDiv>
                 <Div>자기소개</Div>
                 <UserProfileDiv style={{height: '140px'}}>
-                  {data.getUserById.description}
+                  {user.data.getUserById.description}
                 </UserProfileDiv>
               </InnerLayout>
             </WholeLayout>
             <WholeLayout>
               <InnerLayout>
                 <Div>대전 기록</Div>
-                <MatchRecords userId={userId} height="fit" />
+                <MatchRecords records={records.records} height="fit" />
               </InnerLayout>
               <InnerLayout>
                 <Div>업적</Div>
-                <UserAchivementList>
-                  <UserAchivementDiv isSuccess={true}>
-                    첫 접속
-                  </UserAchivementDiv>
-                  <UserAchivementDiv isSuccess={false}>첫 승</UserAchivementDiv>
-                  <UserAchivementDiv isSuccess={false}>5승</UserAchivementDiv>
-                </UserAchivementList>
+                <AchievementList userId={userId} />
               </InnerLayout>
             </WholeLayout>
             <OptionBoxLayout>
@@ -142,8 +138,6 @@ export default function UserProfile({
                 )}
               </OptionBox>
               <OptionBox>
-                {/* 대화방 없으면 만들고 입장 & 있으면 거기에 입장 */}
-                {/* 차단 중이면 대화하기, 게임하기 비활성화 */}
                 <>
                   <DirectMessages
                     changeVisible={onBackClick}
@@ -153,14 +147,16 @@ export default function UserProfile({
                   <OptionButton
                     onClick={onGameStartButtonClick}
                     disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
-                    hidden={data.getUserById.connectionStatusId !== 'CS1'}
+                    hidden={user.data.getUserById.connectionStatusId !== 'CS1'}
                   >
                     게임하기
                   </OptionButton>
                   <OptionButton
                     onClick={onGameSpectateButtonClick}
                     disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
-                    hidden={!(data.getUserById.connectionStatusId === 'CS2')}
+                    hidden={
+                      !(user.data.getUserById.connectionStatusId === 'CS2')
+                    }
                   >
                     관전하기
                   </OptionButton>
@@ -271,31 +267,4 @@ const UserProfileDiv = styled.div`
 
   border-radius: 6px;
   padding: 2px;
-`;
-
-const UserAchivementList = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  width: 100%;
-
-  overflow-x: auto;
-`;
-
-const UserAchivementDiv = styled.div<{isSuccess: boolean}>`
-  position: static;
-  width: 103px;
-  height: 103px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 10px 14px;
-  margin-left: 0px;
-  background: ${props => (props.isSuccess ? '#FFEF98' : '#89969F')};
-  border-radius: 10px;
 `;

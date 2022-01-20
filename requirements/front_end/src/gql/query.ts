@@ -8,6 +8,8 @@ export const GET_RECORDS = gql`
         leftUserId
         rightUserId
         resultId
+        modeId #보통인지 어려움인지
+        typeId #래더인지 일반인지
       }
     }
   }
@@ -16,9 +18,7 @@ export const GET_RECORDS = gql`
 export const GET_ACHIEVMENT = gql`
   query getAchievementsByUserId($input: Float!) {
     getAchievementsByUserId(userId: $input) {
-      type {
-        label_korean
-      }
+      typeId
     }
   }
 `;
