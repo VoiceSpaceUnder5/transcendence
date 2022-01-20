@@ -8,6 +8,7 @@ import { JwtAccessStrategy } from './strategy/jwt.strategy';
 import { FortyTwoStrategy } from './strategy/fortytwo.strategy';
 import { ConfigModule } from '@nestjs/config';
 import { CodeModule } from 'src/code/code.module';
+import { RefreshTokenModule } from 'src/refreshtoken/refreshtoken.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CodeModule } from 'src/code/code.module';
     CodeModule,
     PassportModule,
     ConfigModule,
+    RefreshTokenModule,
     JwtModule.register({}),
   ],
   providers: [AuthService, JwtAccessStrategy, FortyTwoStrategy],

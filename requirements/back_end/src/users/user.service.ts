@@ -55,7 +55,6 @@ export class UsersService {
   }
 
   async create(createUserInput: CreateUserInput): Promise<User> {
-    createUserInput.authorityId = 'UA1'; // 권한 설정
     return await this.userRepository.save(createUserInput);
   }
 

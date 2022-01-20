@@ -22,9 +22,18 @@ export class AuthController {
 
   @UseGuards(FortyTwoAuthGuard)
   @Get('fortytwo/login')
-  async fortyTwoLogin(@Req() req, @Res({ passthrough: true }) res: Response) {
-    console.log('요청 헤더', req.headers);
-    console.log('응답 헤더', res.getHeaders());
-    return await this.authService.loginFortyTwo(req.user, res);
+  async login(@Req() req, @Res({ passthrough: true }) res: Response) {
+    return await this.authService.login(req.user, res);
+  }
+
+  @Get('refresh')
+  async refresh(@Req() req, @Res() res: Response) {
+    const result = await this.authService.refresh(req, res);
+    return result;
+  }
+
+  @Get('logout')
+  async logout(@Res() res: Response) {
+    return this.authService.logout(res);
   }
 }

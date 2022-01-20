@@ -19,7 +19,6 @@ export class GqlJwtAccessGuard extends AuthGuard('jwt-access') {
     if (err || !user) {
       throw err || new AuthenticationError('GqlAuthGuard');
     }
-    console.log('Step2', user);
     return user;
   }
 }
