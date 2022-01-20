@@ -13,6 +13,17 @@ import {
   createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
+import {onError} from '@apollo/client/link/error';
+
+const errorLink = onError(({graphQLErrors}) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({message}) => {
+      if (message === 'Unauthorized') {
+        window.location.href = 'http://api.ts.io:30000/auth/refresh';
+      }
+    });
+  }
+});
 
 const httpLink = createHttpLink({
   // 요로케 쓰면 되나?
@@ -23,23 +34,8 @@ const httpLink = createHttpLink({
   // },
 });
 
-// const cache = new InMemoryCache({
-//   typePolicies: {
-//     Agenda: {
-//       fields: {
-//         tasks: {
-//           // eslint-disable-next-line
-//           merge(existing = [], incoming: any[]) {
-//             return [...existing, ...incoming];
-//           },
-//         },
-//       },
-//     },
-//   },
-// });
-
 const client = new ApolloClient({
-  link: httpLink,
+  link: errorLink.concat(httpLink),
   // cache: cache,
   cache: new InMemoryCache(),
 });
