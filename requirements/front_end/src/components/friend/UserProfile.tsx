@@ -74,8 +74,7 @@ export default function UserProfile({
                 <Div>이름</Div>
                 <UserProfileDiv>{user.data.getUserById.name}</UserProfileDiv>
                 <Div>email</Div>
-                <UserProfileDiv>test@test.com</UserProfileDiv>
-                {/* <UserProfileDiv>{user.data.getUserById.email}</UserProfileDiv> */}
+                <UserProfileDiv>{user.data.getUserById.email}</UserProfileDiv>
                 <Div>자기소개</Div>
                 <UserProfileDiv style={{height: '140px'}}>
                   {user.data.getUserById.description}
@@ -139,8 +138,6 @@ export default function UserProfile({
                 )}
               </OptionBox>
               <OptionBox>
-                {/* 대화방 없으면 만들고 입장 & 있으면 거기에 입장 */}
-                {/* 차단 중이면 대화하기, 게임하기 비활성화 */}
                 <>
                   <DirectMessages
                     changeVisible={onBackClick}
