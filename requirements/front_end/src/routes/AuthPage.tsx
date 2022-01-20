@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useHistory} from 'react-router-dom';
-import {gql, useLazyQuery} from '@apollo/client';
+import {gql, useLazyQuery, useMutation} from '@apollo/client';
 
 const GET_ME = gql`
   query {
@@ -11,8 +11,17 @@ const GET_ME = gql`
   }
 `;
 
+const CREATE_ACHIEVEMENT = gql`
+  mutation createAchievement($input: CreateAchievementInput!) {
+    createAchievement(createAchievementInput: $input) {
+      typeId
+    }
+  }
+`;
+
 export default function AuthPage(): JSX.Element {
   const [getMe, {loading, error}] = useLazyQuery(GET_ME);
+  const [createAchievement] = useMutation(CREATE_ACHIEVEMENT);
   const history = useHistory();
 
   useEffect(() => {
@@ -20,7 +29,20 @@ export default function AuthPage(): JSX.Element {
       const user = data.data.getMe;
       localStorage.setItem('meId', user.id);
       localStorage.setItem('meName', user.name);
-      history.push('/home');
+      createAchievement({
+        variables: {
+          input: {
+            userId: user.id,
+            typeId: 'AT0',
+          },
+        },
+      })
+        .then(() => {
+          history.push('/home');
+        })
+        .catch(() => {
+          history.push('/home');
+        });
     });
   }, []);
   if (loading) return <>로그인 중</>;
