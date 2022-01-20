@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {IoMdMedal} from 'react-icons/io';
 
 const LadderBoxStyle = styled.div`
   display: flex;
@@ -39,16 +40,12 @@ const LadderMarkBoxStyle = styled.div`
   border-radius: 10px;
 `;
 
-const ImageStyle = styled.img`
+const IconStyle = styled.div`
   font-style: normal;
   font-weight: 600;
   font-size: 100%;
   line-height: 17px;
   text-align: center;
-
-  /* Color / hover */
-
-  color: rgba(247, 247, 247, 0.8);
 `;
 
 const TextStyle = styled.div`
@@ -75,22 +72,35 @@ const TextStyle = styled.div`
 `;
 
 interface LadderBoxProps {
-  ladderImagePath: string;
   point: number;
   win: number;
   lose: number;
 }
 
-export default function LadderBox(props: LadderBoxProps): JSX.Element {
+export default function LadderBox({
+  point,
+  win,
+  lose,
+}: LadderBoxProps): JSX.Element {
+  let color = 'grey';
+  if (point > 200) {
+    color = 'yellow';
+  } else if (point > 100) {
+    color = 'grey';
+  } else {
+    color = 'black';
+  }
   return (
     <LadderBoxStyle>
       <LadderInfoStyle>
         <LadderMarkBoxStyle>
-          <ImageStyle src={'props.ladderImagePath'} />
+          <IconStyle>
+            <IoMdMedal size="50px" color={color} />
+          </IconStyle>
         </LadderMarkBoxStyle>
-        <TextStyle>점수 {props.point}</TextStyle>
+        <TextStyle>점수 {point}</TextStyle>
         <TextStyle>
-          승 {props.win} 패 {props.lose}
+          승 {win} 패 {lose}
         </TextStyle>
       </LadderInfoStyle>
     </LadderBoxStyle>

@@ -12,12 +12,6 @@ import MatchRecordBoard from '../components/matchRecord/MatchRecordBoard';
 import useRecord from '../hooks/useRecord';
 
 function HomePage(): JSX.Element {
-  const ladderData = {
-    imagePath: `${process.env.PUBLIC_URL}/testImage.png`,
-    point: 1000,
-    win: 10,
-    lose: 5,
-  };
   const achievementData = [
     {achievement: '가', isSuccess: true},
     {achievement: '나', isSuccess: false},
@@ -37,7 +31,7 @@ function HomePage(): JSX.Element {
             <MatchRecordBoard records={records} />
           </BackboardBoxInnerLayout>
           <BackboardBoxInnerLayout speed={20}>
-            <Ladder ladderData={ladderData} />
+            <Ladder records={records} />
             <AchievementBoard achievementData={achievementData} />
           </BackboardBoxInnerLayout>
         </BackboardBoxLayout>
