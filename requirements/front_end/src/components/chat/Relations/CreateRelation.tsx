@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {gql, useMutation} from '@apollo/client';
 import {OptionButton} from '../../common/Button';
+import {GET_RELATIONS} from '../../../hooks/useRelation';
 
 const CREATE_RELATION = gql`
   mutation createRelation($createRelationInput: CreateRelationInput!) {
@@ -28,13 +29,14 @@ export default function CreateRelation({
         typeId: typeId,
       },
     },
+    refetchQueries: [GET_RELATIONS],
   });
   const onClick = useCallback(() => {
     createRelation().catch(e => console.dir(e));
   }, []);
   return (
     <OptionButton onClick={onClick}>
-      {typeId === 'RE0' ? '친구 신청' : '차'}
+      {typeId === 'RE0' ? '친구 신청' : '차단'}
     </OptionButton>
   );
 }
