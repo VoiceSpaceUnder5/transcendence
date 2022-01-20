@@ -1,5 +1,3 @@
-import { ObjectType } from '@nestjs/graphql';
-import { IoAdapter } from '@nestjs/platform-socket.io';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -7,18 +5,11 @@ import {
   OnGatewayDisconnect,
   OnGatewayConnection,
 } from '@nestjs/websockets';
-import { isEmpty } from 'class-validator';
-import { RuleTester } from 'eslint';
-import { isObjectType } from 'graphql';
-import { stringify } from 'querystring';
-import { identity } from 'rxjs';
 import { Server } from 'socket.io';
-import { Client } from 'socket.io/dist/client';
-import { CreateRecordInput } from 'src/record/dto/create-record.input';
 import { RecordService } from 'src/record/record.service';
 import { UsersService } from 'src/users/user.service';
+import { AchievementService } from 'src/achievement/achievement.service';
 import gameEngine, {
-  canvasHeight,
   canvasWidth,
   GameScoreData,
   makeRecord,
@@ -181,6 +172,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   constructor(
     private readonly recordService: RecordService,
     private readonly userService: UsersService,
+    private readonly achievementService: AchievementService,
   ) {
     // request animation frame 추가.
     setInterval(() => {
@@ -352,11 +344,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
             this.server.to(userClientId).emit('requestGame', {
               roomId: room.id,
               opponentId: users[client.id].userId,
+              userName: users[client.id].userName,
             });
             return;
           }
         });
-        // client.emit('requestGame', room.id);
       }
     }
   }
@@ -438,7 +430,12 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   runGameEngine() {
     const roomIds = Object.keys(rooms);
     roomIds.forEach((roomId) => {
-      gameEngine(rooms[roomId], this.server, this.recordService);
+      gameEngine(
+        rooms[roomId],
+        this.server,
+        this.recordService,
+        this.achievementService,
+      );
     });
   }
 }

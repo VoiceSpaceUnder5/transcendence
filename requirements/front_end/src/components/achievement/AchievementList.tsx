@@ -19,6 +19,7 @@ export default function AchievementList({
     variables: {
       input: userId,
     },
+    fetchPolicy: 'no-cache',
   });
   const [achievements, setAchievements] = useState({
     // AT0: 첫 승, AT1: 첫 로그인, AT2: 첫 패

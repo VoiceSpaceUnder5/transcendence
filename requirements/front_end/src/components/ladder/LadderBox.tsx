@@ -41,10 +41,10 @@ export default function LadderBox({records}: LadderBoxProps): JSX.Element {
     if (records) {
       const ladderInfo = getLadderInfo(records);
       setLadderInfo(ladderInfo);
-      if (ladderInfo.point > 200) {
+      if (ladderInfo.point >= 200) {
         setColor('yellow');
-      } else if (ladderInfo.point > 100) {
-        setColor('grey');
+      } else if (ladderInfo.point >= 100) {
+        setColor('#dddddd');
       } else {
         setColor('black');
       }

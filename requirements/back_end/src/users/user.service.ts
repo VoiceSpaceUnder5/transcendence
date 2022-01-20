@@ -24,12 +24,10 @@ export class UsersService {
   }
 
   findUserById(id: number): Promise<User> {
-    console.log('Step5 id: ', id);
     return this.userRepository.findOneOrFail(id);
   }
 
   findUsersByIds(id: number[]): Promise<User[]> {
-    console.log('Step5 id: ', id);
     return this.userRepository.findByIds(id);
   }
 
