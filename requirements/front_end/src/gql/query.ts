@@ -8,6 +8,8 @@ export const GET_RECORDS = gql`
         leftUserId
         rightUserId
         resultId
+        modeId #보통인지 어려움인지
+        typeId #래더인지 일반인지
       }
     }
   }
