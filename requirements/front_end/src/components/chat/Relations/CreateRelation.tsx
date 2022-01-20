@@ -12,10 +12,12 @@ const CREATE_RELATION = gql`
 
 interface CreateRelationProps {
   userId: number;
+  typeId: string;
 }
 
 export default function CreateRelation({
   userId,
+  typeId,
 }: CreateRelationProps): JSX.Element {
   const [meId] = useState<number>(Number(localStorage.getItem('meId')));
   const [createRelation] = useMutation(CREATE_RELATION, {
@@ -23,12 +25,16 @@ export default function CreateRelation({
       createRelationInput: {
         user_first_id: meId,
         user_second_id: userId,
-        typeId: 'RE1',
+        typeId: typeId,
       },
     },
   });
   const onClick = useCallback(() => {
     createRelation().catch(e => console.dir(e));
   }, []);
-  return <OptionButton onClick={onClick}>친구 신청</OptionButton>;
+  return (
+    <OptionButton onClick={onClick}>
+      {typeId === 'RE0' ? '친구 신청' : '차'}
+    </OptionButton>
+  );
 }

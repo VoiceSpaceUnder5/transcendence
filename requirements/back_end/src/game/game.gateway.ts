@@ -8,6 +8,7 @@ import {
 import { Server } from 'socket.io';
 import { RecordService } from 'src/record/record.service';
 import { UsersService } from 'src/users/user.service';
+import { AchievementService } from 'src/achievement/achievement.service';
 import gameEngine, {
   canvasWidth,
   GameScoreData,
@@ -171,6 +172,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   constructor(
     private readonly recordService: RecordService,
     private readonly userService: UsersService,
+    private readonly achievementService: AchievementService,
   ) {
     // request animation frame 추가.
     setInterval(() => {
@@ -428,7 +430,12 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
   runGameEngine() {
     const roomIds = Object.keys(rooms);
     roomIds.forEach((roomId) => {
-      gameEngine(rooms[roomId], this.server, this.recordService);
+      gameEngine(
+        rooms[roomId],
+        this.server,
+        this.recordService,
+        this.achievementService,
+      );
     });
   }
 }

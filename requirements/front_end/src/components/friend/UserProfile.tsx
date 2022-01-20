@@ -121,13 +121,18 @@ export default function UserProfile({
                     actionTypeId="RE1"
                   />
                 )}
-                {typeId === undefined && <CreateRelation userId={userId} />}
-                {typeId !== 'RE3' && (
+                {typeId === undefined && (
+                  <CreateRelation userId={userId} typeId="RE0" />
+                )}
+                {typeId !== 'RE3' && typeId !== undefined && (
                   <UpdateRelation
                     userId={userId}
                     actionType="차단"
                     actionTypeId="RE3"
                   />
+                )}
+                {typeId === undefined && (
+                  <CreateRelation userId={userId} typeId="RE3" />
                 )}
                 {typeId === 'RE3' && (
                   <UpdateRelation

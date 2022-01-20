@@ -22,8 +22,6 @@ function GameStart(): JSX.Element {
     if (GameData.socket) {
       GameData.socket.disconnect();
     }
-    console.log('몇번이나 불릴까??');
-    console.log(GameData.socket);
     GameData.setSocket(io('http://api.ts.io:33000/game'));
     GameData.setIsHard(isHard);
     GameData.setIsLadder(isLadder);

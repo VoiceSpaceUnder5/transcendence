@@ -2,6 +2,8 @@ import { VerifyCallback } from 'passport-oauth2';
 import { Server } from 'socket.io';
 import { CreateRecordInput } from 'src/record/dto/create-record.input';
 import { RecordService } from 'src/record/record.service';
+import { AchievementService } from 'src/achievement/achievement.service';
+import { CreateAchievementInput } from 'src/achievement/dto/create-achievement.input';
 import {
   Room,
   Vec,
@@ -10,8 +12,9 @@ import {
   GameData,
   countAndRun,
 } from './game.gateway';
+import { isModuleNamespaceObject } from 'util/types';
 
-const winnerScore = 5;
+const winnerScore = 1;
 const paddleWidth = 20;
 const paddleHeight = 100;
 const ballWidth = 30;
@@ -170,6 +173,7 @@ async function winTheGame(
   server: Server,
   isWinnerLeft: boolean,
   recordService: RecordService,
+  achievementService: AchievementService,
 ) {
   isWinnerLeft ? room.leftUserScore++ : room.rightUserScore++;
   room.isStart = false;
@@ -185,7 +189,28 @@ async function winTheGame(
 
     room.leftUserReady = false;
     room.rightUserReady = false;
-    recordService.createRecord(makeRecord(room));
+    const record = makeRecord(room);
+    recordService.createRecord(record);
+    const winnerAchievement = new CreateAchievementInput();
+    const loserAchievement = new CreateAchievementInput();
+    // AT1 첫승 AT2 첫패
+
+    winnerAchievement.typeId = 'AT1';
+    loserAchievement.typeId = 'AT2';
+    if (record.typeId === 'BT0') {
+      winnerAchievement.userId = room.leftUser.userId;
+      loserAchievement.userId = room.rightUser.userId;
+      await achievementService.createAchievement(winnerAchievement);
+      await achievementService.createAchievement(loserAchievement);
+    } else if (record.typeId === 'BT1') {
+      winnerAchievement.userId = room.rightUser.userId;
+      loserAchievement.userId = room.leftUser.userId;
+      await achievementService.createAchievement(loserAchievement);
+      await achievementService.createAchievement(winnerAchievement);
+    }
+
+    // console.log(winnerAchievement);
+    // console.log(loserAchievement);
     room.leftUserScore = 0;
     room.rightUserScore = 0;
   }
@@ -202,6 +227,7 @@ export default function gameEngine(
   room: Room,
   server: Server,
   recordService: RecordService,
+  achievementService: AchievementService,
 ) {
   if (!room) return;
   const gameData = room.gameData;
@@ -274,10 +300,10 @@ export default function gameEngine(
     }
     // 승리 판단
   } else if (isWallBallCollide === WallCollisionCheck.leftCollision) {
-    winTheGame(room, server, false, recordService);
+    winTheGame(room, server, false, recordService, achievementService);
     return;
   } else if (isWallBallCollide === WallCollisionCheck.rightCollision) {
-    winTheGame(room, server, true, recordService);
+    winTheGame(room, server, true, recordService, achievementService);
     return;
   }
 

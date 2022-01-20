@@ -15,9 +15,17 @@ export class AchievementService {
     return this.achievementRepository.find({ userId });
   }
 
-  createAchievement(
+  getAchievement(createAchievement: CreateAchievementInput) {
+    return this.achievementRepository.findOneOrFail(createAchievement);
+  }
+
+  async createAchievement(
     createAchievementInput: CreateAchievementInput,
   ): Promise<Achievement> {
-    return this.achievementRepository.save(createAchievementInput);
+    try {
+      return await this.achievementRepository.save(createAchievementInput);
+    } catch (e) {
+      return await this.getAchievement(createAchievementInput);
+    }
   }
 }
