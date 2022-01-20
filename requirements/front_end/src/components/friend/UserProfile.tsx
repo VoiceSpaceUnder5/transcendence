@@ -46,7 +46,7 @@ export default function UserProfile({
   });
   const records = useRecord(userId);
   const history = useHistory();
-  if (user.loading || records.loading) return <>로딩 중..</>;
+  if (user.loading || records.loading) return <></>;
   if (user.error || records.error) return <>에러 ..</>;
   const onGameStartButtonClick = () => {
     GameData.setIsHard(false);

@@ -18,9 +18,7 @@ export const GET_RECORDS = gql`
 export const GET_ACHIEVMENT = gql`
   query getAchievementsByUserId($input: Float!) {
     getAchievementsByUserId(userId: $input) {
-      type {
-        label_korean
-      }
+      typeId
     }
   }
 `;

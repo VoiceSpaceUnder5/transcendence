@@ -12,11 +12,6 @@ import MatchRecordBoard from '../components/matchRecord/MatchRecordBoard';
 import useRecord from '../hooks/useRecord';
 
 function HomePage(): JSX.Element {
-  const achievementData = [
-    {achievement: '가', isSuccess: true},
-    {achievement: '나', isSuccess: false},
-    {achievement: '다', isSuccess: true},
-  ];
   const {loading, error, records} = useRecord(
     Number(localStorage.getItem('meId')),
   );
@@ -32,7 +27,7 @@ function HomePage(): JSX.Element {
           </BackboardBoxInnerLayout>
           <BackboardBoxInnerLayout speed={20}>
             <Ladder records={records} />
-            <AchievementBoard achievementData={achievementData} />
+            <AchievementBoard />
           </BackboardBoxInnerLayout>
         </BackboardBoxLayout>
         <Chat />
