@@ -94,7 +94,6 @@ type User {
   connectionStatus: Code!
   connectionStatusId: String!
   twoFactorAuth: Boolean!
-  twoFactorAuthSecret: String
 }
 
 type Achievement {
@@ -159,12 +158,9 @@ input CreateChannelUserInput {
 }
 
 input CreateUserInput {
-  id: Float!
+  id: Int!
   name: String!
   email: String
-  profile_image: String
-  authorityId: String = "UA1"
-  description: String
 }
 
 input UpdateUserInput {

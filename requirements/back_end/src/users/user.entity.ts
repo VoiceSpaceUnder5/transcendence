@@ -25,19 +25,33 @@ export class User extends DefaultEntity {
   email?: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ nullable: true })
+  @Column({
+    nullable: true,
+    default: `https://i.ibb.co/Y4ggzLc/1-W35-QUSv-Gpc-Lux-Po3-SRTH4w.png`,
+  })
   profile_image?: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ nullable: true })
+  @Column({
+    nullable: true,
+    default: `https://i.ibb.co/DPddxR9/1-W35-QUSv-Gpc-Lux-Po3-SRTH4w.png`,
+  })
   profile_image_thumb?: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ nullable: true })
+  @Column({
+    nullable: true,
+    default: `https://i.ibb.co/Y4ggzLc/1-W35-QUSv-Gpc-Lux-Po3-SRTH4w.png`,
+  })
   profile_image_medium?: string;
 
-  @Field(() => String, { nullable: true, defaultValue: '자신을 소개해보세요' })
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Field(() => String, { nullable: true })
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: true,
+    default: '자신을 소개해보세요',
+  })
   description?: string;
 
   @Field((type) => Code)
@@ -76,7 +90,6 @@ export class User extends DefaultEntity {
   @Column({ default: false })
   twoFactorAuth: boolean;
 
-  @Field({ nullable: true })
   @Column({ type: 'varchar', length: 200, nullable: true })
   twoFactorAuthSecret?: string;
 }
