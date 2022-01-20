@@ -13,6 +13,7 @@ import {GameData} from '../pongGame/GameData';
 import {useHistory} from 'react-router-dom';
 import MatchRecords from '../matchRecord/MatchRecords';
 import useRecord from '../../hooks/useRecord';
+import AchievementList from '../achievement/AchievementList';
 
 const GET_USER_BY_ID = gql`
   query getUserById($userId: Int!) {
@@ -88,13 +89,7 @@ export default function UserProfile({
               </InnerLayout>
               <InnerLayout>
                 <Div>업적</Div>
-                <UserAchivementList>
-                  <UserAchivementDiv isSuccess={true}>
-                    첫 접속
-                  </UserAchivementDiv>
-                  <UserAchivementDiv isSuccess={false}>첫 승</UserAchivementDiv>
-                  <UserAchivementDiv isSuccess={false}>5승</UserAchivementDiv>
-                </UserAchivementList>
+                <AchievementList userId={userId} />
               </InnerLayout>
             </WholeLayout>
             <OptionBoxLayout>
@@ -275,31 +270,4 @@ const UserProfileDiv = styled.div`
 
   border-radius: 6px;
   padding: 2px;
-`;
-
-const UserAchivementList = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  width: 100%;
-
-  overflow-x: auto;
-`;
-
-const UserAchivementDiv = styled.div<{isSuccess: boolean}>`
-  position: static;
-  width: 103px;
-  height: 103px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 10px 14px;
-  margin-left: 0px;
-  background: ${props => (props.isSuccess ? '#FFEF98' : '#89969F')};
-  border-radius: 10px;
 `;
