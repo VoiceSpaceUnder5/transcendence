@@ -1,6 +1,72 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {IoMdMedal} from 'react-icons/io';
+import {FilteredRecord} from '../../hooks/useRecord';
+
+interface LadderBoxProps {
+  records: FilteredRecord[];
+}
+
+interface LadderInfo {
+  win: number;
+  lose: number;
+  point: number;
+}
+
+export default function LadderBox({records}: LadderBoxProps): JSX.Element {
+  const [color, setColor] = useState('white');
+  const [ladderInfo, setLadderInfo] = useState<LadderInfo | undefined>();
+  useEffect(() => {
+    const getLadderInfo = (records: FilteredRecord[]) => {
+      let point = 0;
+      let win = 0;
+      let lose = 0;
+      records.forEach(record => {
+        if (record.typeId === 'BT1') {
+          if (record.result === '승') {
+            win += 1;
+          } else if (record.result === '패') {
+            lose += 1;
+          }
+          point = win * 100 - lose * 150;
+        }
+      });
+      return {
+        point,
+        win,
+        lose,
+      };
+    };
+
+    if (records) {
+      const ladderInfo = getLadderInfo(records);
+      setLadderInfo(ladderInfo);
+      if (ladderInfo.point > 200) {
+        setColor('yellow');
+      } else if (ladderInfo.point > 100) {
+        setColor('grey');
+      } else {
+        setColor('black');
+      }
+    }
+  }, [records]);
+  if (!records || ladderInfo === undefined) return <>로딩 중..</>;
+  return (
+    <LadderBoxStyle>
+      <LadderInfoStyle>
+        <LadderMarkBoxStyle>
+          <IconStyle>
+            <IoMdMedal size="50px" color={color} />
+          </IconStyle>
+        </LadderMarkBoxStyle>
+        <TextStyle>점수 {ladderInfo.point}</TextStyle>
+        <TextStyle>
+          승 {ladderInfo.win} 패 {ladderInfo.lose}
+        </TextStyle>
+      </LadderInfoStyle>
+    </LadderBoxStyle>
+  );
+}
 
 const LadderBoxStyle = styled.div`
   display: flex;
@@ -70,39 +136,3 @@ const TextStyle = styled.div`
   flex-grow: 0;
   margin: 8px 0px;
 `;
-
-interface LadderBoxProps {
-  point: number;
-  win: number;
-  lose: number;
-}
-
-export default function LadderBox({
-  point,
-  win,
-  lose,
-}: LadderBoxProps): JSX.Element {
-  let color = 'grey';
-  if (point > 200) {
-    color = 'yellow';
-  } else if (point > 100) {
-    color = 'grey';
-  } else {
-    color = 'black';
-  }
-  return (
-    <LadderBoxStyle>
-      <LadderInfoStyle>
-        <LadderMarkBoxStyle>
-          <IconStyle>
-            <IoMdMedal size="50px" color={color} />
-          </IconStyle>
-        </LadderMarkBoxStyle>
-        <TextStyle>점수 {point}</TextStyle>
-        <TextStyle>
-          승 {win} 패 {lose}
-        </TextStyle>
-      </LadderInfoStyle>
-    </LadderBoxStyle>
-  );
-}
