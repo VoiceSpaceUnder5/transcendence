@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {gql, useQuery} from '@apollo/client';
 
-const GET_RELATIONS = gql`
+export const GET_RELATIONS = gql`
   query getRelation($meId: Int!, $userId: Int!) {
     getRelation(user_first_id: $meId, user_second_id: $userId) {
       typeId

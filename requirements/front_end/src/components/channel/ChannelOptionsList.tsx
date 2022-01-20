@@ -58,7 +58,6 @@ export default function ChannelOptionsList({
     },
   });
   const [leaveChannel] = useMutation(LEAVE_CHANNEL);
-  console.log(meId, channelId);
   const onLeave = () => {
     leaveChannel({
       variables: {

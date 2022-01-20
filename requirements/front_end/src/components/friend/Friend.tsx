@@ -3,27 +3,24 @@ import styled from 'styled-components';
 import {MenuInfoList, MenuInfo} from '../common/MenuList';
 import {OptionButton} from '../common/Button';
 import UserProfile from './UserProfile';
-// import Img from '../common/Img';
-// import DirectMessages from '../chat/DirectMessage';
 
 interface FriendProps {
   typeId?: string;
   userId?: number;
   imagePath?: string;
   username: string;
-  isOnline?: boolean;
   matchRecord?: string;
   description?: string;
+  connectionStatus: string;
 }
 
 export default function Friend({
-  typeId,
   userId,
   username,
   imagePath,
-  isOnline,
   matchRecord,
   description,
+  connectionStatus,
 }: FriendProps): JSX.Element {
   const [meId] = useState(Number(localStorage.getItem('meId')));
   const [visible, setVisible] = useState(false);
@@ -38,9 +35,14 @@ export default function Friend({
     <FriendStyle onClick={onDivClick}>
       {!visible && (
         <>
-          <ProfileImageStyle src={imagePath} isOnline={isOnline} />
+          <ProfileImageStyle src={imagePath} isOnline={connectionStatus} />
           <MenuInfoList>
-            {username && <MenuInfo>{username}</MenuInfo>}
+            {username && !matchRecord && <MenuInfo>{username}</MenuInfo>}
+            {username && matchRecord && (
+              <MenuInfo>
+                <span style={{fontWeight: 'bold'}}>vs</span> {username}
+              </MenuInfo>
+            )}
             {description && <MenuInfo>{description}</MenuInfo>}
             {matchRecord && <MenuInfo>{matchRecord}</MenuInfo>}
           </MenuInfoList>
@@ -52,7 +54,6 @@ export default function Friend({
           <UserProfile
             meId={meId}
             userId={userId as number}
-            typeId={typeId as string}
             onBackClick={onBackClick}
           ></UserProfile>
         )}
@@ -83,12 +84,12 @@ const FriendStyle = styled.div`
   }
 `;
 
-const ProfileImageStyle = styled.img<{isOnline?: boolean}>`
+const ProfileImageStyle = styled.img<{isOnline?: string}>`
   width: 40px;
   height: 40px;
   border-radius: 50%;
   border: 3px solid
-    ${props => (props.isOnline ? `grey;` : `${props.theme.online};`)};
+    ${props => (props.isOnline === 'CS0' ? `grey;` : `${props.theme.online};`)};
 `;
 
 const FriendOptions = styled.div<{visible: boolean}>`

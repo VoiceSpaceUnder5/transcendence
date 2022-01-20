@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {OptionButton} from '../../common/Button';
 import {gql, useMutation} from '@apollo/client';
+import {GET_RELATIONS} from '../../../hooks/useRelation';
 
 const UPDATE_RELATION = gql`
   mutation updateRelation($updateRelationInput: CreateRelationInput!) {
@@ -30,6 +31,7 @@ export default function UpdateRelation({
         typeId: actionTypeId,
       },
     },
+    refetchQueries: [GET_RELATIONS],
   });
   const onClick = () => {
     updateRelation();

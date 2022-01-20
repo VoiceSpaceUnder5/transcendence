@@ -8,11 +8,10 @@ import CreateRelation from '../chat/Relations/CreateRelation';
 import UpdateRelation from '../chat/Relations/UpdateRelation';
 import useRelation from '../../hooks/useRelation';
 import Img from '../common/Img';
-import {MenuList} from '../common/MenuList';
-import Friend from './Friend';
 import DirectMessages from './DirectMessage';
 import {GameData} from '../pongGame/GameData';
 import {useHistory} from 'react-router-dom';
+import MatchRecords from '../matchRecord/MatchRecords';
 
 const GET_USER_BY_ID = gql`
   query getUserById($userId: Int!) {
@@ -33,7 +32,6 @@ interface UserProfileProps {
 }
 
 export default function UserProfile({
-  // typeId,
   userId,
   meId,
   onBackClick,
@@ -84,26 +82,7 @@ export default function UserProfile({
             <WholeLayout>
               <InnerLayout>
                 <Div>대전 기록</Div>
-                <MenuList height="fit">
-                  <Friend
-                    imagePath="#"
-                    username="hi"
-                    isOnline={false}
-                    matchRecord="패"
-                  />
-                  <Friend
-                    imagePath="#"
-                    username="hi"
-                    isOnline={false}
-                    matchRecord="패"
-                  />
-                  <Friend
-                    imagePath="#"
-                    username="hi"
-                    isOnline={false}
-                    matchRecord="패"
-                  />
-                </MenuList>
+                <MatchRecords userId={userId} height="fit" />
               </InnerLayout>
               <InnerLayout>
                 <Div>업적</Div>
@@ -116,7 +95,6 @@ export default function UserProfile({
                 </UserAchivementList>
               </InnerLayout>
             </WholeLayout>
-            {/* 친구 상태에 따라 신청할지 차단할지? */}
             <OptionBoxLayout>
               <OptionBox>
                 {typeId === 'RE1' && (
@@ -215,14 +193,13 @@ const UserProfileStyles = styled.div`
     flex-direction: column;
     height: 100%;
     justify-content: start;
-    overflow-y: auto;
   }
 `;
 
 const UserProfileBackboard = styled.div`
-  width: 50%;
   min-width: 320px;
-  // height: 70%;
+  height: 90%;
+  overflow-y: auto;
 
   display: flex;
   flex-direction: column;
