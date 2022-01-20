@@ -17,6 +17,8 @@ interface MatchRecordProps {
     id: number;
     opponentId: number;
     result?: string;
+    typeId: string;
+    modeId: string;
   };
 }
 
@@ -29,6 +31,18 @@ export default function MatchRecord({record}: MatchRecordProps): JSX.Element {
   });
   if (loading) <>로딩 중...</>;
   if (error) <>에러!</>;
+  let recordAndMode;
+  if (record.result) {
+    if (record.typeId === 'BT1') {
+      recordAndMode = `${record.result}[래더]`;
+    } else if (record.typeId === 'BT0') {
+      if (record.modeId === 'BM0') {
+        recordAndMode = `${record.result}[일반, normal]`;
+      } else if (record.modeId === 'BM1') {
+        recordAndMode = `${record.result}[일반, hard]`;
+      }
+    }
+  }
   return (
     <>
       {record.result !== undefined && data && (
@@ -37,7 +51,7 @@ export default function MatchRecord({record}: MatchRecordProps): JSX.Element {
           imagePath={data.getUserById.profile_image_thumb}
           userId={record.opponentId}
           username={data.getUserById.name}
-          matchRecord={record.result}
+          matchRecord={recordAndMode}
           connectionStatus={data.getUserById.connectionStatusId}
         ></Friend>
       )}
