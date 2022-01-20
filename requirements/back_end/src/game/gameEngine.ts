@@ -197,12 +197,12 @@ async function winTheGame(
 
     winnerAchievement.typeId = 'AT1';
     loserAchievement.typeId = 'AT2';
-    if (record.typeId === 'BT0') {
+    if (record.resultId === 'BR0') {
       winnerAchievement.userId = room.leftUser.userId;
       loserAchievement.userId = room.rightUser.userId;
       await achievementService.createAchievement(winnerAchievement);
       await achievementService.createAchievement(loserAchievement);
-    } else if (record.typeId === 'BT1') {
+    } else if (record.resultId === 'BR1') {
       winnerAchievement.userId = room.rightUser.userId;
       loserAchievement.userId = room.leftUser.userId;
       await achievementService.createAchievement(loserAchievement);
