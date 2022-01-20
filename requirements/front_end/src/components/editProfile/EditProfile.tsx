@@ -96,7 +96,7 @@ export default function EditProfile(): JSX.Element {
           <Div>자기소개</Div>
           <Textarea
             name="description"
-            value={inputs.description as string}
+            value={!inputs.description ? '' : inputs.description}
             onChange={onChange}
           ></Textarea>
         </InnerLayout>
