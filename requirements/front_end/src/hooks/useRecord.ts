@@ -72,7 +72,7 @@ export default function useRecord(userId: number): ReturnType {
 
     if (data) {
       const filteredRecord = filterRecord(data.getUserById.records);
-      setFilteredRecords(filteredRecord);
+      setFilteredRecords(filteredRecord.reverse());
     }
   }, [data]);
 
