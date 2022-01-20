@@ -27,6 +27,7 @@ const ButtonStyle = styled.button.attrs(props => ({
   right?: boolean;
   large?: boolean;
   ani?: boolean;
+  hidden?: boolean;
 }>`
   /* font */
   font-style: normal;
@@ -43,7 +44,6 @@ const ButtonStyle = styled.button.attrs(props => ({
   text-align: center;
 
   /* Auto Layout */
-  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -92,7 +92,6 @@ const ButtonStyle = styled.button.attrs(props => ({
       `;
     }
   }}
-
   ${props =>
     props.brand &&
     css`
@@ -119,6 +118,17 @@ const ButtonStyle = styled.button.attrs(props => ({
         animation: smoothAppear 0.5s ease-in-out;
       }
     `}
+    /* hidden */
+    ${props => {
+    if (props.hidden)
+      return css`
+        display: none;
+      `;
+    else
+      return css`
+        display: flex;
+      `;
+  }}
 `;
 
 interface ButtonProps {
@@ -131,6 +141,7 @@ interface ButtonProps {
   large?: boolean;
   type?: string;
   ani?: boolean;
+  hidden?: boolean;
   onClick?: () => void;
   onHover?: () => void;
 }
@@ -145,6 +156,7 @@ function Button({
   large,
   type,
   ani,
+  hidden,
   onClick,
   onHover,
 }: ButtonProps): JSX.Element {
@@ -161,6 +173,7 @@ function Button({
       onMouseLeave={onHover}
       type={type}
       ani={ani}
+      hidden={hidden}
     >
       {children}
     </ButtonStyle>

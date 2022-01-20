@@ -352,11 +352,11 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
             this.server.to(userClientId).emit('requestGame', {
               roomId: room.id,
               opponentId: users[client.id].userId,
+              userName: users[client.id].userName,
             });
             return;
           }
         });
-        // client.emit('requestGame', room.id);
       }
     }
   }

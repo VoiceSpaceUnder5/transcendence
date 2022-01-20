@@ -1,8 +1,7 @@
 import React, {ReactNode} from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
-const BackBoardStyle = styled.div<{size?: string}>`
-  display: flex;
+const BackBoardStyle = styled.div<{hidden?: boolean; size?: string}>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -19,11 +18,22 @@ const BackBoardStyle = styled.div<{size?: string}>`
   border-radius: 50px;
   margin: 0px 12px;
   margin-bottom: 12px;
+  ${props => {
+    if (props.hidden)
+      return css`
+        display: none;
+      `;
+    else
+      return css`
+        display: flex;
+      `;
+  }}
 `;
 
 interface BackBoardProps {
   children: ReactNode;
   size?: string;
+  hidden?: boolean;
 }
 
 BackBoard.defaultProps = {
@@ -33,6 +43,11 @@ BackBoard.defaultProps = {
 export default function BackBoard({
   children,
   size,
+  hidden,
 }: BackBoardProps): JSX.Element {
-  return <BackBoardStyle size={size}>{children}</BackBoardStyle>;
+  return (
+    <BackBoardStyle hidden={hidden} size={size}>
+      {children}
+    </BackBoardStyle>
+  );
 }

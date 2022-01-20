@@ -6,6 +6,7 @@ import styled, {css} from 'styled-components';
 const TextStyle = styled.button<{
   bg?: string;
   large?: boolean;
+  hidden?: boolean;
 }>`
   /* Text */
 
@@ -38,6 +39,17 @@ const TextStyle = styled.button<{
       `;
     }
   }}
+  /* visibility */
+  ${props => {
+    if (props.hidden)
+      return css`
+        display: none;
+      `;
+    else
+      return css`
+        display: inline;
+      `;
+  }}
 
   border: 0px;
   border-radius: 4px;
@@ -48,11 +60,12 @@ interface TextProps {
   bg?: string;
   large?: boolean;
   onClick?: (e: FormEvent) => void;
+  hidden?: boolean;
 }
 
-function Text({children, bg, large, onClick}: TextProps): JSX.Element {
+function Text({children, bg, large, onClick, hidden}: TextProps): JSX.Element {
   return (
-    <TextStyle bg={bg} large={large} onClick={onClick}>
+    <TextStyle hidden={hidden} bg={bg} large={large} onClick={onClick}>
       {children}
     </TextStyle>
   );

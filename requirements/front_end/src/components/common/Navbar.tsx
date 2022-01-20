@@ -7,10 +7,7 @@ import GameStart from '../pongGame/GameStart';
 import LogOut from './LogOut';
 import Img from './Img';
 
-interface NavbarProps {
-  isStart?: boolean;
-}
-function Navbar({isStart}: NavbarProps): JSX.Element {
+function Navbar(): JSX.Element {
   const [meId] = useState(Number(localStorage.getItem('meId')));
   const [meName] = useState(localStorage.getItem('meName'));
   const [isToggle, setIsToggle] = useState<boolean>(false);
@@ -47,7 +44,7 @@ function Navbar({isStart}: NavbarProps): JSX.Element {
           {isClick && <LogOut />}
         </NavCollapse>
       </Nav>
-      <GameStart isStart={isStart} />
+      <GameStart />
     </NavbarBackground>
   );
 }

@@ -5,17 +5,16 @@ import {HiChevronDown, HiChevronUp} from 'react-icons/hi';
 import {useHistory} from 'react-router-dom';
 import {GameData} from './GameData';
 import {io} from 'socket.io-client';
+import Text from '../common/Text';
+import BackBoard from '../common/BackBoard';
 
-interface GameStartProps {
-  isStart?: boolean;
-}
-
-function GameStart({isStart}: GameStartProps): JSX.Element {
+function GameStart(): JSX.Element {
   const [toggle, setToggle] = useState(false);
   const [isHard, setIsHard] = useState(false);
   const history = useHistory();
   const [isLadder, setIsLadder] = useState(false);
   const [join, setJoin] = useState(false);
+  const [requestUserName, setRequestUserName] = useState('');
 
   // 게임 소켓은 스타트 버튼이 뜨면  바로 연결됩니다.
   useEffect(() => {
@@ -31,8 +30,17 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     GameData.socket.emit('sendUserData', {userId: GameData.id});
     GameData.socket.on(
       'requestGame',
-      ({roomId, opponentId}: {roomId: string; opponentId: number}) => {
+      ({
+        roomId,
+        opponentId,
+        userName,
+      }: {
+        roomId: string;
+        opponentId: number;
+        userName: string;
+      }) => {
         setJoin(true);
+        setRequestUserName(userName);
         GameData.setRoomId(roomId);
         GameData.setOnGameUserId(opponentId);
       },
@@ -73,8 +81,8 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
     history.push('/home');
   };
   return (
-    <GameStartStyles>
-      {!isStart ? (
+    <>
+      <GameStartStyles>
         <>
           <Button icon right bg="grey" onClick={onToggle}>
             {toggle ? <HiChevronUp /> : <HiChevronDown />}
@@ -110,25 +118,24 @@ function GameStart({isStart}: GameStartProps): JSX.Element {
               </GameOptions>
             )}
           </form>
+        </>
+      </GameStartStyles>
+      <RequestPopUp>
+        <BackBoard hidden={!join} size={'medium'}>
+          <Text>{requestUserName}가 대전을 신청하였습니다</Text>
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
               alignItems: 'center',
             }}
           >
-            <button hidden={!join} onClick={onWithMeClick}>
-              함께하자
-            </button>
-            <button hidden={!join} onClick={onCancelClick}>
-              취소
-            </button>
+            <Button onClick={onWithMeClick}>수락</Button>
+            <Button onClick={onCancelClick}>거절</Button>
           </div>
-        </>
-      ) : (
-        <button>취소</button>
-      )}
-    </GameStartStyles>
+        </BackBoard>
+      </RequestPopUp>
+    </>
   );
 }
 
@@ -170,4 +177,11 @@ const GameOption = styled.div`
   display: flex;
   align-self: stretch;
   justify-content: flex-end;
+`;
+
+const RequestPopUp = styled.div`
+  position: absolute;
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
 `;
