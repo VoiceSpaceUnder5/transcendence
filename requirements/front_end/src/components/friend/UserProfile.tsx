@@ -12,6 +12,7 @@ import DirectMessages from './DirectMessage';
 import {GameData} from '../pongGame/GameData';
 import {useHistory} from 'react-router-dom';
 import MatchRecords from '../matchRecord/MatchRecords';
+import useRecord from '../../hooks/useRecord';
 
 const GET_USER_BY_ID = gql`
   query getUserById($userId: Int!) {
@@ -37,15 +38,16 @@ export default function UserProfile({
   onBackClick,
 }: UserProfileProps): JSX.Element {
   const typeId = useRelation(meId, userId);
-  const {loading, error, data} = useQuery(GET_USER_BY_ID, {
+  const user = useQuery(GET_USER_BY_ID, {
     variables: {
       userId: userId,
     },
     fetchPolicy: 'no-cache',
   });
+  const records = useRecord(userId);
   const history = useHistory();
-  if (loading) return <></>;
-  if (error) return <>에러 ..</>;
+  if (user.loading || records.loading) return <>로딩 중..</>;
+  if (user.error || records.error) return <>에러 ..</>;
   const onGameStartButtonClick = () => {
     GameData.setIsHard(false);
     GameData.setOnGameUserId(userId);
@@ -58,7 +60,7 @@ export default function UserProfile({
   };
   return (
     <>
-      {data && (
+      {user.data && (
         <UserProfileStyles>
           <UserProfileBackboard>
             <TitleDiv color="black">친구 프로필</TitleDiv>
@@ -69,20 +71,20 @@ export default function UserProfile({
               </InnerLayout>
               <InnerLayout>
                 <Div>이름</Div>
-                <UserProfileDiv>{data.getUserById.name}</UserProfileDiv>
+                <UserProfileDiv>{user.data.getUserById.name}</UserProfileDiv>
                 <Div>email</Div>
                 <UserProfileDiv>test@test.com</UserProfileDiv>
-                {/* <UserProfileDiv>{data.getUserById.email}</UserProfileDiv> */}
+                {/* <UserProfileDiv>{user.data.getUserById.email}</UserProfileDiv> */}
                 <Div>자기소개</Div>
                 <UserProfileDiv style={{height: '140px'}}>
-                  {data.getUserById.description}
+                  {user.data.getUserById.description}
                 </UserProfileDiv>
               </InnerLayout>
             </WholeLayout>
             <WholeLayout>
               <InnerLayout>
                 <Div>대전 기록</Div>
-                <MatchRecords userId={userId} height="fit" />
+                <MatchRecords records={records.records} height="fit" />
               </InnerLayout>
               <InnerLayout>
                 <Div>업적</Div>
@@ -153,14 +155,16 @@ export default function UserProfile({
                   <OptionButton
                     onClick={onGameStartButtonClick}
                     disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
-                    hidden={data.getUserById.connectionStatusId !== 'CS1'}
+                    hidden={user.data.getUserById.connectionStatusId !== 'CS1'}
                   >
                     게임하기
                   </OptionButton>
                   <OptionButton
                     onClick={onGameSpectateButtonClick}
                     disabled={typeId === ('RE3' || 'RE4' || 'RE5') && true}
-                    hidden={!(data.getUserById.connectionStatusId === 'CS2')}
+                    hidden={
+                      !(user.data.getUserById.connectionStatusId === 'CS2')
+                    }
                   >
                     관전하기
                   </OptionButton>

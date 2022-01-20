@@ -1,17 +1,14 @@
 import React from 'react';
 import {MenuList} from '../common/MenuList';
 import MatchRecord from './MatchRecord';
-import useRecord from '../../hooks/useRecord';
+import {FilteredRecord} from '../../hooks/useRecord';
 
-interface MatchRecordProps {
-  userId: number;
+interface MatchRecordsProps {
+  records: FilteredRecord[];
   height?: string;
 }
 
-function MatchRecords({userId, height}: MatchRecordProps): JSX.Element {
-  const {loading, error, records} = useRecord(userId);
-  if (loading) return <>로딩 중..</>;
-  if (error) return <>에러!</>;
+function MatchRecords({records, height}: MatchRecordsProps): JSX.Element {
   return (
     <MenuList height={height}>
       {records.map(record => (

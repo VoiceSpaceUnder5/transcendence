@@ -9,6 +9,7 @@ import {
 import Ladder from '../components/ladder/LadderBoard';
 import AchievementBoard from '../components/achievement/AchievementBoard';
 import MatchRecordBoard from '../components/matchRecord/MatchRecordBoard';
+import useRecord from '../hooks/useRecord';
 
 function HomePage(): JSX.Element {
   const ladderData = {
@@ -22,13 +23,18 @@ function HomePage(): JSX.Element {
     {achievement: '나', isSuccess: false},
     {achievement: '다', isSuccess: true},
   ];
+  const {loading, error, records} = useRecord(
+    Number(localStorage.getItem('meId')),
+  );
+  if (loading) return <>로딩...</>;
+  if (error) return <>에러..</>;
   return (
     <>
       <Body>
         <Navbar />
         <BackboardBoxLayout>
           <BackboardBoxInnerLayout speed={5}>
-            <MatchRecordBoard />
+            <MatchRecordBoard records={records} />
           </BackboardBoxInnerLayout>
           <BackboardBoxInnerLayout speed={20}>
             <Ladder ladderData={ladderData} />

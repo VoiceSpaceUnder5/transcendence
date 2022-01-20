@@ -11,7 +11,7 @@ interface OriginalRecord {
   typeId: string;
 }
 
-interface FilteredRecord {
+export interface FilteredRecord {
   id: number;
   opponentId: number;
   result: string | undefined;
