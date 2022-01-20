@@ -6,6 +6,7 @@ import { RefreshTokenService } from 'src/refreshtoken/refreshtoken.service';
 import { CreateUserInput } from 'src/users/dto/create-user.input';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/user.service';
+import { Otp } from 'src/utils/otp';
 import { JwtPayload } from './interface/jwt-payload.interface';
 
 @Injectable()
@@ -29,6 +30,11 @@ export class AuthService {
     this.setAccessTokenCookie(res, accessToken);
     this.setRefreshTokenCookie(res, refreshTokenId);
     return res.redirect(`${this.configService.get<string>('FRONT_URI')}/auth`);
+  }
+
+  async login2fa(userId: number, token: string, res: Response) {
+    const user = await this.usersService.findUserById(userId);
+    // Otp.varifyOtp(token, )
   }
 
   async logout(res: Response) {
@@ -89,14 +95,14 @@ export class AuthService {
 
   private setAccessTokenCookie(res: Response, accessToken: string) {
     res.cookie('accessToken', accessToken, {
-      maxAge: 300000000000,
+      maxAge: 60 * 15 * 1000, // 15분
       domain: '.ts.io',
     });
   }
 
   private setRefreshTokenCookie(res: Response, refreshTokenId: string) {
     res.cookie('refreshTokenId', refreshTokenId, {
-      maxAge: 600000000000,
+      maxAge: 60 * 60 * 24 * 14 * 1000, // 14일
       domain: '.ts.io',
     });
   }

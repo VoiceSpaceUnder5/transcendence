@@ -24,6 +24,7 @@ import { CodeService } from 'src/code/code.service';
 import { Record } from 'src/record/record.entity';
 
 @Resolver(() => User)
+@UseGuards(GqlJwtAccessGuard)
 export class UserResolver {
   constructor(
     private readonly usersService: UsersService,
@@ -34,13 +35,11 @@ export class UserResolver {
   ) {}
 
   //@GetUser 가드를 통과해서 내려온 컨텍스트에서 user 추출
-  @UseGuards(GqlJwtAccessGuard)
   @Query(() => User, { name: 'getMe' })
   async getMe(@GetUser() user: User) {
     return user;
   }
 
-  @UseGuards(GqlJwtAccessGuard)
   @Mutation(() => String, {
     name: 'activateTwoFactorAuth',
     description: 'Return 데이터는 QRcode 이미지 데이터의 DataUri 이다',
@@ -49,7 +48,6 @@ export class UserResolver {
     return await this.usersService.activateTwoFactorAuth(user);
   }
 
-  @UseGuards(GqlJwtAccessGuard)
   @Mutation(() => User, {
     name: 'deactivateTwoFactorAuth',
     description: 'Return 데이터는 QRcode 이미지 데이터의 DataUri 이다',

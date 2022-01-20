@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   ID,
@@ -8,6 +9,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
 import { Code } from 'src/code/code.entity';
 import { CodeService } from 'src/code/code.service';
 import { ChannelUser } from './channel-user.entity';
@@ -15,6 +17,7 @@ import { ChannelUserService } from './channel-user.service';
 import { CreateChannelUserInput } from './inputs/create-channel-user.input';
 
 @Resolver(() => ChannelUser)
+@UseGuards(GqlJwtAccessGuard)
 export class ChannelUserResolver {
   constructor(
     private readonly channelUserService: ChannelUserService,

@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -6,6 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
 import { CodeService } from 'src/code/code.service';
 import { Code } from 'typeorm';
 import { CreateRecordInput } from './dto/create-record.input';
@@ -13,6 +15,7 @@ import { Record } from './record.entity';
 import { RecordService } from './record.service';
 
 @Resolver((of) => Record)
+@UseGuards(GqlJwtAccessGuard)
 export class RecordResolver {
   constructor(
     private readonly recordService: RecordService,
