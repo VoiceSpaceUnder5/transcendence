@@ -1,5 +1,3 @@
-import { ObjectType } from '@nestjs/graphql';
-import { IoAdapter } from '@nestjs/platform-socket.io';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -7,18 +5,10 @@ import {
   OnGatewayDisconnect,
   OnGatewayConnection,
 } from '@nestjs/websockets';
-import { isEmpty } from 'class-validator';
-import { RuleTester } from 'eslint';
-import { isObjectType } from 'graphql';
-import { stringify } from 'querystring';
-import { identity } from 'rxjs';
 import { Server } from 'socket.io';
-import { Client } from 'socket.io/dist/client';
-import { CreateRecordInput } from 'src/record/dto/create-record.input';
 import { RecordService } from 'src/record/record.service';
 import { UsersService } from 'src/users/user.service';
 import gameEngine, {
-  canvasHeight,
   canvasWidth,
   GameScoreData,
   makeRecord,
