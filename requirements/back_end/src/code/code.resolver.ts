@@ -1,9 +1,12 @@
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
 import { Code } from './code.entity';
 import { CodeService } from './code.service';
 import { CreateCodeInput } from './inputs/create-code.input';
 
 @Resolver()
+@UseGuards(GqlJwtAccessGuard)
 export class CodeResolver {
   constructor(private readonly codeService: CodeService) {}
 

@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -6,6 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
 import { ChannelService } from 'src/chat-channels/channel.service';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/user.service';
@@ -14,6 +16,7 @@ import { Message } from './message.entity';
 import { MessageService } from './message.service';
 
 @Resolver(() => Message)
+@UseGuards(GqlJwtAccessGuard)
 export class MessageResolver {
   constructor(
     private readonly messageService: MessageService,

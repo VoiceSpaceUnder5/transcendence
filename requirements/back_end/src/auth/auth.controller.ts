@@ -26,6 +26,14 @@ export class AuthController {
     return await this.authService.login(req.user, res);
   }
 
+  @Get('login/2fa')
+  async login2fa(@Req() req, @Res() res: Response) {
+    //request의 otp 코드를 넘겨준다.
+    const token = req.body.otpToken;
+    const userId = req.body.userId;
+    return await this.authService.login2fa(userId, token, res);
+  }
+
   @Get('refresh')
   async refresh(@Req() req, @Res() res: Response) {
     const result = await this.authService.refresh(req, res);
