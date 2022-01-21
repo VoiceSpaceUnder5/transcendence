@@ -40,10 +40,11 @@ export class UsersService {
       throw new BadRequestException('이미 2FA가 활성화 되어 있습니다.');
     }
     const { otpURI, secret } = Otp.createOtp(user.name);
+    const dataUri = await Otp.createQrCode(otpURI);
     user.twoFactorAuth = true;
     user.twoFactorAuthSecret = this.encryptService.encrypt(secret);
+    user.twoFactorAuthImageUri = dataUri;
     await this.userRepository.update(user.id, user);
-    const dataUri = await Otp.createQrCode(otpURI);
     return dataUri;
   }
 
@@ -51,11 +52,13 @@ export class UsersService {
     await this.userRepository.update(user.id, {
       twoFactorAuth: false,
       twoFactorAuthSecret: null,
+      twoFactorAuthImageUri: null,
     });
   }
 
   async create(createUserInput: CreateUserInput): Promise<User> {
-    return await this.userRepository.save(createUserInput);
+    await this.userRepository.save(createUserInput);
+    return this.userRepository.findOneOrFail(createUserInput.id);
   }
 
   async update(id: number, updateUserInput: UpdateUserInput): Promise<User> {
