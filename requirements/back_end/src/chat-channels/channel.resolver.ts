@@ -9,7 +9,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
+import { AccessGuard } from 'src/auth/guard/access.guard';
 import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
 import { ChannelUserService } from 'src/chat-channel-user/channel-user.service';
 import { Code } from 'src/code/code.entity';
@@ -23,7 +23,7 @@ import { LeaveChannelInput } from './inputs/leave-channel.input';
 import { UpdateChannelInput } from './inputs/update-channel.input';
 
 @Resolver((type) => Channel)
-@UseGuards(GqlJwtAccessGuard)
+@UseGuards(AccessGuard)
 export class ChannelResolver {
   constructor(
     private readonly channelService: ChannelService,

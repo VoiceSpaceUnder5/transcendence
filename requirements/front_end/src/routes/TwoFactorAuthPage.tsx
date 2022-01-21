@@ -7,8 +7,10 @@ import Body, {
 } from '../components/common/Body';
 import {OptionBox} from '../components/friend/UserProfile';
 import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 
 export default function TwoFactorAuthPage(): JSX.Element {
+  const history = useHistory();
   const number = useRef(0);
   const [inputs, setInputs] = useState({
     value: '',
@@ -28,7 +30,7 @@ export default function TwoFactorAuthPage(): JSX.Element {
     });
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token =
       inputs.otp0 +
@@ -37,9 +39,20 @@ export default function TwoFactorAuthPage(): JSX.Element {
       inputs.otp3 +
       inputs.otp4 +
       inputs.otp5;
-    axios.post('http://api.ts.io:3000/auth/login/2fa', {
-      token,
-    });
+    const res = await axios.post(
+      'http://api.ts.io:30000/auth/login/2fa',
+      {
+        token,
+      },
+      {
+        withCredentials: true,
+      },
+    );
+    if (res.data === true) {
+      history.push('/auth');
+    } else {
+      alert('실패');
+    }
   };
 
   const onFocus = (e: React.FocusEvent) => {

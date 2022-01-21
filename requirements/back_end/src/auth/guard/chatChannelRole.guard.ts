@@ -14,7 +14,7 @@ export class channelRoleGuard implements CanActivate {
   }
 }
 
-// export class GqlJwtAccessGuard extends AuthGuard('jwt-access') {
+// export class AccessGuard extends AuthGuard('jwt-access') {
 //   canActivate(
 //     context: ExecutionContext,
 //   ): boolean | Promise<boolean> | Observable<boolean> {
