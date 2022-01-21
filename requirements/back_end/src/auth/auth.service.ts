@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -28,22 +28,30 @@ export class AuthService {
   async login(createUserInput: CreateUserInput, res: Response) {
     const user = await this.usersService.create(createUserInput);
     //여기에서 2fa 활성유저인지 체크
-    if (user.twoFactorAuth) {
-      return 'this user need to check 2fa';
-    }
     const accessToken = this.createAccessToken(user.id);
     const refreshTokenId = await this.createRefreshTokenToDB(user.id);
     this.setAccessTokenCookie(res, accessToken);
     this.setRefreshTokenCookie(res, refreshTokenId);
+    if (user.twoFactorAuth) {
+      return res.redirect(
+        `${this.configService.get<string>('FRONT_URI')}/auth/2fa`,
+      );
+    }
     return res.redirect(`${this.configService.get<string>('FRONT_URI')}/auth`);
   }
 
-  async login2fa(userId: number, token: string, res: Response) {
-    const user = await this.usersService.findUserById(userId);
+  async login2fa(user: User, token: string, res: Response) {
+    // const user = await this.usersService.findUserById(userId);
     const decryptedSecret = this.encryptService.decrypt(
       user.twoFactorAuthSecret,
     );
-    console.log('OTP인증 결과:', Otp.varifyOtp(token, decryptedSecret));
+    const validOtp = Otp.varifyOtp(token, decryptedSecret);
+    if (!validOtp) {
+      throw new NotAcceptableException('2fa 인증 실패');
+    }
+    const twoFactorToken = this.createTwoFactorToken(user.id);
+    this.setTwoFactorTokenCookie(res, twoFactorToken);
+    return res.redirect(`${this.configService.get<string>('FRONT_URI')}/auth`);
   }
 
   async logout(res: Response) {
@@ -88,6 +96,17 @@ export class AuthService {
     return accessToken;
   }
 
+  private createTwoFactorToken(userId: number): string {
+    const twoFactorToken = this.jwtService.sign(
+      { id: userId },
+      {
+        expiresIn: this.configService.get<string>('ACCESS_TOEKN_TIME'),
+        secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+      },
+    );
+    return twoFactorToken;
+  }
+
   private async createRefreshTokenToDB(userId: number): Promise<string> {
     const refreshToken = this.jwtService.sign(
       { id: userId },
@@ -104,6 +123,13 @@ export class AuthService {
 
   private setAccessTokenCookie(res: Response, accessToken: string) {
     res.cookie('accessToken', accessToken, {
+      maxAge: 60 * 15 * 1000, // 15분
+      domain: '.ts.io',
+    });
+  }
+
+  private setTwoFactorTokenCookie(res: Response, twoFactorToken: string) {
+    res.cookie('twoFactorToken', twoFactorToken, {
       maxAge: 60 * 15 * 1000, // 15분
       domain: '.ts.io',
     });

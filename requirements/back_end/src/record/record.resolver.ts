@@ -7,7 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
+import { AccessGuard } from 'src/auth/guard/access.guard';
 import { CodeService } from 'src/code/code.service';
 import { Code } from 'typeorm';
 import { CreateRecordInput } from './dto/create-record.input';
@@ -15,7 +15,7 @@ import { Record } from './record.entity';
 import { RecordService } from './record.service';
 
 @Resolver((of) => Record)
-@UseGuards(GqlJwtAccessGuard)
+@UseGuards(AccessGuard)
 export class RecordResolver {
   constructor(
     private readonly recordService: RecordService,

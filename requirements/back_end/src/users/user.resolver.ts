@@ -8,7 +8,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { GqlJwtAccessGuard } from 'src/auth/guard/gql-jwt.guard';
+import { AccessGuard } from 'src/auth/guard/access.guard';
 import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
 import { ChannelUserService } from 'src/chat-channel-user/channel-user.service';
 import { RecordService } from 'src/record/record.service';
@@ -24,7 +24,7 @@ import { CodeService } from 'src/code/code.service';
 import { Record } from 'src/record/record.entity';
 
 @Resolver(() => User)
-@UseGuards(GqlJwtAccessGuard)
+@UseGuards(AccessGuard)
 export class UserResolver {
   constructor(
     private readonly usersService: UsersService,

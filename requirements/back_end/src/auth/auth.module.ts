@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CodeModule } from 'src/code/code.module';
 import { RefreshTokenModule } from 'src/refreshtoken/refreshtoken.module';
 import { EncryptModule } from 'src/encrypt/encrypt.module';
+import { TwoFactorGuard } from './guard/twoFactor.guard';
 
 @Module({
   imports: [
