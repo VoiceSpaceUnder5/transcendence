@@ -8,7 +8,10 @@ export class EncryptService {
   private key: Buffer;
 
   constructor() {
-    this.iv = randomBytes(16);
+    this.iv = Buffer.from([
+      0x62, 0x75, 0x66, 0x66, 0x65, 0x72, 0x65, 0x72, 0x62, 0x75, 0x66, 0x66,
+      0x65, 0x72, 0x65, 0x72,
+    ]);
     promisify(scrypt)(process.env.ENCRYPT_SECRET, 'salt', 32) //
       .then((scrypt) => (this.key = scrypt as Buffer));
   }

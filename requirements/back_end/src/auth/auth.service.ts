@@ -1,4 +1,4 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -41,17 +41,17 @@ export class AuthService {
   }
 
   async login2fa(user: User, token: string, res: Response) {
-    // const user = await this.usersService.findUserById(userId);
     const decryptedSecret = this.encryptService.decrypt(
       user.twoFactorAuthSecret,
     );
     const validOtp = Otp.varifyOtp(token, decryptedSecret);
+    console.log(validOtp);
     if (!validOtp) {
-      throw new NotAcceptableException('2fa 인증 실패');
+      return false;
     }
     const twoFactorToken = this.createTwoFactorToken(user.id);
     this.setTwoFactorTokenCookie(res, twoFactorToken);
-    return res.redirect(`${this.configService.get<string>('FRONT_URI')}/auth`);
+    return true;
   }
 
   async logout(res: Response) {
@@ -59,6 +59,9 @@ export class AuthService {
       domain: '.ts.io',
     });
     res.clearCookie('refreshTokenId', {
+      domain: '.ts.io',
+    });
+    res.clearCookie('twoFactorToken', {
       domain: '.ts.io',
     });
     return res.redirect(`${this.configService.get<string>('FRONT_URI')}`);
@@ -75,7 +78,8 @@ export class AuthService {
       });
       const accessToken = this.createAccessToken(payload.id);
       this.setAccessTokenCookie(res, accessToken);
-
+      const twoFactorToken = this.createTwoFactorToken(payload.id);
+      this.setTwoFactorTokenCookie(res, twoFactorToken);
       return res.redirect(
         `${this.configService.get<string>('FRONT_URI')}/auth`,
       );

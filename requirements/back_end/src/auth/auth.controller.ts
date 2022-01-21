@@ -32,8 +32,8 @@ export class AuthController {
     return await this.authService.login(req.user, res);
   }
 
-  @PassAccessGuard()
-  @Get('login/2fa')
+  @PassTwoFactorGuard()
+  @Post('login/2fa')
   async login2fa(@Req() req, @Res({ passthrough: true }) res: Response) {
     //request의 otp 코드를 넘겨준다.
     const token = req.body.token;
