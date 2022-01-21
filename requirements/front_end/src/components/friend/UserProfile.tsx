@@ -235,7 +235,7 @@ const OptionBoxLayout = styled.div`
   width: 100%;
 `;
 
-const OptionBox = styled.div`
+export const OptionBox = styled.div`
   display: flex;
   width: 100%;
   max-width: 400px;
