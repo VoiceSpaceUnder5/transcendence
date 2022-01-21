@@ -92,4 +92,8 @@ export class User extends DefaultEntity {
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   twoFactorAuthSecret?: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
+  twoFactorAuthImageUri?: string;
 }

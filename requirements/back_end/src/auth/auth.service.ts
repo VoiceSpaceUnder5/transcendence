@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { EncryptService } from 'src/encrypt/encrypt.service';
 import { RefreshTokenService } from 'src/refreshtoken/refreshtoken.service';
 import { CreateUserInput } from 'src/users/dto/create-user.input';
 import { User } from 'src/users/user.entity';
@@ -16,6 +17,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly refreshTokenService: RefreshTokenService,
+    private readonly encryptService: EncryptService,
   ) {}
 
   async validateUser(payload: JwtPayload): Promise<User> {
@@ -25,6 +27,10 @@ export class AuthService {
 
   async login(createUserInput: CreateUserInput, res: Response) {
     const user = await this.usersService.create(createUserInput);
+    //여기에서 2fa 활성유저인지 체크
+    if (user.twoFactorAuth) {
+      return 'this user need to check 2fa';
+    }
     const accessToken = this.createAccessToken(user.id);
     const refreshTokenId = await this.createRefreshTokenToDB(user.id);
     this.setAccessTokenCookie(res, accessToken);
@@ -34,7 +40,10 @@ export class AuthService {
 
   async login2fa(userId: number, token: string, res: Response) {
     const user = await this.usersService.findUserById(userId);
-    // Otp.varifyOtp(token, )
+    const decryptedSecret = this.encryptService.decrypt(
+      user.twoFactorAuthSecret,
+    );
+    console.log('OTP인증 결과:', Otp.varifyOtp(token, decryptedSecret));
   }
 
   async logout(res: Response) {

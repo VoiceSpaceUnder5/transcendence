@@ -26,12 +26,12 @@ export class AuthController {
     return await this.authService.login(req.user, res);
   }
 
+  @UseGuards(FortyTwoAuthGuard)
   @Get('login/2fa')
-  async login2fa(@Req() req, @Res() res: Response) {
+  async login2fa(@Req() req, @Res({ passthrough: true }) res: Response) {
     //request의 otp 코드를 넘겨준다.
     const token = req.body.otpToken;
-    const userId = req.body.userId;
-    return await this.authService.login2fa(userId, token, res);
+    return await this.authService.login2fa(req.user.id, token, res);
   }
 
   @Get('refresh')

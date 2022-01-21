@@ -9,6 +9,7 @@ import { FortyTwoStrategy } from './strategy/fortytwo.strategy';
 import { ConfigModule } from '@nestjs/config';
 import { CodeModule } from 'src/code/code.module';
 import { RefreshTokenModule } from 'src/refreshtoken/refreshtoken.module';
+import { EncryptModule } from 'src/encrypt/encrypt.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RefreshTokenModule } from 'src/refreshtoken/refreshtoken.module';
     ConfigModule,
     RefreshTokenModule,
     JwtModule.register({}),
+    EncryptModule,
   ],
   providers: [AuthService, JwtAccessStrategy, FortyTwoStrategy],
   controllers: [AuthController],
