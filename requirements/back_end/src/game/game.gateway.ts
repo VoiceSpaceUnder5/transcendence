@@ -180,9 +180,7 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     }, 16);
   }
   // 유저 초기화
-  handleConnection(client: any, ...args: any[]) {
-    console.log('게임 소켓이 연결되었습니다. : ', client.id);
-  }
+  handleConnection(client: any, ...args: any[]) {}
   // 나가면 유저 지우기, 룸 지우기.
   handleDisconnect(client: any) {
     if (!client) throw new Error('Method not implemented.');
@@ -205,7 +203,6 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayConnection {
     }
     this.userService.updateUserConnectionStatus(user.userId, 'CS0');
     delete users[client.id];
-    console.log('게임소켓 연결이 끊겼습니다. : ', client.id);
   }
   @WebSocketServer()
   server: Server;

@@ -10,7 +10,7 @@ import {GameData} from '../components/pongGame/GameData';
 
 export default function LoginPage(): JSX.Element {
   const onClick = () => {
-    window.location.href = 'http://localhost:30000/auth/fortytwo';
+    window.location.href = `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/fortytwo`;
   };
   useEffect(() => {
     if (GameData.socket) {

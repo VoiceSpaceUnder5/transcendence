@@ -15,7 +15,7 @@ export default function App(): JSX.Element {
     buildGraphQLProvider({
       buildQuery,
       clientOptions: {
-        uri: 'http://localhost:30000/graphql',
+        uri: `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_DOMAIN}:30000/graphql`,
       },
     }).then(dataProvider => setDataProvider(dataProvider));
   }, []);

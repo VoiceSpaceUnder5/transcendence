@@ -22,7 +22,11 @@ function GameStart(): JSX.Element {
     if (GameData.socket) {
       GameData.socket.disconnect();
     }
-    GameData.setSocket(io('http://localhost:33000/game'));
+    GameData.setSocket(
+      io(
+        `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_GAME}${process.env.REACT_APP_BACKEND_DOMAIN}/game`,
+      ),
+    );
     GameData.setIsHard(isHard);
     GameData.setIsLadder(isLadder);
     GameData.setId(Number(localStorage.getItem('meId')));

@@ -97,7 +97,9 @@ export default function Chatting(): JSX.Element {
   );
 
   useEffect(() => {
-    const socket = io('http://localhost:32000');
+    const socket = io(
+      `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_CHAT}${process.env.REACT_APP_BACKEND_DOMAIN}`,
+    );
     socket.connect();
     setSocket(socket);
     socket.emit(
