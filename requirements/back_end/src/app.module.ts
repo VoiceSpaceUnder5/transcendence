@@ -35,7 +35,7 @@ import { RefreshTokenModule } from './refreshtoken/refreshtoken.module';
     ConfigModule.forRoot({ envFilePath: '.dev.env' }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost', // docker-compose service 도메인으로 사용되나?
+      host: 'db', // docker-compose service 도메인으로 사용되나?
       port: 5432,
       username: 'kilee',
       password: 'kilee',
