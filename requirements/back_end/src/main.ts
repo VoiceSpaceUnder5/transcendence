@@ -42,7 +42,6 @@ async function bootstrap() {
   //✅ 전역가드로 AccessGuard를 전달해준다. 이 가드의 예외처리를 위한 리플랙터도 전달.
   const reflector = app.get(Reflector);
   app.useGlobalGuards(new AccessGuard(reflector));
-  app.useGlobalGuards(new TwoFactorGuard(reflector));
 
   //✅ 앱이 실행되면서 데이터베이스를 시딩합니다.
   dbSeed();

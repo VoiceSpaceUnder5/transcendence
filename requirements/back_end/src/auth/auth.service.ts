@@ -27,9 +27,13 @@ export class AuthService {
 
   async login(createUserInput: CreateUserInput, res: Response) {
     const user = await this.usersService.create(createUserInput);
-    //여기에서 2fa 활성유저인지 체크
-    const accessToken = this.createAccessToken(user.id);
-    const refreshTokenId = await this.createRefreshTokenToDB(user.id);
+    const payload: JwtPayload = {
+      id: user.id,
+      twoFactorActivated: user.twoFactorAuth,
+      twoFactorAuthenticated: false,
+    };
+    const accessToken = this.createAccessToken(payload);
+    const refreshTokenId = await this.createRefreshTokenToDB(payload);
     this.setAccessTokenCookie(res, accessToken);
     this.setRefreshTokenCookie(res, refreshTokenId);
     if (user.twoFactorAuth) {
@@ -45,12 +49,18 @@ export class AuthService {
       user.twoFactorAuthSecret,
     );
     const validOtp = Otp.varifyOtp(token, decryptedSecret);
-    console.log(validOtp);
     if (!validOtp) {
       return false;
     }
-    const twoFactorToken = this.createTwoFactorToken(user.id);
-    this.setTwoFactorTokenCookie(res, twoFactorToken);
+    const payload: JwtPayload = {
+      id: user.id,
+      twoFactorActivated: user.twoFactorAuth,
+      twoFactorAuthenticated: true,
+    };
+    const newAccessToken = this.createAccessToken(payload);
+    const refreshTokenId = await this.createRefreshTokenToDB(payload);
+    this.setAccessTokenCookie(res, newAccessToken);
+    this.setRefreshTokenCookie(res, refreshTokenId);
     return true;
   }
 
@@ -59,9 +69,6 @@ export class AuthService {
       domain: '.ts.io',
     });
     res.clearCookie('refreshTokenId', {
-      domain: '.ts.io',
-    });
-    res.clearCookie('twoFactorToken', {
       domain: '.ts.io',
     });
     return res.redirect(`${this.configService.get<string>('FRONT_URI')}`);
@@ -76,10 +83,8 @@ export class AuthService {
       const payload = this.jwtService.verify(refreshToken.token, {
         secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
       });
-      const accessToken = this.createAccessToken(payload.id);
+      const accessToken = this.createAccessToken(payload);
       this.setAccessTokenCookie(res, accessToken);
-      const twoFactorToken = this.createTwoFactorToken(payload.id);
-      this.setTwoFactorTokenCookie(res, twoFactorToken);
       return res.redirect(
         `${this.configService.get<string>('FRONT_URI')}/auth`,
       );
@@ -89,38 +94,21 @@ export class AuthService {
     }
   }
 
-  private createAccessToken(userId: number): string {
-    const accessToken = this.jwtService.sign(
-      { id: userId },
-      {
-        expiresIn: this.configService.get<string>('ACCESS_TOEKN_TIME'),
-        secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-      },
-    );
+  private createAccessToken(payload: JwtPayload): string {
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: this.configService.get<string>('ACCESS_TOEKN_TIME'),
+      secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+    });
     return accessToken;
   }
 
-  private createTwoFactorToken(userId: number): string {
-    const twoFactorToken = this.jwtService.sign(
-      { id: userId },
-      {
-        expiresIn: this.configService.get<string>('ACCESS_TOEKN_TIME'),
-        secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-      },
-    );
-    return twoFactorToken;
-  }
-
-  private async createRefreshTokenToDB(userId: number): Promise<string> {
-    const refreshToken = this.jwtService.sign(
-      { id: userId },
-      {
-        expiresIn: this.configService.get<string>('REFRESH_TOKEN_TIME'),
-        secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
-      },
-    );
+  private async createRefreshTokenToDB(payload: JwtPayload): Promise<string> {
+    const refreshToken = this.jwtService.sign(payload, {
+      expiresIn: this.configService.get<string>('REFRESH_TOKEN_TIME'),
+      secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
+    });
     const refreshTokenId = await this.refreshTokenService
-      .create(userId, refreshToken)
+      .create(payload.id, refreshToken)
       .then((refreshToken) => refreshToken.id);
     return refreshTokenId;
   }
