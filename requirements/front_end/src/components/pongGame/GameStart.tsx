@@ -22,7 +22,7 @@ function GameStart(): JSX.Element {
     if (GameData.socket) {
       GameData.socket.disconnect();
     }
-    GameData.setSocket(io('http://api.ts.io:33000/game'));
+    GameData.setSocket(io('http://localhost:33000/game'));
     GameData.setIsHard(isHard);
     GameData.setIsLadder(isLadder);
     GameData.setId(Number(localStorage.getItem('meId')));

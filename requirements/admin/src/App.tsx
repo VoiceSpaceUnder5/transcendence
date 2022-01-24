@@ -15,7 +15,7 @@ export default function App(): JSX.Element {
     buildGraphQLProvider({
       buildQuery,
       clientOptions: {
-        uri: 'http://api.ts.io:30000/graphql',
+        uri: 'http://localhost:30000/graphql',
       },
     }).then(dataProvider => setDataProvider(dataProvider));
   }, []);

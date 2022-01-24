@@ -97,7 +97,7 @@ export default function Chatting(): JSX.Element {
   );
 
   useEffect(() => {
-    const socket = io('http://api.ts.io:30000');
+    const socket = io('http://localhost:32000');
     socket.connect();
     setSocket(socket);
     socket.emit(

@@ -13,6 +13,12 @@ async function bootstrap() {
   });
   const port = process.env.PORT || 3000;
 
+  //✅ 앱이 실행되면서 CORS 설정을 추가합니다.
+  app.enableCors({
+    origin: [process.env.FRONT_URI, process.env.ADMIN_URI],
+    credentials: true,
+  });
+  
   //✅ 앱이 실행되면서 쿠키 파서를 추가합니다.
   app.use(cookieParser());
 
@@ -20,11 +26,6 @@ async function bootstrap() {
   app.use(bodyParser.json({ limit: '5mb' }));
   app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 
-  //✅ 앱이 실행되면서 CORS 설정을 추가합니다.
-  app.enableCors({
-    origin: [process.env.FRONT_URI, process.env.ADMIN_URI],
-    credentials: true,
-  });
 
   //✅ 앱이 리스폰스를 보낼 때, 헤더에 Access-Control-Allow-Origin에 프론트엔드 URI를 추가합니다.(Cors 허용을 위해)
   app.use((req, res, next) => {

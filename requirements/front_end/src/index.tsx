@@ -19,7 +19,7 @@ const errorLink = onError(({graphQLErrors}) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({message}) => {
       if (message === 'Unauthorized') {
-        window.location.href = 'http://api.ts.io:30000/auth/refresh';
+        window.location.href = 'http://localhost:30000/auth/refresh';
       }
     });
   }
@@ -27,7 +27,7 @@ const errorLink = onError(({graphQLErrors}) => {
 
 const httpLink = createHttpLink({
   // 요로케 쓰면 되나?
-  uri: 'http://api.ts.io:30000/graphql',
+  uri: 'http://localhost:30000/graphql',
   credentials: 'include',
   // fetchOptions: {
   //   mode: 'no-cors',
