@@ -40,7 +40,7 @@ export default function TwoFactorAuthPage(): JSX.Element {
       inputs.otp4 +
       inputs.otp5;
     const res = await axios.post(
-      'http://api.ts.io:30000/auth/login/2fa',
+      `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/login/2fa`,
       {
         token,
       },

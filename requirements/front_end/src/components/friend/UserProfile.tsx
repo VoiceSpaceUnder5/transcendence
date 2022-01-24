@@ -122,7 +122,7 @@ export default function UserProfile({
                   />
                 )}
                 {typeId === undefined && (
-                  <CreateRelation userId={userId} typeId="RE0" />
+                  <CreateRelation userId={userId} typeId="RE1" />
                 )}
                 {typeId !== 'RE3' && typeId !== undefined && (
                   <UpdateRelation

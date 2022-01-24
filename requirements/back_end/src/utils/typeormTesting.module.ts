@@ -8,7 +8,7 @@ import { User } from 'src/users/user.entity';
 export const TypeOrmTestingModule = () => [
   TypeOrmModule.forRoot({
     type: 'postgres',
-    host: 'localhost', // docker-compose service 도메인으로 사용되나?
+    host: 'under5.ngrok.io', // docker-compose service 도메인으로 사용되나?
     port: 5432,
     username: 'kilee',
     password: 'kilee',

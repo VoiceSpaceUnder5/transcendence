@@ -19,15 +19,14 @@ const errorLink = onError(({graphQLErrors}) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({message}) => {
       if (message === 'Unauthorized') {
-        window.location.href = 'http://api.ts.io:30000/auth/refresh';
+        window.location.href = `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/refresh`;
       }
     });
   }
 });
 
 const httpLink = createHttpLink({
-  // 요로케 쓰면 되나?
-  uri: 'http://api.ts.io:30000/graphql',
+  uri: `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/graphql`,
   credentials: 'include',
   // fetchOptions: {
   //   mode: 'no-cors',

@@ -4,7 +4,7 @@ export default {
   // called when the user attempts to log in
   login: ({intra}: {intra: string}) => {
     console.log(intra);
-    return axios.get('http://api.ts.io:30000/auth/profile', {
+    return axios.get(`${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/profile`, {
       withCredentials: true,
     });
   },
@@ -23,7 +23,7 @@ export default {
   // called when the user navigates to a new location, to check for authentication
   checkAuth: async () => {
     return await axios
-      .get('http://api.ts.io:30000/auth/profile', {
+      .get(`${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/profile`, {
         withCredentials: true,
       })
       .then(() => Promise.resolve())

@@ -27,6 +27,7 @@ export class AuthService {
 
   async login(createUserInput: CreateUserInput, res: Response) {
     const user = await this.usersService.create(createUserInput);
+    console.log('User: ', user);
     const payload: JwtPayload = {
       id: user.id,
       twoFactorActivated: user.twoFactorAuth,
@@ -66,10 +67,10 @@ export class AuthService {
 
   async logout(res: Response) {
     res.clearCookie('accessToken', {
-      domain: '.ts.io',
+      domain: process.env.COOKIE_DOMAIN,
     });
     res.clearCookie('refreshTokenId', {
-      domain: '.ts.io',
+      domain: process.env.COOKIE_DOMAIN,
     });
     return res.redirect(`${this.configService.get<string>('FRONT_URI')}`);
   }
@@ -116,21 +117,22 @@ export class AuthService {
   private setAccessTokenCookie(res: Response, accessToken: string) {
     res.cookie('accessToken', accessToken, {
       maxAge: 60 * 15 * 1000, // 15분
-      domain: '.ts.io',
+      domain: process.env.COOKIE_DOMAIN,
     });
   }
 
   private setTwoFactorTokenCookie(res: Response, twoFactorToken: string) {
     res.cookie('twoFactorToken', twoFactorToken, {
       maxAge: 60 * 15 * 1000, // 15분
-      domain: '.ts.io',
+      domain: process.env.COOKIE_DOMAIN,
     });
   }
 
   private setRefreshTokenCookie(res: Response, refreshTokenId: string) {
+    console.log('COOKIE', process.env.COOKIE_DOMAIN);
     res.cookie('refreshTokenId', refreshTokenId, {
       maxAge: 60 * 60 * 24 * 14 * 1000, // 14일
-      domain: '.ts.io',
+      domain: process.env.COOKIE_DOMAIN,
     });
   }
 }
