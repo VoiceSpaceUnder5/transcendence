@@ -1,4 +1,5 @@
 authtoken: 248GoS3vBwilY6tkrlJQcKoPnMm_7qHWQKTDChBiErXDrb9K4
+region: jp
 tunnels:
     front:
         addr: 80
@@ -20,3 +21,8 @@ tunnels:
         proto: http
         hostname: chat.pingpongonline.tk
         host_header: chat.pingpongonline.tk
+    front-admin:
+        addr: 3001
+        proto: http
+        hostname: admin.pingpongonline.tk
+        host_header: admin.pingpongonline.tk
