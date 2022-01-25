@@ -14,7 +14,7 @@ import {
 } from './game.gateway';
 import { isModuleNamespaceObject } from 'util/types';
 
-const winnerScore = 1;
+const winnerScore = 3;
 const paddleWidth = 20;
 const paddleHeight = 100;
 const ballWidth = 30;

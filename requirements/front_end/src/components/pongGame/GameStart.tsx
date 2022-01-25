@@ -22,6 +22,7 @@ function GameStart(): JSX.Element {
     if (GameData.socket) {
       GameData.socket.disconnect();
     }
+    console.log(process.env.REACT_APP_BACKEND_DOMAIN);
     GameData.setSocket(
       io(
         `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_GAME}${process.env.REACT_APP_BACKEND_DOMAIN}/game`,

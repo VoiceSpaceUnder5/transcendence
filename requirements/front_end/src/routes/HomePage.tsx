@@ -15,7 +15,7 @@ function HomePage(): JSX.Element {
   const {loading, error, records} = useRecord(
     Number(localStorage.getItem('meId')),
   );
-  if (loading) return <>로딩...</>;
+  if (loading) return <></>;
   if (error) return <>에러..</>;
   return (
     <>

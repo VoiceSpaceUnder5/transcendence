@@ -46,7 +46,7 @@ export default function SearchChannel(): JSX.Element {
     refetch();
   }, []);
 
-  if (loading) return <>로딩 중</>;
+  if (loading) return <></>;
   if (error) return <>에러</>;
   const channelList = (data.getChannelsByUserId as Channel[]).map(channel => {
     return {

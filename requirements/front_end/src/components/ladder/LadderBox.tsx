@@ -50,7 +50,7 @@ export default function LadderBox({records}: LadderBoxProps): JSX.Element {
       }
     }
   }, [records]);
-  if (!records || ladderInfo === undefined) return <>로딩 중..</>;
+  if (!records || ladderInfo === undefined) return <></>;
   return (
     <LadderBoxStyle>
       <LadderInfoStyle>

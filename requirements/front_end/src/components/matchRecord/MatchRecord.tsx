@@ -29,7 +29,7 @@ export default function MatchRecord({record}: MatchRecordProps): JSX.Element {
     },
     fetchPolicy: 'no-cache',
   });
-  if (loading) <>로딩 중...</>;
+  if (loading) <></>;
   if (error) <>에러!</>;
   let recordAndMode;
   if (record.result) {

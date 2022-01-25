@@ -75,7 +75,7 @@ export default function ChannelOptionsList({
   const onSetting = () => {
     setIsClick(!isClick);
   };
-  if (usersData.loading) return <>로딩 중</>;
+  if (usersData.loading) return <></>;
   if (usersData.error) return <>에러</>;
 
   const users: UserInfo[] = usersData.data.getUsersByIds;
