@@ -38,6 +38,9 @@ export default function AuthPage(): JSX.Element {
         },
       })
         .then(() => {
+          alert(
+            '첫 로그인을 축하합니다. 프로필 페이지에서 프로필을 수정해보세요',
+          );
           history.push('/home');
         })
         .catch(() => {

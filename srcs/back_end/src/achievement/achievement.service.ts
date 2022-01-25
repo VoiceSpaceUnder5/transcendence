@@ -25,7 +25,10 @@ export class AchievementService {
     try {
       return await this.achievementRepository.save(createAchievementInput);
     } catch (e) {
-      return await this.getAchievement(createAchievementInput);
+      console.log('로그인 업적 중복');
     }
+    // } catch (e) {
+    //   return await this.getAchievement(createAchievementInput);
+    // }
   }
 }

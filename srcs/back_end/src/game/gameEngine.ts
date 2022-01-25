@@ -200,13 +200,23 @@ async function winTheGame(
     if (record.resultId === 'BR0') {
       winnerAchievement.userId = room.leftUser.userId;
       loserAchievement.userId = room.rightUser.userId;
-      await achievementService.createAchievement(winnerAchievement);
-      await achievementService.createAchievement(loserAchievement);
+      try {
+        await achievementService.createAchievement(winnerAchievement);
+        await achievementService.createAchievement(loserAchievement);
+      } catch (e) {
+        // console.log(e);
+        console.log('중복된 업적');
+      }
     } else if (record.resultId === 'BR1') {
       winnerAchievement.userId = room.rightUser.userId;
       loserAchievement.userId = room.leftUser.userId;
-      await achievementService.createAchievement(loserAchievement);
-      await achievementService.createAchievement(winnerAchievement);
+      try {
+        await achievementService.createAchievement(loserAchievement);
+        await achievementService.createAchievement(winnerAchievement);
+      } catch (e) {
+        console.log('중복된 업적');
+        // console.log(e);
+      }
     }
 
     // console.log(winnerAchievement);
