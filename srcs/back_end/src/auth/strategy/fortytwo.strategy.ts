@@ -26,8 +26,6 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, 'fortyTwo') {
     done: VarifyCallback,
   ): Promise<any> {
     const { id, username, emails } = profile;
-    console.log('42access_token: ', accessToken);
-    console.log('42refresh_token: ', refreshToken);
     const user = {
       id: +id,
       name: username,
