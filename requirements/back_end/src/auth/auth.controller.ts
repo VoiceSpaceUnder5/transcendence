@@ -4,12 +4,14 @@ import { AuthService } from './auth.service';
 import { FortyTwoAuthGuard } from './guard/fortytwo-auth.guard';
 import { PassAccessGuard } from './decorator/pass.decorator';
 import { TwoFactorGuard } from './guard/twoFactor.guard';
+import { DuplicateLoginGuard } from './guard/duplicateLogin.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('profile')
+  @UseGuards(DuplicateLoginGuard)
   getProfile(@Req() req) {
     return req.user;
   }

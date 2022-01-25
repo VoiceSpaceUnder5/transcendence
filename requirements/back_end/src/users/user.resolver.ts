@@ -22,9 +22,11 @@ import { GetUser } from './user.decorator';
 import { UsersService } from './user.service';
 import { CodeService } from 'src/code/code.service';
 import { Record } from 'src/record/record.entity';
+import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
 
 @Resolver(() => User)
 @UseGuards(AccessGuard)
+@UseGuards(DuplicateLoginGuard)
 export class UserResolver {
   constructor(
     private readonly usersService: UsersService,
