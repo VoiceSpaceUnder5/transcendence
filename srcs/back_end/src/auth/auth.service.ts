@@ -27,7 +27,6 @@ export class AuthService {
 
   async login(createUserInput: CreateUserInput, res: Response) {
     const user = await this.usersService.create(createUserInput);
-    console.log('User: ', user);
     const payload: JwtPayload = {
       id: user.id,
       twoFactorActivated: user.twoFactorAuth,
@@ -134,7 +133,6 @@ export class AuthService {
   }
 
   private setRefreshTokenCookie(res: Response, refreshTokenId: string) {
-    console.log('COOKIE', process.env.COOKIE_DOMAIN);
     res.cookie('refreshTokenId', refreshTokenId, {
       maxAge: 60 * 60 * 24 * 14 * 1000, // 14일
       domain: process.env.COOKIE_DOMAIN,

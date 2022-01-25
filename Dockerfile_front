@@ -1,14 +1,24 @@
 # Step1
 ## 노드를 빌드하고 실행시키는 이미지를 가져온다.
-FROM node:16.13-alpine3.13
-EXPOSE 3000
+FROM node:16.13
+EXPOSE 3000 3001
 
-WORKDIR /app
 #Proejct의 모든 파일을 WORKDIR == /app 으로 복사한다.
-COPY ./srcs/front_end .
-RUN npm i
+WORKDIR /app
+#ngrok 배포를 위한 공통 설정
+COPY ./srcs/deploy/ngrok .
+COPY ./srcs/deploy/pm2-ngrok.yml .
+RUN npm i -g pm2
 RUN npm i -g serve
-RUN npm run build
 
-ENTRYPOINT [ "serve" ]
-CMD [ "-s", "build",	"-l", "3000" ]
+COPY ./srcs/front_end .
+
+#front_end/service 빌드
+RUN cd service && npm i
+RUN cd service && npm run build
+
+#front_end/admin 빌드
+RUN cd admin && yarn
+RUN cd admin && yarn build
+ENTRYPOINT [ "bash" ]
+CMD [ "./start.sh" ]

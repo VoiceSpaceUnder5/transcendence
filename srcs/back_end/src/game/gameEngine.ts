@@ -1,4 +1,3 @@
-import { VerifyCallback } from 'passport-oauth2';
 import { Server } from 'socket.io';
 import { CreateRecordInput } from 'src/record/dto/create-record.input';
 import { RecordService } from 'src/record/record.service';
@@ -12,7 +11,6 @@ import {
   GameData,
   countAndRun,
 } from './game.gateway';
-import { isModuleNamespaceObject } from 'util/types';
 
 const winnerScore = 3;
 const paddleWidth = 20;
