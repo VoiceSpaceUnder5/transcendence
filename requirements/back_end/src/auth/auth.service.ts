@@ -84,7 +84,12 @@ export class AuthService {
       const payload = this.jwtService.verify(refreshToken.token, {
         secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
       });
-      const accessToken = this.createAccessToken(payload);
+      const newPayload = {
+        id: payload.id,
+        twoFactorActivated: payload.twoFactorActivated,
+        twoFactorAuthenticated: payload.twoFactorAuthenticated,
+      };
+      const accessToken = this.createAccessToken(newPayload);
       this.setAccessTokenCookie(res, accessToken);
       return res.redirect(
         `${this.configService.get<string>('FRONT_URI')}/auth`,

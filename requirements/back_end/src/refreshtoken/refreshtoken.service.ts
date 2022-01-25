@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { RefreshToken } from './refreshtoken.entity';
 
 @Injectable()
@@ -11,10 +12,11 @@ export class RefreshTokenService {
   ) {}
 
   async create(userId: number, token: string): Promise<RefreshToken> {
+    const id = uuidv4();
     try {
-      return await this.refreshRepository.save({ userId, token });
+      return await this.refreshRepository.save({ id, userId, token });
     } catch (e) {
-      await this.refreshRepository.update({ userId }, { token });
+      await this.refreshRepository.update({ userId }, { id, token });
       return this.findOneByUserId(userId);
     }
   }
