@@ -13,7 +13,7 @@ const buildQuery: BuildQueryFactory =
     const resource = introspectionResults.resources.find(
       r => r.type.name === resourceName,
     );
-
+    console.log('패치타입: ', raFetchType);
     switch (raFetchType) {
       case 'GET_ONE': {
         if (resourceName !== 'Code') params.id = Number(params.id);
@@ -38,9 +38,20 @@ const buildQuery: BuildQueryFactory =
 						}`,
           variables: params, // params = { id: ... }
           parseResponse: response => {
-            return {data: response.data.data, total: response.data.data.length};
+            let data = response.data.data;
+            if (resourceName === 'ChannelUser') {
+              let idx = 0;
+              data = data.map((item: any) => {
+                item.id = idx++;
+              });
+            }
+            return {
+              data: data,
+              total: response.data.data.length,
+            };
           },
         };
+
       case 'GET_MANY': {
         if (resourceName === 'Code')
           params.ids = params.ids.map((id: string) => `"${id}"`);
@@ -53,6 +64,19 @@ const buildQuery: BuildQueryFactory =
           variables: params, // params = { id: ... }
           parseResponse: response => {
             return {data: response.data.data, total: response.data.data.length};
+          },
+        };
+      }
+      case 'DELETE_MANY': {
+        if (resourceName === 'Channel')
+          params.ids = params.ids.map((id: string) => `"${id}"`);
+        return {
+          query: gql`mutation Delete${resourceName}s {
+            data: delete${resourceName}s(ids: [${params.ids.join(',')}])
+          }`,
+          variables: params,
+          parseResponse: response => {
+            return {data: [], total: response.data.data};
           },
         };
       }

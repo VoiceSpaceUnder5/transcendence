@@ -9,7 +9,7 @@ import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 export class Achievement extends DefaultEntity {
   @Field((type) => Int)
   @PrimaryColumn({ type: 'int' })
-  @ManyToOne((type) => User, (user) => user.id)
+  @ManyToOne((type) => User, (user) => user.id, { onDelete: 'CASCADE' })
   userId: number;
 
   @Field()

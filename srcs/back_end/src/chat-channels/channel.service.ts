@@ -71,7 +71,10 @@ export class ChannelService {
     const id = uuidv4();
     return await this.channelRepository.save({ id, ...createChannelInput });
   }
-
+  async deleteChannels(ids: string[]) {
+    return await this.channelRepository.delete(ids);
+  }
+  
   async joinDirectChannel(userId: number, otherUserId: number) {
     const firstUserId = Math.min(userId, otherUserId);
     const secondUserId = Math.max(userId, otherUserId);
@@ -101,7 +104,7 @@ export class ChannelService {
   }
 
   async updateChannel(
-    channelId: number,
+    channelId: string,
     updateChannelInput: UpdateChannelInput,
   ): Promise<Channel> {
     if (updateChannelInput.password)

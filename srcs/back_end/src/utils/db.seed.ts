@@ -100,13 +100,14 @@ export const dbSeed = async () => {
   );
 
   // ** 계정 권한 user.authority
+
   entityManager.upsert<Code>(
     Code,
     {
       group: 'UA',
       id: 'UA0',
-      label_korean: '사이트관리자',
-      label_english: 'site-manager',
+      label_korean: '소유자',
+      label_english: 'site-owner',
     },
     ['id'],
   );
@@ -116,11 +117,30 @@ export const dbSeed = async () => {
       group: 'UA',
       id: 'UA1',
       label_korean: '일반회원',
-      label_english: 'member',
+      label_english: 'site-member',
     },
     ['id'],
   );
-
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'UA',
+      id: 'UA2',
+      label_korean: '사이트관리자',
+      label_english: 'site-manager',
+    },
+    ['id'],
+  );
+  entityManager.upsert<Code>(
+    Code,
+    {
+      group: 'UA',
+      id: 'UA3',
+      label_korean: '차단된 유저',
+      label_english: 'site-banned',
+    },
+    ['id'],
+  );
   // ** 관계 타입 relation.type
   entityManager.upsert<Code>(
     Code,

@@ -9,12 +9,12 @@ import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 export class Relation extends DefaultEntity {
   @Field((type) => Int)
   @PrimaryColumn({ type: 'int' })
-  @ManyToOne((type) => User, (user) => user.id)
+  @ManyToOne((type) => User, (user) => user.id, { onDelete: 'CASCADE' })
   user_first_id: number;
 
   @Field((type) => Int)
   @PrimaryColumn({ type: 'int' })
-  @ManyToOne((type) => User, (user) => user.id)
+  @ManyToOne((type) => User, (user) => user.id, { onDelete: 'CASCADE' })
   user_second_id: number;
 
   @Field((type) => Code)

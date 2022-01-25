@@ -72,13 +72,22 @@ export class ChannelResolver {
   //여기는 권한 가드 만들어야할듯 (해당 방을 업데이트할 수 있는 권한이 있는지)
   @Mutation(() => Channel, { name: 'updateChannel' })
   async updateChannel(
-    @Args('channelId', { type: () => ID }) channelId: number,
+    @Args('channelId', { type: () => ID }) channelId: string,
     @Args('updateChannelInput') updateChannelInput: UpdateChannelInput,
   ) {
     return await this.channelService.updateChannel(
       channelId,
       updateChannelInput,
     );
+  }
+
+  @Mutation(() => Int, { name: 'deleteChannels' })
+  async deleteChannels(
+    @Args('ids', { type: () => [ID] }) channelIds: string[],
+  ) {
+    const affects = (await this.channelService.deleteChannels(channelIds))
+      .affected;
+    return affects;
   }
 
   //채팅방에 들어가는 뮤테이션, 들어가려고 하는 유저 id, 채팅방 id, 비밀번호 있으면 비밀번호 확인

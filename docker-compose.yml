@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
     db:
@@ -54,5 +54,5 @@ services:
     #         - db
     #         - back
 networks:
-    ts_network:
-        driver: bridge
+  ts_network:
+    driver: bridge
