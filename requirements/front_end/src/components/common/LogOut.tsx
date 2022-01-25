@@ -54,7 +54,7 @@ export default function LogOut(): JSX.Element {
       deactivateTwoFactorAuth();
     }
   };
-  if (loading) return <>로딩 중..</>;
+  if (loading) return <></>;
   if (error) return <>에러..</>;
   return (
     <Div>

@@ -38,7 +38,7 @@ export default function RelationUserList({
   if (loading)
     return (
       <div>
-        <div>로딩 중</div>
+        <div></div>
         <div>-</div>
       </div>
     );

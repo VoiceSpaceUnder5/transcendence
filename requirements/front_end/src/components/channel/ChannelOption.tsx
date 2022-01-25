@@ -41,7 +41,7 @@ export default React.memo(function ChannelOption({
   useEffect(() => {
     refetch();
   }, []);
-  if (loading) return <>로딩</>;
+  if (loading) return <></>;
   if (error) return <>에러</>;
   const userRoles: UserRole[] = data.getChannelUsersByChannelId;
   const meRole = userRoles.find(userRole => userRole.userId === meId)

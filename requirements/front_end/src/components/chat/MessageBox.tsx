@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import {gql, useQuery} from '@apollo/client';
 
-const GET_RELATIONS = gql`
+export const GET_MESSAGE_RELATIONS = gql`
   query getRelations($userId: Float!) {
     getRelationsByUserIdTreatAsFirst(userId: $userId) {
       user_second_id
@@ -20,7 +20,7 @@ export default React.memo(function MessageBox({
   meId,
   messages,
 }: MessageBoxProps): JSX.Element {
-  const {loading, error, data} = useQuery(GET_RELATIONS, {
+  const {loading, error, data} = useQuery(GET_MESSAGE_RELATIONS, {
     variables: {
       userId: meId,
     },
@@ -40,7 +40,7 @@ export default React.memo(function MessageBox({
     }
   };
 
-  if (loading) return <>로딩 중..</>;
+  if (loading) return <></>;
   if (error) return <>에러..</>;
   return (
     <>

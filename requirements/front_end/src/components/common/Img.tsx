@@ -22,7 +22,7 @@ export default function Img({userId, size}: ImgProps): JSX.Element {
       userId,
     },
   });
-  if (loading) return <>로딩 중</>;
+  if (loading) return <></>;
   if (error) return <>에러</>;
   const src =
     size === 'navbar' || size === 'channel'

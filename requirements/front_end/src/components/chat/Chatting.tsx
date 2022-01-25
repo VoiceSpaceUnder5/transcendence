@@ -142,7 +142,7 @@ export default function Chatting(): JSX.Element {
     });
   }, []);
 
-  if (loading) return <>로딩 중..</>;
+  if (loading) return <></>;
   if (error) {
     console.log(error);
     return <>에러!</>;

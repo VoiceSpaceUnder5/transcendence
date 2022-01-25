@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {OptionButton} from '../../common/Button';
 import {gql, useMutation} from '@apollo/client';
 import {GET_RELATIONS} from '../../../hooks/useRelation';
+import {GET_MESSAGE_RELATIONS} from '../MessageBox';
 
 const UPDATE_RELATION = gql`
   mutation updateRelation($updateRelationInput: CreateRelationInput!) {
@@ -31,7 +32,7 @@ export default function UpdateRelation({
         typeId: actionTypeId,
       },
     },
-    refetchQueries: [GET_RELATIONS],
+    refetchQueries: [GET_RELATIONS, GET_MESSAGE_RELATIONS],
   });
   const onClick = () => {
     updateRelation();

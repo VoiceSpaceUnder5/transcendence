@@ -21,7 +21,7 @@ export default function MessageList({meId}: MessageListProps): JSX.Element {
     },
   });
 
-  if (loading) return <>로딩 중...</>;
+  if (loading) return <>.</>;
   if (error) return <>에러...</>;
   data;
   return <></>;
