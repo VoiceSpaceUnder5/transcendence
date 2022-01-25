@@ -7,7 +7,7 @@ export class RefreshToken extends DefaultEntity {
   @PrimaryColumn({ type: 'uuid' })
   id: string;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
 

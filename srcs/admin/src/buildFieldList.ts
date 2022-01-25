@@ -62,20 +62,21 @@ const channelFields = [
   'id', // Int!
   'name', // String!
   'password', // String
-  'type', // Code!
+  // 'type', // Code!
   'typeId', // String!
-  'channelUsers', // [ChannelUser]!
-  'messages', // [Message]!
+  'channelUsers {\
+    userId\
+    }', // [ChannelUser]!
+  // 'messages', // [Message]!
 ];
 
 const channelUserFields = [
   'created_at', // DateTime!
   'updated_at', // DateTime!
-  'id', // Int!
   'userId', // Int!
   'channelId', // Int!
   'roleId', // String!
-  'role', // Code!
+  // 'role', // Code!
 ];
 
 const relationFields = [

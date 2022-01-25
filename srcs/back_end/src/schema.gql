@@ -141,6 +141,7 @@ type Mutation {
   updateUserConnectionStatus(connectionStatusId: String!, id: Float!): User!
   createChannel(createChannelInput: CreateChannelInput!, userId: Int!): Channel!
   updateChannel(updateChannelInput: UpdateChannelInput!, channelId: ID!): Channel!
+  deleteChannels(ids: [ID!]!): Int!
   joinChannel(joinChannelInput: JoinChannelInput!): Boolean!
   leaveChannel(leaveChannelInput: LeaveChannelInput!): Boolean!
   joinDirectChannel(otherUserId: Int!, userId: Int!): Channel!

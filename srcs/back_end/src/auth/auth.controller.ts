@@ -2,7 +2,10 @@ import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { FortyTwoAuthGuard } from './guard/fortytwo-auth.guard';
-import { PassAccessGuard } from './decorator/pass.decorator';
+import {
+  PassAccessGuard,
+  PassSiteAuthorityGuard,
+} from './decorator/pass.decorator';
 import { TwoFactorGuard } from './guard/twoFactor.guard';
 import { DuplicateLoginGuard } from './guard/duplicateLogin.guard';
 
@@ -17,6 +20,7 @@ export class AuthController {
   }
 
   @PassAccessGuard()
+  @PassSiteAuthorityGuard()
   @UseGuards(FortyTwoAuthGuard)
   @Get('fortytwo')
   async fortyTwoAuth() {
@@ -24,6 +28,7 @@ export class AuthController {
   }
 
   @PassAccessGuard()
+  @PassSiteAuthorityGuard()
   @UseGuards(FortyTwoAuthGuard)
   @Get('fortytwo/login')
   async login(@Req() req, @Res({ passthrough: true }) res: Response) {
@@ -31,6 +36,7 @@ export class AuthController {
   }
 
   @PassAccessGuard()
+  @PassSiteAuthorityGuard()
   @UseGuards(TwoFactorGuard)
   @Post('login/2fa')
   async login2fa(@Req() req, @Res({ passthrough: true }) res: Response) {
@@ -40,6 +46,7 @@ export class AuthController {
   }
 
   @PassAccessGuard()
+  @PassSiteAuthorityGuard()
   @Get('refresh')
   async refresh(@Req() req, @Res() res: Response) {
     const result = await this.authService.refresh(req, res);
@@ -47,6 +54,7 @@ export class AuthController {
   }
 
   @PassAccessGuard()
+  @PassSiteAuthorityGuard()
   @Get('logout')
   async logout(@Res() res: Response) {
     return this.authService.logout(res);

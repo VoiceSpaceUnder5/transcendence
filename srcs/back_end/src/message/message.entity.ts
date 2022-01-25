@@ -12,14 +12,16 @@ export class Message extends DefaultEntity {
   id: number;
 
   @Field((type) => User)
-  @ManyToOne(() => User, (user) => user.messages)
+  @ManyToOne(() => User, (user) => user.messages, { onDelete: 'CASCADE' })
   user: User;
 
   @Field((type) => Int)
   @Column()
   userId: number;
 
-  @ManyToOne((type) => Channel, (channel) => channel.messages)
+  @ManyToOne((type) => Channel, (channel) => channel.messages, {
+    onDelete: 'CASCADE',
+  })
   channel: Channel;
 
   @Field((type) => String)
