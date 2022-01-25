@@ -19,7 +19,6 @@ export default function App(): JSX.Element {
       },
     }).then(dataProvider => setDataProvider(dataProvider));
   }, []);
-
   if (dataProvider) {
     return (
       <Admin

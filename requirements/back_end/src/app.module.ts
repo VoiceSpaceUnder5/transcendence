@@ -32,14 +32,18 @@ import { RefreshTokenModule } from './refreshtoken/refreshtoken.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.dev.env' }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: process.env.NODE_ENV == 'dev' ? '.env.dev' : '.env.prod',
+    }),
+
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'db', // docker-compose service 도메인으로 사용되나?
+      host: process.env.DB_HOST, // docker-compose service 도메인으로 사용되나?
       port: 5432,
-      username: 'kilee',
-      password: 'kilee',
-      database: 'test',
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [
         User,
         Channel,
