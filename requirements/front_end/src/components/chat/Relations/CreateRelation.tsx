@@ -36,7 +36,7 @@ export default function CreateRelation({
   }, []);
   return (
     <OptionButton onClick={onClick}>
-      {typeId === 'RE0' ? '친구 신청' : '차단'}
+      {typeId === 'RE1' ? '친구 신청' : '차단'}
     </OptionButton>
   );
 }
