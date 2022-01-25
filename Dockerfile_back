@@ -5,7 +5,7 @@ EXPOSE 30000 32000 33000
 
 WORKDIR /app
 #Proejct의 모든 파일을 WORKDIR == /app 으로 복사한다.
-COPY . .
+COPY ./srcs/back_end .
 RUN yarn
 RUN yarn build
 
