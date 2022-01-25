@@ -122,6 +122,7 @@ function GameStart(): JSX.Element {
                 </GameOption>
                 <ul>
                   <li>먼저 3점을 얻은 사람이 승리합니다.</li>
+                  <li>위, 아래 방향키로 조작할 수 있습니다.</li>
                   <li>hard 선택 시, 초기 공 속도가 빨라집니다.</li>
                   <li>ladder 선택 시, 결과가 래더 점수에 반영됩니다.</li>
                 </ul>
