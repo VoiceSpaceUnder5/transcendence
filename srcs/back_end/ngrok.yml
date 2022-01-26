@@ -4,15 +4,18 @@ tunnels:
   back:
     addr: 30000
     proto: http
+    bind_tls: true
     hostname: api.pingpongonline.tk
     host_header: api.pingpongonline.tk
   back-game:
     addr: 33000
     proto: http
+    bind_tls: true
     hostname: game.pingpongonline.tk
     host_header: game.pingpongonline.tk
   back-chat:
     addr: 32000
     proto: http
+    bind_tls: true
     hostname: chat.pingpongonline.tk
     host_header: chat.pingpongonline.tk
