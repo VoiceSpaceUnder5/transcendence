@@ -10,6 +10,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
+import { SiteManagerGuard } from 'src/auth/guard/role.guard';
 import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
 import { ChannelUserService } from 'src/chat-channel-user/channel-user.service';
 import { Code } from 'src/code/code.entity';
@@ -81,6 +82,7 @@ export class ChannelResolver {
     );
   }
 
+  @UseGuards(SiteManagerGuard)
   @Mutation(() => Int, { name: 'deleteChannels' })
   async deleteChannels(
     @Args('ids', { type: () => [ID] }) channelIds: string[],

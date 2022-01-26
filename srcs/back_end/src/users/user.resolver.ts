@@ -23,6 +23,7 @@ import { UsersService } from './user.service';
 import { CodeService } from 'src/code/code.service';
 import { Record } from 'src/record/record.entity';
 import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
+import { SiteManagerGuard } from 'src/auth/guard/role.guard';
 
 @Resolver(() => User)
 @UseGuards(DuplicateLoginGuard)
@@ -99,6 +100,7 @@ export class UserResolver {
   }
 
   //🔴 여기 관리자 권한 유저 가드 붙여야함.
+  @UseGuards(SiteManagerGuard)
   @Mutation(() => User, { name: 'updateUserAuthority' })
   async updateUserAuthority(
     @Args('id', { type: () => Int }) id: number,
