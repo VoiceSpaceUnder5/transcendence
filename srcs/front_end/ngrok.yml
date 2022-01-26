@@ -4,10 +4,12 @@ tunnels:
   front:
     addr: 3000
     proto: http
+    bind_tls: true
     hostname: www.pingpongonline.tk
     host_header: www.pingpongonline.tk
   front-admin:
     addr: 3001
     proto: http
+    bind_tls: true
     hostname: admin.pingpongonline.tk
     host_header: admin.pingpongonline.tk
