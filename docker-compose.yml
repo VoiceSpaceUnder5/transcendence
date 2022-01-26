@@ -15,32 +15,32 @@ services:
             - ts_network
     #   volumes:
     #     - ${POSTGRES_HOME_DIR}/data/:/var/lib/postgresql/data
-    # back:
-    #     container_name: back_end
-    #     build:
-    #         context: .
-    #         dockerfile: ${BACKEND_DOCKERFILE}
-    #     ports:
-    #         - 30000:30000
-    #         - 32000:32000
-    #         - 33000:33000
-    #     networks:
-    #         - ts_network
-    #     depends_on:
-    #         - db
-    # front:
-    #     container_name: front_end
-    #     build:
-    #         context: .
-    #         dockerfile: ${FRONTEND_DOCKERFILE}
-    #     ports:
-    #         - 80:3000
-    #         - 3001:3001
-    #     networks:
-    #         - ts_network
-    #     depends_on:
-    #         - db
-    #         - back
+    back:
+        container_name: back_end
+        build:
+            context: .
+            dockerfile: ${BACKEND_DOCKERFILE}
+        ports:
+            - 30000:30000
+            - 32000:32000
+            - 33000:33000
+        networks:
+            - ts_network
+        depends_on:
+            - db
+    front:
+        container_name: front_end
+        build:
+            context: .
+            dockerfile: ${FRONTEND_DOCKERFILE}
+        ports:
+            - 80:3000
+            - 3001:3001
+        networks:
+            - ts_network
+        depends_on:
+            - db
+            - back
 networks:
     ts_network:
         driver: bridge
