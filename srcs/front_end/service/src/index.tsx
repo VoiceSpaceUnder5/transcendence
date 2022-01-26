@@ -21,6 +21,10 @@ const errorLink = onError(({graphQLErrors}) => {
       if (message === 'Unauthorized') {
         window.location.href = `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/refresh`;
       }
+      if (message === 'Forbidden') {
+        window.location.href = `${process.env.REACT_APP_FRONTEND_PROTOCOL}://${process.env.REACT_APP_FRONTEND_DOMAIN}`;
+        alert('차단된 아이디입니다. 다시 입력해주세요.');
+      }
     });
   }
 });
