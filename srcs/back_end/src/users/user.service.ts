@@ -74,13 +74,12 @@ export class UsersService {
   }
   async updateUserName(user: User, name: string) {
     // 이미 존재
-    if (await this.userRepository.findOneOrFail(name)) {
-      console.log(user);
-      throw new NotAcceptableException();
-    }
+    const existName = await this.userRepository.findOne({ name });
+    if (existName) throw new NotAcceptableException();
     await this.userRepository.update(user.id, { name });
     return this.userRepository.findOneOrFail(user.id);
   }
+
   async updateUserConnectionStatus(id: number, connectionStatusId: string) {
     await this.userRepository.update(id, { connectionStatusId });
     return this.userRepository.findOneOrFail(id);

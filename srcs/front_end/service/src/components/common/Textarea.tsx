@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from 'react';
 import styled from 'styled-components';
 
-const TextareaStyle = styled.textarea`
+const TextareaStyle = styled.textarea<{name: string}>`
   /* font */
   font-family: inherit;
   font-style: normal;
@@ -11,7 +11,11 @@ const TextareaStyle = styled.textarea`
 
   width: 98%;
   border-radius: 4px;
-  height: 182px;
+  ${props => {
+    if (props.name === 'description') return `height: 182px;`;
+    else if (props.name === 'name') return `height: 27px;`;
+    else return `height: 27px;`;
+  }}
 `;
 
 // name="description"
