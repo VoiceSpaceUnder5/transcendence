@@ -10,7 +10,7 @@ import authProvider from './login/authProvider';
 import MyLoginPage from './login/MyLoginPage';
 import {createHttpLink, InMemoryCache} from '@apollo/client';
 import {ChannelList} from './entity/channel';
-import {ChannelUserList} from './entity/channelUser';
+import {ChannelUserEdit, ChannelUserList} from './entity/channelUser';
 
 const customLink = createHttpLink({
   uri: `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/graphql`,
@@ -52,7 +52,11 @@ export default function App(): JSX.Element {
         <Resource name="Code" list={CodeList} />
         <Resource name="Message" list={MessageList} />
         <Resource name="Channel" list={ChannelList} />
-        {/* <Resource name="ChannelUser" list={ChannelUserList} /> */}
+        <Resource
+          name="ChannelUser"
+          list={ChannelUserList}
+          edit={ChannelUserEdit}
+        />
       </Admin>
     );
   } else return <div>Loading</div>;

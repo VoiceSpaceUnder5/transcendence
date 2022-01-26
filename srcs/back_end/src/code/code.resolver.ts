@@ -6,7 +6,6 @@ import { CodeService } from './code.service';
 import { CreateCodeInput } from './inputs/create-code.input';
 
 @Resolver()
-@UseGuards(AccessGuard)
 export class CodeResolver {
   constructor(private readonly codeService: CodeService) {}
 
@@ -20,11 +19,11 @@ export class CodeResolver {
     return await this.codeService.findCodebyId(id);
   }
 
-  @Query(() => [Code])
+  @Query(() => [Code], { nullable: 'items' })
   async getCodesByIds(
     @Args('ids', { type: () => [String] }) codeIds: string[],
   ) {
-    return this.codeService.findCodesByIds(codeIds);
+    return await this.codeService.findCodesByIds(codeIds);
   }
 
   @Mutation(() => Code)

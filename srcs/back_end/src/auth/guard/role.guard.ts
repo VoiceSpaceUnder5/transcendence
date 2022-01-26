@@ -26,9 +26,42 @@ export class SiteAuthorityGuard implements CanActivate {
       context.getType() === 'http'
         ? context.switchToHttp().getRequest()
         : GqlExecutionContext.create(context).getContext().req;
-    const refreshTokenId = req.cookies?.refreshTokenId;
     const authorityId = req.user.authorityId;
     if (authorityId === 'UA3') {
+      throw new ForbiddenException();
+    }
+    return true;
+  }
+}
+
+@Injectable()
+export class SiteManagerGuard implements CanActivate {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const req =
+      context.getType() === 'http'
+        ? context.switchToHttp().getRequest()
+        : GqlExecutionContext.create(context).getContext().req;
+    const authorityId = req.user.authorityId;
+    if (authorityId !== 'UA0' && authorityId !== 'UA2') {
+      throw new ForbiddenException();
+    }
+    return true;
+  }
+}
+
+@Injectable()
+export class SiteOwnerGuard implements CanActivate {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const req =
+      context.getType() === 'http'
+        ? context.switchToHttp().getRequest()
+        : GqlExecutionContext.create(context).getContext().req;
+    const authorityId = req.user.authorityId;
+    if (authorityId !== 'UA0') {
       throw new ForbiddenException();
     }
     return true;

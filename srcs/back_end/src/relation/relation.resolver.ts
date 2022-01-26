@@ -7,7 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { AccessGuard } from 'src/auth/guard/access.guard';
+import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
 import { Code } from 'src/code/code.entity';
 import { CodeService } from 'src/code/code.service';
 import { CreateRelationInput } from './dto/create-relation.input';
@@ -16,7 +16,7 @@ import { Relation } from './relation.entity';
 import { RelationService } from './relation.service';
 
 @Resolver(() => Relation)
-@UseGuards(AccessGuard)
+@UseGuards(DuplicateLoginGuard)
 export class RelationResolver {
   constructor(
     private readonly realtionService: RelationService,

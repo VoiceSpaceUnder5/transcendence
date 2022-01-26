@@ -8,6 +8,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { AccessGuard } from 'src/auth/guard/access.guard';
+import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
 import { ChannelService } from 'src/chat-channels/channel.service';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/user.service';
@@ -16,7 +17,7 @@ import { Message } from './message.entity';
 import { MessageService } from './message.service';
 
 @Resolver(() => Message)
-@UseGuards(AccessGuard)
+@UseGuards(DuplicateLoginGuard)
 export class MessageResolver {
   constructor(
     private readonly messageService: MessageService,

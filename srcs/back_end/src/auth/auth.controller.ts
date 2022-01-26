@@ -8,10 +8,17 @@ import {
 } from './decorator/pass.decorator';
 import { TwoFactorGuard } from './guard/twoFactor.guard';
 import { DuplicateLoginGuard } from './guard/duplicateLogin.guard';
+import { SiteManagerGuard } from './guard/role.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('manager')
+  @UseGuards(SiteManagerGuard)
+  isManager() {
+    return true;
+  }
 
   @Get('profile')
   @UseGuards(DuplicateLoginGuard)

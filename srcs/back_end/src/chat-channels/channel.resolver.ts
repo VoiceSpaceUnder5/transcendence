@@ -9,7 +9,8 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { AccessGuard } from 'src/auth/guard/access.guard';
+import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
+import { SiteManagerGuard } from 'src/auth/guard/role.guard';
 import { ChannelUser } from 'src/chat-channel-user/channel-user.entity';
 import { ChannelUserService } from 'src/chat-channel-user/channel-user.service';
 import { Code } from 'src/code/code.entity';
@@ -23,7 +24,7 @@ import { LeaveChannelInput } from './inputs/leave-channel.input';
 import { UpdateChannelInput } from './inputs/update-channel.input';
 
 @Resolver((type) => Channel)
-@UseGuards(AccessGuard)
+@UseGuards(DuplicateLoginGuard)
 export class ChannelResolver {
   constructor(
     private readonly channelService: ChannelService,
@@ -51,6 +52,13 @@ export class ChannelResolver {
     return await this.channelService.findChannelById(channelId);
   }
 
+  @Query(() => [Channel], { name: 'getChannelsByIds' })
+  async getChannelsByIds(
+    @Args('ids', { type: () => [ID] }) channelIds: string[],
+  ) {
+    return await this.channelService.findChannelsByIds(channelIds);
+  }
+  
   //UserId validation check 필요
   @Mutation(() => Channel, { name: 'createChannel' })
   async createChannel(
@@ -81,6 +89,7 @@ export class ChannelResolver {
     );
   }
 
+  @UseGuards(SiteManagerGuard)
   @Mutation(() => Int, { name: 'deleteChannels' })
   async deleteChannels(
     @Args('ids', { type: () => [ID] }) channelIds: string[],
