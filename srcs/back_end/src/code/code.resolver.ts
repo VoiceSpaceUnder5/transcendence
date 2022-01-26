@@ -19,11 +19,11 @@ export class CodeResolver {
     return await this.codeService.findCodebyId(id);
   }
 
-  @Query(() => [Code])
+  @Query(() => [Code], { nullable: 'items' })
   async getCodesByIds(
     @Args('ids', { type: () => [String] }) codeIds: string[],
   ) {
-    return this.codeService.findCodesByIds(codeIds);
+    return await this.codeService.findCodesByIds(codeIds);
   }
 
   @Mutation(() => Code)

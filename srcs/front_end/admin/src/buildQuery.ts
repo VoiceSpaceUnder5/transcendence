@@ -13,7 +13,7 @@ const buildQuery: BuildQueryFactory =
     const resource = introspectionResults.resources.find(
       r => r.type.name === resourceName,
     );
-    console.log('패치타입: ', raFetchType);
+    console.log('패치타입: ', raFetchType, resourceName);
     switch (raFetchType) {
       case 'GET_ONE': {
         if (resourceName !== 'Code') params.id = Number(params.id);
@@ -27,6 +27,7 @@ const buildQuery: BuildQueryFactory =
           variables: params, // params = { id: ... }
           parseResponse: response => response.data,
         };
+        break;
       }
       // ... other types handled here
       case 'GET_LIST':
@@ -38,34 +39,31 @@ const buildQuery: BuildQueryFactory =
 						}`,
           variables: params, // params = { id: ... }
           parseResponse: response => {
-            let data = response.data.data;
-            if (resourceName === 'ChannelUser') {
-              let idx = 0;
-              data = data.map((item: any) => {
-                item.id = idx++;
-              });
-            }
             return {
-              data: data,
+              data: response.data.data,
               total: response.data.data.length,
             };
           },
         };
-
       case 'GET_MANY': {
-        if (resourceName === 'Code')
+        if (resourceName === 'Code' || resourceName === 'Channel') {
           params.ids = params.ids.map((id: string) => `"${id}"`);
-        return {
-          query: gql`query Get${resourceName}sByIds {
+          return {
+            query: gql`query Get${resourceName}sByIds {
 								data: get${resourceName}sByIds(ids: [${params.ids.join(',')}]) {
 									${buildFieldList(resourceName)}
 								}
 							}`,
-          variables: params, // params = { id: ... }
-          parseResponse: response => {
-            return {data: response.data.data, total: response.data.data.length};
-          },
-        };
+            variables: params, // params = { id: ... }
+            parseResponse: response => {
+              return {
+                data: response.data.data,
+                total: response.data.data.length,
+              };
+            },
+          };
+        }
+        break;
       }
       case 'DELETE_MANY': {
         if (resourceName === 'Channel')
@@ -93,6 +91,24 @@ const buildQuery: BuildQueryFactory =
 										${buildFieldList(resourceName)}
 									}
 								}`,
+              variables: variable,
+              parseResponse: response => response.data,
+            };
+          }
+          if (resourceName === 'ChannelUser') {
+            const variable = {
+              updateChannelUserInput: {
+                channelId: params.data.channelId,
+                userId: params.data.userId,
+                roleId: params.data.roleId,
+              },
+            };
+            return {
+              query: gql`mutation UpdateChannelUser($updateChannelUserInput: CreateChannelUserInput!) {
+                  data: updateChannelUser(updateChannelUserInput: $updateChannelUserInput) {
+										${buildFieldList(resourceName)}
+                  }
+            }`,
               variables: variable,
               parseResponse: response => response.data,
             };

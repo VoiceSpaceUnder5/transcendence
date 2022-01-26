@@ -16,6 +16,14 @@ export class ChannelUserService {
     return this.channelUserRepository.find();
   }
 
+  findById(id: number): Promise<ChannelUser> {
+    return this.channelUserRepository.findOne({ id });
+  }
+
+  findByIds(ids: number[]): Promise<ChannelUser[]> {
+    return this.channelUserRepository.findByIds(ids);
+  }
+
   findByUserId(userId: number): Promise<ChannelUser[]> {
     return this.channelUserRepository.find({ userId });
   }
@@ -33,7 +41,9 @@ export class ChannelUserService {
   async update(
     updatechannelUserInput: CreateChannelUserInput,
   ): Promise<ChannelUser> {
-    return this.channelUserRepository.save(updatechannelUserInput);
+    await this.channelUserRepository.save(updatechannelUserInput);
+    const { userId, channelId } = updatechannelUserInput;
+    return this.channelUserRepository.findOne({ userId, channelId });
   }
 
   async delete(deletechannelUser: DeleteChannelUserInput) {

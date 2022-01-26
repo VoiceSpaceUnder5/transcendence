@@ -42,6 +42,7 @@ type Channel {
 type ChannelUser {
   created_at: DateTime!
   updated_at: DateTime!
+  id: Int!
   userId: Int!
   channelId: String!
   roleId: String!
@@ -107,6 +108,8 @@ type Achievement {
 
 type Query {
   getChannelUsers: [ChannelUser]!
+  getChannelUserById(id: Int!): ChannelUser!
+  getChannelUsersByIds(ids: [ID!]!): [ChannelUser!]!
   getChannelUsersByChannelId(channelId: ID!): [ChannelUser!]!
   getMe: User!
   getUsers: [User]!
@@ -116,9 +119,10 @@ type Query {
   getChannels: [Channel]!
   getChannelsByUserId(joined: Boolean!, userId: Int!): [Channel]!
   getChannelById(channelId: ID!): Channel!
+  getChannelsByIds(ids: [ID!]!): [Channel!]!
   getCodes: [Code]!
   getCodeById(id: String!): Code!
-  getCodesByIds(ids: [String!]!): [Code!]!
+  getCodesByIds(ids: [String!]!): [Code]!
   getMessages: [Message]!
   getRelations: [Relation!]!
   getRelationsByUserIdTreatAsFirst(typeId: String, userId: Float!): [Relation!]!

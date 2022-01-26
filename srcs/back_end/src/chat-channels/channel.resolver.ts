@@ -52,6 +52,13 @@ export class ChannelResolver {
     return await this.channelService.findChannelById(channelId);
   }
 
+  @Query(() => [Channel], { name: 'getChannelsByIds' })
+  async getChannelsByIds(
+    @Args('ids', { type: () => [ID] }) channelIds: string[],
+  ) {
+    return await this.channelService.findChannelsByIds(channelIds);
+  }
+  
   //UserId validation check 필요
   @Mutation(() => Channel, { name: 'createChannel' })
   async createChannel(

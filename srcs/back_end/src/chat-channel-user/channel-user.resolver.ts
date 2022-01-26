@@ -31,7 +31,20 @@ export class ChannelUserResolver {
   async getChannelUsers() {
     return this.channelUserService.findAll();
   }
+  @Query(() => ChannelUser, { name: 'getChannelUserById' })
+  async getChannelUserById(
+    @Args('id', { type: () => Int }) channelUserId: number,
+  ) {
+    return await this.channelUserService.findById(channelUserId);
+  }
 
+  @Query(() => [ChannelUser], { name: 'getChannelUsersByIds' })
+  async getChannelUsersByIds(
+    @Args('ids', { type: () => [ID] }) channelUserIds: number[],
+  ) {
+    return await this.channelUserService.findByIds(channelUserIds);
+  }
+  
   @Query(() => [ChannelUser], {
     name: 'getChannelUsersByChannelId',
   })
@@ -41,16 +54,6 @@ export class ChannelUserResolver {
     return this.channelUserService.findByChannelId(channelId);
   }
 
-  // @Mutation(() => ChannelUser, { name: 'createChannelUser' })
-  // async createChannelUser(
-  //   @Args('createchannelUserInput')
-  //   createchannelUserInput: CreatechannelUserInput,
-  // ) {
-  //   // 유효성검사 어떡하지?
-  //   // 내가 이미 방에 들어가있는데 또 들어가려고 하면??
-  //   return await this.channelUserService.create(createchannelUserInput);
-  // }
-
   @Mutation(() => ChannelUser, { name: 'updateChannelUser' })
   async updateChannelUser(
     @Args('updateChannelUserInput')
@@ -58,14 +61,6 @@ export class ChannelUserResolver {
   ) {
     return await this.channelUserService.update(updateChannelUserInput);
   }
-
-  // @Mutation(() => Boolean)
-  // async deleteChannelUser(
-  //   @Args('deletechannelUserInput')
-  //   deletechannelUser: DeletechannelUserInput,
-  // ) {
-  //   return await this.channelUserService.delete(deleteChannelUser);
-  // }
 
   @ResolveField(() => Code)
   async role(@Parent() channelUser: ChannelUser) {
