@@ -16,6 +16,12 @@ export default {
   },
   // called when the API returns an error
   checkError: ({status}: {status: number}) => {
+    axios.get(
+      `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/refresh`,
+      {
+        withCredentials: true,
+      },
+    );
     if (status === 401 || status === 403) {
       return Promise.reject();
     }

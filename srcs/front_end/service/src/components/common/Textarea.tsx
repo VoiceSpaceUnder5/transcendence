@@ -38,7 +38,7 @@ export default function Textarea({
       name={name}
       value={value}
       onChange={onChange}
-      maxLength={100}
+      maxLength={name === 'description' ? 100 : name === 'name' ? 10 : 100}
     />
   );
 }
