@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CodeService } from 'src/code/code.service';
 import { EncryptService } from 'src/encrypt/encrypt.service';
@@ -68,7 +72,15 @@ export class UsersService {
       await this.updateDescription(id, updateUserInput.description);
     return await this.userRepository.findOneOrFail(id);
   }
-
+  async updateUserName(user: User, name: string) {
+    // 이미 존재
+    if (await this.userRepository.findOneOrFail(name)) {
+      console.log(user);
+      throw new NotAcceptableException();
+    }
+    await this.userRepository.update(user.id, { name });
+    return this.userRepository.findOneOrFail(user.id);
+  }
   async updateUserConnectionStatus(id: number, connectionStatusId: string) {
     await this.userRepository.update(id, { connectionStatusId });
     return this.userRepository.findOneOrFail(id);

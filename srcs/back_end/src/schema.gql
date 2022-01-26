@@ -137,6 +137,7 @@ type Mutation {
   deactivateTwoFactorAuth: User!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!, user_id: Int!): User!
+  updateUserName(name: String!): User!
   updateUserAuthority(authorityId: String!, id: Int!): User!
   updateUserConnectionStatus(connectionStatusId: String!, id: Float!): User!
   createChannel(createChannelInput: CreateChannelInput!, userId: Int!): Channel!

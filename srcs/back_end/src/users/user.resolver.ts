@@ -94,6 +94,11 @@ export class UserResolver {
     return this.usersService.update(id, updateUserInput);
   }
 
+  @Mutation(() => User, { name: 'updateUserName' })
+  async updateUserName(@GetUser() user: User, @Args('name') name: string) {
+    return await this.usersService.updateUserName(user, name);
+  }
+
   //🔴 여기 관리자 권한 유저 가드 붙여야함.
   @Mutation(() => User, { name: 'updateUserAuthority' })
   async updateUserAuthority(
