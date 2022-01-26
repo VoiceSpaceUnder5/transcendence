@@ -6,7 +6,6 @@ import { CodeService } from './code.service';
 import { CreateCodeInput } from './inputs/create-code.input';
 
 @Resolver()
-@UseGuards(AccessGuard)
 export class CodeResolver {
   constructor(private readonly codeService: CodeService) {}
 

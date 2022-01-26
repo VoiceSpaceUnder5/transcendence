@@ -9,7 +9,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { AccessGuard } from 'src/auth/guard/access.guard';
+import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
 import { Code } from 'src/code/code.entity';
 import { CodeService } from 'src/code/code.service';
 import { ChannelUser } from './channel-user.entity';
@@ -17,7 +17,7 @@ import { ChannelUserService } from './channel-user.service';
 import { CreateChannelUserInput } from './inputs/create-channel-user.input';
 
 @Resolver(() => ChannelUser)
-@UseGuards(AccessGuard)
+@UseGuards(DuplicateLoginGuard)
 export class ChannelUserResolver {
   constructor(
     private readonly channelUserService: ChannelUserService,

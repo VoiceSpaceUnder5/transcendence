@@ -25,7 +25,6 @@ import { Record } from 'src/record/record.entity';
 import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
 
 @Resolver(() => User)
-@UseGuards(AccessGuard)
 @UseGuards(DuplicateLoginGuard)
 export class UserResolver {
   constructor(

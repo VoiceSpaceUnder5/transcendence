@@ -7,7 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { AccessGuard } from 'src/auth/guard/access.guard';
+import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
 import { CodeService } from 'src/code/code.service';
 import { Code } from 'typeorm';
 import { CreateRecordInput } from './dto/create-record.input';
@@ -15,7 +15,7 @@ import { Record } from './record.entity';
 import { RecordService } from './record.service';
 
 @Resolver((of) => Record)
-@UseGuards(AccessGuard)
+@UseGuards(DuplicateLoginGuard)
 export class RecordResolver {
   constructor(
     private readonly recordService: RecordService,
