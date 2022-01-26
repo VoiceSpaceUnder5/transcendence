@@ -14,16 +14,25 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import {onError} from '@apollo/client/link/error';
+import axios from 'axios';
 
 const errorLink = onError(({graphQLErrors}) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({message}) => {
       if (message === 'Unauthorized') {
-        window.location.href = `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/refresh`;
+        axios
+          .get(
+            `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/refresh`,
+            {withCredentials: true},
+          )
+          .then(res => {
+            if (res.data === false)
+              window.location.href = `${process.env.REACT_APP_FRONTEND_PROTOCOL}://${process.env.REACT_APP_FRONTEND_DOMAIN}`;
+          });
       }
       if (message === 'Forbidden') {
         window.location.href = `${process.env.REACT_APP_FRONTEND_PROTOCOL}://${process.env.REACT_APP_FRONTEND_DOMAIN}`;
-        alert('차단된 아이디입니다. 다시 입력해주세요.');
+        alert('차단된 아이디입니다. 다시는 얼씬거리지 마세요.');
       }
     });
   }

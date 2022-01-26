@@ -90,12 +90,10 @@ export class AuthService {
       };
       const accessToken = this.createAccessToken(newPayload);
       this.setAccessTokenCookie(res, accessToken);
-      return res.redirect(
-        `${this.configService.get<string>('FRONT_URI')}/auth`,
-      );
+      return true;
     } catch (err) {
       console.error('리프레시 토큰 유효하지 않음!');
-      return res.redirect(`${this.configService.get<string>('FRONT_URI')}`);
+      return false;
     }
   }
 

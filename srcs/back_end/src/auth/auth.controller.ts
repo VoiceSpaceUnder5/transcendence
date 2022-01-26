@@ -55,9 +55,8 @@ export class AuthController {
   @PassAccessGuard()
   @PassSiteAuthorityGuard()
   @Get('refresh')
-  async refresh(@Req() req, @Res() res: Response) {
-    const result = await this.authService.refresh(req, res);
-    return result;
+  async refresh(@Req() req, @Res({ passthrough: true }) res: Response) {
+    return await this.authService.refresh(req, res);
   }
 
   @PassAccessGuard()
