@@ -83,6 +83,7 @@ function GameStart(): JSX.Element {
   };
   const onCancelClick = () => {
     history.push('/home');
+    setJoin(false);
   };
   return (
     <>
