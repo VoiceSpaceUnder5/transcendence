@@ -57,6 +57,7 @@ export default function UserProfile({
     history.push('/game');
   };
   const onGameSpectateButtonClick = () => {
+    GameData.onGameUserId = userId;
     history.push('/spectating');
   };
   return (

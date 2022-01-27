@@ -44,7 +44,7 @@ export default function SpectateGame(): JSX.Element {
     // 게임 신청
     if (!GameData.socket) history.push('/home');
     if (GameData.socket) {
-      GameData.socket.emit('spectate', {onGameUserId: 76167});
+      GameData.socket.emit('spectate', {onGameUserId: GameData.onGameUserId});
       GameData.socket.on('forceQuit', () => {
         setStartState(StartState.quit);
       });
