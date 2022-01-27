@@ -10,7 +10,6 @@ import {useLocation, useHistory} from 'react-router-dom';
 import useInput from '../../hooks/useInput';
 import {useMutation, gql} from '@apollo/client';
 import {GET_PROFILE_IMAGE} from '../common/Img';
-import {findAllInRenderedTree} from 'react-dom/test-utils';
 
 const UPDATE_MY_PROFILE = gql`
   mutation updateUser($user_id: Int!, $updateUserInput: UpdateUserInput!) {

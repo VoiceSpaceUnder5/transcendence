@@ -6,7 +6,7 @@ import {createTheme} from '@material-ui/core/styles';
 const MyLoginPage = () => {
   const login = useLogin();
   const notify = useNotify();
-  const submit = (e: any) => {
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
     // will call authProvider.login({ email, password })
     login({}).catch(() =>

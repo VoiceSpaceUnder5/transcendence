@@ -2,9 +2,9 @@ import React from 'react';
 import {
   List,
   Datagrid,
-  TextField,
-  DateField,
-  NumberField,
+  // TextField,
+  // DateField,
+  // NumberField,
   ReferenceField,
   ListProps,
   ChipField,

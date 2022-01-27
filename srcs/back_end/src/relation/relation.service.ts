@@ -22,7 +22,7 @@ export class RelationService {
       user_first_id: sorted.user_first_id,
       user_second_id: sorted.user_second_id,
     };
-    return this.relationRepository.findOneOrFail(primaryKey);
+    return this.relationRepository.findOne(primaryKey);
   }
 
   findRelationByUserId(userId: number): Promise<Relation[]> {

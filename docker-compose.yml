@@ -1,46 +1,46 @@
-version: '3'
+version: "3"
 
 services:
-    db:
-        image: postgres:13.5-alpine
-        container_name: postgresql
-        restart: always
-        ports:
-            - 5432:5432
-        environment:
-            POSTGRES_DB: '${DB_NAME}'
-            POSTGRES_USER: '${DB_USER_ID}'
-            POSTGRES_PASSWORD: '${DB_USER_PASSWORD}'
-        networks:
-            - ts_network
-    #   volumes:
-    #     - ${POSTGRES_HOME_DIR}/data/:/var/lib/postgresql/data
-    back:
-        container_name: back_end
-        build:
-            context: .
-            dockerfile: ${BACKEND_DOCKERFILE}
-        ports:
-            - 30000:30000
-            - 32000:32000
-            - 33000:33000
-        networks:
-            - ts_network
-        depends_on:
-            - db
-    front:
-        container_name: front_end
-        build:
-            context: .
-            dockerfile: ${FRONTEND_DOCKERFILE}
-        ports:
-            - 80:3000
-            - 3001:3001
-        networks:
-            - ts_network
-        depends_on:
-            - db
-            - back
+  db:
+    image: postgres:13.5-alpine
+    container_name: postgresql
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: "${DB_NAME}"
+      POSTGRES_USER: "${DB_USER_ID}"
+      POSTGRES_PASSWORD: "${DB_USER_PASSWORD}"
+    networks:
+      - ts_network
+  #   volumes:
+  #     - ${POSTGRES_HOME_DIR}/data/:/var/lib/postgresql/data
+  # back:
+  #     container_name: back_end
+  #     build:
+  #         context: .
+  #         dockerfile: ${BACKEND_DOCKERFILE}
+  #     ports:
+  #         - 30000:30000
+  #         - 32000:32000
+  #         - 33000:33000
+  #     networks:
+  #         - ts_network
+  #     depends_on:
+  #         - db
+  # front:
+  #     container_name: front_end
+  #     build:
+  #         context: .
+  #         dockerfile: ${FRONTEND_DOCKERFILE}
+  #     ports:
+  #         - 80:3000
+  #         - 3001:3001
+  #     networks:
+  #         - ts_network
+  #     depends_on:
+  #         - db
+  #         - back
 networks:
-    ts_network:
-        driver: bridge
+  ts_network:
+    driver: bridge

@@ -3,14 +3,14 @@ import {
   List,
   Datagrid,
   TextField,
-  DateField,
-  NumberField,
+  // DateField,
+  // NumberField,
   ReferenceField,
   ListProps,
   ChipField,
-  Edit,
-  SimpleForm,
-  RadioButtonGroupInput,
+  // Edit,
+  // SimpleForm,
+  // RadioButtonGroupInput,
 } from 'react-admin';
 
 export const ChannelList = (props: ListProps) => (

@@ -19,4 +19,4 @@ import { UserModule } from 'src/users/user.module';
   exports: [TypeOrmModule, ChannelService],
   providers: [ChannelService, ChannelResolver],
 })
-export class channelsModule {}
+export class ChannelsModule {}

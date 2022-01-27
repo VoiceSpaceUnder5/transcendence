@@ -7,9 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { AccessGuard } from 'src/auth/guard/access.guard';
 import { DuplicateLoginGuard } from 'src/auth/guard/duplicateLogin.guard';
-import { ChannelService } from 'src/chat-channels/channel.service';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/user.service';
 import { CreateMessageInput } from './dto/create-message.input';
@@ -22,7 +20,6 @@ export class MessageResolver {
   constructor(
     private readonly messageService: MessageService,
     private readonly userService: UsersService,
-    private readonly channelService: ChannelService,
   ) {}
 
   @Query(() => [Message], { name: 'getMessages', nullable: 'items' })

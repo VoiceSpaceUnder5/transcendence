@@ -58,7 +58,7 @@ export class ChannelResolver {
   ) {
     return await this.channelService.findChannelsByIds(channelIds);
   }
-  
+
   //UserId validation check 필요
   @Mutation(() => Channel, { name: 'createChannel' })
   async createChannel(
@@ -112,6 +112,12 @@ export class ChannelResolver {
   async leaveChannel(
     @Args('leaveChannelInput') leaveChannelInput: LeaveChannelInput,
   ) {
+    const { roleId } = await this.channelUserService.findByPK(
+      leaveChannelInput,
+    );
+    // 소유자면 방폭
+    if (roleId === 'UR0')
+      return this.deleteChannels([leaveChannelInput.channelId]);
     if (await this.channelUserService.delete(leaveChannelInput)) return true;
     return false;
   }

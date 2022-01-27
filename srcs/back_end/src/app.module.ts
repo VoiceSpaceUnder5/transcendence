@@ -8,7 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './users/user.entity';
 import { UserModule } from './users/user.module';
-import { channelsModule } from './chat-channels/channel.module';
+import { ChannelsModule } from './chat-channels/channel.module';
 import { channelUserModule } from './chat-channel-user/channel-user.module';
 import { CodeService } from './code/code.service';
 import { CodeModule } from './code/code.module';
@@ -67,7 +67,7 @@ import { RefreshTokenModule } from './refreshtoken/refreshtoken.module';
     }),
     channelUserModule,
     UserModule,
-    channelsModule,
+    ChannelsModule,
     CodeModule,
     MessageModule,
     AuthModule,

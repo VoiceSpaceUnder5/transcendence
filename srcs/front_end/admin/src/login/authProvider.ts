@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default {
   // called when the user attempts to log in
-  login: ({intra}: {intra: string}) => {
+  login: () => {
     return axios.get(
       `${process.env.REACT_APP_BACKEND_PROTOCOL}://${process.env.REACT_APP_BACKEND_API}${process.env.REACT_APP_BACKEND_DOMAIN}/auth/manager`,
       {

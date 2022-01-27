@@ -56,6 +56,7 @@ export default function ChannelOptionsList({
     variables: {
       userIds: userRoles.map(user => user.userId),
     },
+    fetchPolicy: 'no-cache',
   });
   const [leaveChannel] = useMutation(LEAVE_CHANNEL);
   const onLeave = () => {

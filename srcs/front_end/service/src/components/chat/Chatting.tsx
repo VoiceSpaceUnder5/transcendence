@@ -7,7 +7,7 @@ import ChannelOption from '../channel/ChannelOption';
 import MessageBox from './MessageBox';
 import MessageForm from './MessageForm';
 import {RootState} from '../../modules';
-import {gql, useMutation, useQuery} from '@apollo/client';
+import {ApolloError, gql, useMutation, useQuery} from '@apollo/client';
 import {io, Socket} from 'socket.io-client';
 import Div from '../common/Div';
 
@@ -86,7 +86,17 @@ export default function Chatting(): JSX.Element {
           }
           reset();
         })
-        .catch(e => console.log(e));
+        .catch((e: ApolloError) => {
+          if (e.message === 'banned-user') {
+            alert('채팅방에서 차단되었습니다.');
+            window.location.reload();
+          } else if (e.message === 'muted-user') {
+            alert('채팅방에서 음소거 되었습니다.');
+          } else if (e.message === 'deleted-channel') {
+            alert('사라진 채널입니다.');
+            window.location.reload();
+          }
+        });
     },
     [message],
   );

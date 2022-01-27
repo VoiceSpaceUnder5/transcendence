@@ -4,13 +4,15 @@ import { MessageResolver } from './message.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Message } from './message.entity';
 import { UserModule } from 'src/users/user.module';
-import { channelsModule } from 'src/chat-channels/channel.module';
+import { ChannelsModule } from 'src/chat-channels/channel.module';
+import { channelUserModule } from 'src/chat-channel-user/channel-user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Message]),
     forwardRef(() => UserModule),
-    forwardRef(() => channelsModule),
+    forwardRef(() => ChannelsModule),
+    forwardRef(() => channelUserModule),
   ],
   exports: [TypeOrmModule, MessageService],
   providers: [MessageService, MessageResolver],

@@ -43,13 +43,13 @@ export default function ChangeAuthority({
       },
     });
   };
-  const onClickBlock = () => {
+  const onClickBlock = (roleId: string) => {
     updateChannelUser({
       variables: {
         input: {
           channelId: channelId,
           userId: userId,
-          roleId: userRole === 'UR3' ? 'UR2' : 'UR3',
+          roleId: roleId,
         },
       },
     });
@@ -70,14 +70,24 @@ export default function ChangeAuthority({
           <Button onClick={onClick} bg="grey">
             뒤로
           </Button>
-          {userRole !== 'UR3' && (
-            <Button bg="dark" onClick={onClickBlock}>
+          {userRole !== 'UR3' && userRole !== 'UR0' && (
+            <Button bg="dark" onClick={() => onClickBlock('UR3')}>
               차단
             </Button>
           )}
           {userRole === 'UR3' && (
-            <Button bg="dark" onClick={onClickBlock}>
+            <Button bg="dark" onClick={() => onClickBlock('UR2')}>
               차단 해제
+            </Button>
+          )}
+          {userRole !== 'UR4' && userRole !== 'UR0' && (
+            <Button bg="dark" onClick={() => onClickBlock('UR4')}>
+              음소거
+            </Button>
+          )}
+          {userRole === 'UR4' && (
+            <Button bg="dark" onClick={() => onClickBlock('UR2')}>
+              음소거 해제
             </Button>
           )}
           {(userRole === 'UR2' || userRole == 'UR1') && (

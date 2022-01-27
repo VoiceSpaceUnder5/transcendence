@@ -24,6 +24,10 @@ export class ChannelUserService {
     return this.channelUserRepository.findByIds(ids);
   }
 
+  findByPK(primaryKey: { userId: number; channelId: string }) {
+    return this.channelUserRepository.findOne(primaryKey);
+  }
+  
   findByUserId(userId: number): Promise<ChannelUser[]> {
     return this.channelUserRepository.find({ userId });
   }

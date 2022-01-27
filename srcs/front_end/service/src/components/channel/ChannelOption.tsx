@@ -36,7 +36,10 @@ export default React.memo(function ChannelOption({
     },
   });
   const [visible, setVisible] = useState(false);
-  const onClick = () => setVisible(!visible);
+  const onClick = () => {
+    setVisible(!visible);
+    refetch();
+  };
 
   useEffect(() => {
     refetch();

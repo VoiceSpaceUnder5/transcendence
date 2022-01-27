@@ -8,7 +8,7 @@ import {CodeList} from './entity/code';
 import {MessageList} from './entity/messages';
 import authProvider from './login/authProvider';
 import MyLoginPage from './login/MyLoginPage';
-import {createHttpLink, InMemoryCache} from '@apollo/client';
+import {createHttpLink, InMemoryCache, DefaultOptions} from '@apollo/client';
 import {ChannelList} from './entity/channel';
 import {ChannelUserEdit, ChannelUserList} from './entity/channelUser';
 
@@ -19,10 +19,11 @@ const customLink = createHttpLink({
 
 const customCache = new InMemoryCache({
   typePolicies: {
-    Agenda: {
+    Query: {
       fields: {
-        tasks: {
-          merge(incoming: any[]) {
+        getChannels: {
+          // eslint-disable-next-line
+          merge(existing = [], incoming: any[]) {
             return [...incoming];
           },
         },
@@ -31,7 +32,23 @@ const customCache = new InMemoryCache({
   },
 });
 
-const customOptions = {link: customLink, cache: customCache};
+const defaultOptions: DefaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all',
+  },
+};
+
+const customOptions = {
+  link: customLink,
+  cache: customCache,
+  defaultOptions: defaultOptions,
+};
+
 export default function App(): JSX.Element {
   const [dataProvider, setDataProvider] = useState<null | DataProvider>(null);
   useEffect(() => {
